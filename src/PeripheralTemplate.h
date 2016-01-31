@@ -26,7 +26,7 @@ extern "C" {
     
     //Functions to Initiate / Clear
     int InitiatePeripheral();
-    int ClearBuffer();
+    int ClearPeripheralBuffer();
 
 
 #ifdef	__cplusplus

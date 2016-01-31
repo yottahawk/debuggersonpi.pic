@@ -8,7 +8,7 @@
 #define BUFFER_LENGTH 256
 #define BIT_MASK 0x10
 
-#include "RelevantLibrary"
+#include <xc.h>
 #include "Sens1Peripheral.h"
 
 char Buffer[BUFFER_LENGTH];
