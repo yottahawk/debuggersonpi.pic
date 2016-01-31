@@ -45,17 +45,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=src/PeripheralTemplate.c src/Sens1Peripheral.c src/Sens2Peripheral.c src/SensCubePeripheral.c src/main.c
+SOURCEFILES_QUOTED_IF_SPACED=src/PeripheralTemplate.c src/Sens1Peripheral.c src/Sens2Peripheral.c src/SensCubePeripheral.c src/main.c src/Encoder1Peripheral.c src/Encoder2Peripheral.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/src/PeripheralTemplate.o ${OBJECTDIR}/src/Sens1Peripheral.o ${OBJECTDIR}/src/Sens2Peripheral.o ${OBJECTDIR}/src/SensCubePeripheral.o ${OBJECTDIR}/src/main.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/src/PeripheralTemplate.o.d ${OBJECTDIR}/src/Sens1Peripheral.o.d ${OBJECTDIR}/src/Sens2Peripheral.o.d ${OBJECTDIR}/src/SensCubePeripheral.o.d ${OBJECTDIR}/src/main.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/src/PeripheralTemplate.o ${OBJECTDIR}/src/Sens1Peripheral.o ${OBJECTDIR}/src/Sens2Peripheral.o ${OBJECTDIR}/src/SensCubePeripheral.o ${OBJECTDIR}/src/main.o ${OBJECTDIR}/src/Encoder1Peripheral.o ${OBJECTDIR}/src/Encoder2Peripheral.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/src/PeripheralTemplate.o.d ${OBJECTDIR}/src/Sens1Peripheral.o.d ${OBJECTDIR}/src/Sens2Peripheral.o.d ${OBJECTDIR}/src/SensCubePeripheral.o.d ${OBJECTDIR}/src/main.o.d ${OBJECTDIR}/src/Encoder1Peripheral.o.d ${OBJECTDIR}/src/Encoder2Peripheral.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/src/PeripheralTemplate.o ${OBJECTDIR}/src/Sens1Peripheral.o ${OBJECTDIR}/src/Sens2Peripheral.o ${OBJECTDIR}/src/SensCubePeripheral.o ${OBJECTDIR}/src/main.o
+OBJECTFILES=${OBJECTDIR}/src/PeripheralTemplate.o ${OBJECTDIR}/src/Sens1Peripheral.o ${OBJECTDIR}/src/Sens2Peripheral.o ${OBJECTDIR}/src/SensCubePeripheral.o ${OBJECTDIR}/src/main.o ${OBJECTDIR}/src/Encoder1Peripheral.o ${OBJECTDIR}/src/Encoder2Peripheral.o
 
 # Source Files
-SOURCEFILES=src/PeripheralTemplate.c src/Sens1Peripheral.c src/Sens2Peripheral.c src/SensCubePeripheral.c src/main.c
+SOURCEFILES=src/PeripheralTemplate.c src/Sens1Peripheral.c src/Sens2Peripheral.c src/SensCubePeripheral.c src/main.c src/Encoder1Peripheral.c src/Encoder2Peripheral.c
 
 
 CFLAGS=
@@ -117,6 +117,20 @@ ${OBJECTDIR}/src/main.o: src/main.c  nbproject/Makefile-${CND_CONF}.mk
 	${MP_CC} $(MP_EXTRA_CC_PRE)  src/main.c  -o ${OBJECTDIR}/src/main.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/src/main.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_REAL_ICE=1    -omf=elf -legacy-libc  -O0 -msmart-io=1 -Wall -msfr-warn=off  
 	@${FIXDEPS} "${OBJECTDIR}/src/main.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
+${OBJECTDIR}/src/Encoder1Peripheral.o: src/Encoder1Peripheral.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/src" 
+	@${RM} ${OBJECTDIR}/src/Encoder1Peripheral.o.d 
+	@${RM} ${OBJECTDIR}/src/Encoder1Peripheral.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  src/Encoder1Peripheral.c  -o ${OBJECTDIR}/src/Encoder1Peripheral.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/src/Encoder1Peripheral.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_REAL_ICE=1    -omf=elf -legacy-libc  -O0 -msmart-io=1 -Wall -msfr-warn=off  
+	@${FIXDEPS} "${OBJECTDIR}/src/Encoder1Peripheral.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/src/Encoder2Peripheral.o: src/Encoder2Peripheral.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/src" 
+	@${RM} ${OBJECTDIR}/src/Encoder2Peripheral.o.d 
+	@${RM} ${OBJECTDIR}/src/Encoder2Peripheral.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  src/Encoder2Peripheral.c  -o ${OBJECTDIR}/src/Encoder2Peripheral.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/src/Encoder2Peripheral.o.d"      -g -D__DEBUG -D__MPLAB_DEBUGGER_REAL_ICE=1    -omf=elf -legacy-libc  -O0 -msmart-io=1 -Wall -msfr-warn=off  
+	@${FIXDEPS} "${OBJECTDIR}/src/Encoder2Peripheral.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
 else
 ${OBJECTDIR}/src/PeripheralTemplate.o: src/PeripheralTemplate.c  nbproject/Makefile-${CND_CONF}.mk
 	@${MKDIR} "${OBJECTDIR}/src" 
@@ -152,6 +166,20 @@ ${OBJECTDIR}/src/main.o: src/main.c  nbproject/Makefile-${CND_CONF}.mk
 	@${RM} ${OBJECTDIR}/src/main.o 
 	${MP_CC} $(MP_EXTRA_CC_PRE)  src/main.c  -o ${OBJECTDIR}/src/main.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/src/main.o.d"        -g -omf=elf -legacy-libc  -O0 -msmart-io=1 -Wall -msfr-warn=off  
 	@${FIXDEPS} "${OBJECTDIR}/src/main.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/src/Encoder1Peripheral.o: src/Encoder1Peripheral.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/src" 
+	@${RM} ${OBJECTDIR}/src/Encoder1Peripheral.o.d 
+	@${RM} ${OBJECTDIR}/src/Encoder1Peripheral.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  src/Encoder1Peripheral.c  -o ${OBJECTDIR}/src/Encoder1Peripheral.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/src/Encoder1Peripheral.o.d"        -g -omf=elf -legacy-libc  -O0 -msmart-io=1 -Wall -msfr-warn=off  
+	@${FIXDEPS} "${OBJECTDIR}/src/Encoder1Peripheral.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
+	
+${OBJECTDIR}/src/Encoder2Peripheral.o: src/Encoder2Peripheral.c  nbproject/Makefile-${CND_CONF}.mk
+	@${MKDIR} "${OBJECTDIR}/src" 
+	@${RM} ${OBJECTDIR}/src/Encoder2Peripheral.o.d 
+	@${RM} ${OBJECTDIR}/src/Encoder2Peripheral.o 
+	${MP_CC} $(MP_EXTRA_CC_PRE)  src/Encoder2Peripheral.c  -o ${OBJECTDIR}/src/Encoder2Peripheral.o  -c -mcpu=$(MP_PROCESSOR_OPTION)  -MMD -MF "${OBJECTDIR}/src/Encoder2Peripheral.o.d"        -g -omf=elf -legacy-libc  -O0 -msmart-io=1 -Wall -msfr-warn=off  
+	@${FIXDEPS} "${OBJECTDIR}/src/Encoder2Peripheral.o.d" $(SILENT)  -rsi ${MP_CC_DIR}../ 
 	
 endif
 

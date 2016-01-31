@@ -1,27 +1,41 @@
 /* 
- * File:   PeripheralTemplate.c
+ * File:   ENCODE2Peripheral.c
  * Author: Luke
  *
  * Created on 28 January 2016, 23:57
  */
 
 #define BUFFER_LENGTH 256
+#define BIT_MASK 0x10
+#define PIC_PORT PORTF
+#define PIC_TRIS TRISF
 
-int Buffer[BUFFER_LENGTH];
-int Integral;
+#include <xc.h>
+#include "Encoder2Peripheral.h"
+#include "Wheel2Peripheral.h"
+
+char Buffer[BUFFER_LENGTH];
 int Pointer;
 
 //Function to read a value directly from the peripheral
-int ReadPeripheral() {
-    /*Code depends on peripheral*/
+char ReadENCODE2() {
+    //Read B register and compare to bit mask
+    int val = PIC_PORT & BIT_MASK;
+    
+    //if result of bit mask is non-zero, then peripheral is high
+    //Otherwise peripheral is low
+    if (val > 0) return 0x01;
+    else return 0x00; 
 }
 
 //Functions to read and write to the peripheral's buffer
-int WritePeripheralBuffer(int Data) {
+int WriteENCODE2Buffer(char Data) {
     /*
      * Increments pointer (loops round if exceeds buffer size) 
      * Inserts new value at position
      */
+    char temp = Buffer[Pointer];
+    
     //Increment Pointer 
     if(Pointer==0) Pointer = BUFFER_LENGTH-1; //Loop pointer if exceeds buffer length
     else Pointer--; 
@@ -29,9 +43,15 @@ int WritePeripheralBuffer(int Data) {
     //Insert data at new position
     Buffer[Pointer] = Data;
     
-    //Integral Code?
+    //Integral Code - only changes if the current value is different to
+    //the previous value. Increments if wheel is going forwards, decrements if
+    //wheel is going backwards
+    if (temp != Buffer[Pointer]) {
+        if (ReadWHEEL2()) Integral++;
+        else Integral--;
+    }
 }
-int* ReadPeripheralBuffer(int Count){
+char* ReadENCODE2Buffer(int Count){
     /*
      * Returns a pointer to a buffer of the required size
      * 
@@ -41,7 +61,7 @@ int* ReadPeripheralBuffer(int Count){
     //Reoorganise Buffer if count exceeds values remaining in memory
     if(Count>(BUFFER_LENGTH-Pointer)) {
         //Temporary Buffer
-        int TempBuffer[BUFFER_LENGTH];
+        char TempBuffer[BUFFER_LENGTH];
 
         //Fill temporarybuffer with values from Buffer
         for(int i=Pointer;i<BUFFER_LENGTH;i++){
@@ -60,42 +80,33 @@ int* ReadPeripheralBuffer(int Count){
     
     return &Buffer[Pointer];
 }
-//Also includes a function to read from "special" value
-//i.e. Integral for wheel encoders
-int ReadPeripheralIntegral(){
-    /*
-     * Does what it says on the tin:
-     * return Integral
-     */
+
+int ReadENCODE2Integral() {
     return Integral;
 }
+int ResetENCODE2Integral() {
+    Integral = 0;
+}
 
-int StartupPeripheral() {
-    //Any startup code required by peripherals
-    
+int StartupENCODE2() {
+    // Ensure Data direction register is set to 1 (For 1nput)
+    PIC_TRIS = PIC_TRIS | BIT_MASK;
 }
 
 //Functions to Initiate / Clear
-int InitiatePeripheral() {
-    /*
-     * Ensure Buffer is full of zeros
-     * 
-     * Zero condition integral / special
-     * 
-     * Place pointer at the end of the buffer
-     */
+int InitiateENCODE2() {
     //Ensure Buffer is full of zeros
     ClearBuffer();
     
     //Place pointer at end of buffer
     Pointer = BUFFER_LENGTH-1;
     
-    //Zero integral
-    Integral = 0;
+    //Initiate data direction bits
+    StartupENCODE2();
     
     return 0;
 }
-int ClearPeripheralBuffer() {
+int ClearENCODE2Buffer() {
     /*
      * Writes zeros into every cell of the buffer
      */

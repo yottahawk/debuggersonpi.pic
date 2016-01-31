@@ -7,8 +7,10 @@
 
 #define BUFFER_LENGTH 256
 #define BIT_MASK 0x08
+#define PIC_PORT PORTB
+#define PIC_TRIS TRISB
 
-#include "RelevantLibrary"
+#include <xc.h>
 #include "Sens2Peripheral.h"
 
 char Buffer[BUFFER_LENGTH];
@@ -17,7 +19,7 @@ int Pointer;
 //Function to read a value directly from the peripheral
 char ReadSENS2() {
     //Read B register and compare to bit mask
-    int val = PORTB & BIT_MASK;
+    int val = PIC_PORT & BIT_MASK;
     
     //if result of bit mask is non-zero, then peripheral is high
     //Otherwise peripheral is low
@@ -72,7 +74,7 @@ char* ReadSENS2Buffer(int Count){
 
 int StartupSENS2() {
     // Ensure Data direction register is set to 1 (For 1nput)
-    TRISB = TRISB | BIT_MASK;
+    PIC_TRIS = PIC_TRIS | BIT_MASK;
 }
 
 //Functions to Initiate / Clear

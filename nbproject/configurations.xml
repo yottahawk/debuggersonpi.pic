@@ -9,6 +9,8 @@
       <itemPath>src/Sens2Peripheral.h</itemPath>
       <itemPath>src/SensCubePeripheral.h</itemPath>
       <itemPath>src/main.h</itemPath>
+      <itemPath>src/Encoder1Peripheral.h</itemPath>
+      <itemPath>src/Encoder2Peripheral.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -22,6 +24,8 @@
       <itemPath>src/Sens2Peripheral.c</itemPath>
       <itemPath>src/SensCubePeripheral.c</itemPath>
       <itemPath>src/main.c</itemPath>
+      <itemPath>src/Encoder1Peripheral.c</itemPath>
+      <itemPath>src/Encoder2Peripheral.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
