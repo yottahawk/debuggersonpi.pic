@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=debuggersonpi_pic
+PROJECTNAME=debuggersonpi.pic
 
 # Active Configuration
 DEFAULTCONF=default

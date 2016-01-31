@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>debuggersonpi_pic</name>
+            <name>debuggersonpi.pic</name>
             <creation-uuid>69b2557c-3358-4618-8c59-8ba96a09d78e</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>
