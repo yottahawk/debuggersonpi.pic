@@ -13,3 +13,4 @@
 
 #endif	/* XC_HEADER_TEMPLATE_H */
 
+#include "config.h"

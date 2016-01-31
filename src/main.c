@@ -8,7 +8,15 @@
 #include <main.h>
 
 // main loop of execution - anything not interrupt driven goes here
-int main(void) {
+int main(void) 
+{
+    initialise_pinmap();
+    
+    while(1)
+    {
+        
+    }
     
     return 0;
 }
+
