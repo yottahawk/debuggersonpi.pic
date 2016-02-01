@@ -2,7 +2,7 @@
  * File:   config.c
  * Author: 
  * 
- * This file contains all the configuration to occur before the device 7
+ * This file contains all the configuration to occur before the device 
  * starts processing data. 
  *
  * Created on 31 January 2016, 18:28
