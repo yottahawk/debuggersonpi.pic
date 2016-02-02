@@ -18,6 +18,7 @@
       <itemPath>src/config.h</itemPath>
       <itemPath>src/Encoder1Peripheral.h</itemPath>
       <itemPath>src/Encoder2Peripheral.h</itemPath>
+      <itemPath>src/StateMachine.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -40,6 +41,7 @@
       <itemPath>src/config.c</itemPath>
       <itemPath>src/Encoder1Peripheral.c</itemPath>
       <itemPath>src/Encoder2Peripheral.c</itemPath>
+      <itemPath>src/StateMachine.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
