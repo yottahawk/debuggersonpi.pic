@@ -8,6 +8,8 @@
  * Created on 31 January 2016, 21:24
  */
 
+#include "adc.h"
+
 /*
  * Initialises the ADC module for reading the 4 line-tracking reflective sensors.
  * The four ADC channels are sampled sequentially and the results stored in the 
@@ -58,7 +60,7 @@ void adc_linetrackinginit()
  */
 void linetracking_sample(unsigned int *tempBuffer[3])
 {
-    int *ADC4Ptr = &ADC1BUF0;       // Initialise a pointer to the first adc buffer word;
+    int * ADC4Ptr = &ADC1BUF0;       // Initialise a pointer to the first adc buffer word;
     
     AD1CON1bits.ADON = 1;           // turn ADC on
     IFS0bits.AD1IF = 0;             // Clear AD interrupt flag

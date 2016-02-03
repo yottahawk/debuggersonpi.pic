@@ -21,6 +21,8 @@
       <itemPath>src/adc.h</itemPath>
       <itemPath>src/timers.h</itemPath>
       <itemPath>src/oc.h</itemPath>
+      <itemPath>src/interrupts.h</itemPath>
+      <itemPath>src/indicators_switches.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -46,6 +48,8 @@
       <itemPath>src/adc.c</itemPath>
       <itemPath>src/timers.c</itemPath>
       <itemPath>src/oc.c</itemPath>
+      <itemPath>src/interrupts.c</itemPath>
+      <itemPath>src/indicators_switches.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -108,7 +112,8 @@
         <property key="enable-short-double" value="false"/>
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
-        <property key="extra-include-directories" value=""/>
+        <property key="extra-include-directories"
+                  value="C:\Program Files (x86)\Microchip\xc16\v1.25\support\generic\h"/>
         <property key="isolate-each-function" value="false"/>
         <property key="keep-inline" value="false"/>
         <property key="oXC16gcc-align-arr" value="false"/>

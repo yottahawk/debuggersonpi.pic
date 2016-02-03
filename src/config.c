@@ -46,7 +46,7 @@ void initialise_pinmap(void)
     TRISBbits.TRISB2  = IN;  // SENS_FRONT      (14)
     TRISBbits.TRISB3  = IN;  // SENS_R          (13)
     TRISBbits.TRISB4  = IN;  // PUSH_SW         (12)
-    TRISBbits.TRISB5  = IN;  // WHEEL_ENC_1     (11)
+    // TRISBbits.TRISB5  = IN;  // WHEEL_ENC_1     (11) //Bodged onto pin 42
     TRISBbits.TRISB6  = IN;  // PGC             (17)
     TRISBbits.TRISB7  = IN;  // PGD             (18)
     TRISBbits.TRISB8  = IN;  // LINE_R_F        (21)
@@ -72,8 +72,10 @@ void initialise_pinmap(void)
     TRISDbits.TRISD4  = OUT; // M2_REV          (52)
     TRISDbits.TRISD5  = IN;  // MAG/COMP_DRDY   (53)
     TRISDbits.TRISD7  = OUT; // PI_SIG          (55)
-    TRISDbits.TRISD8  = IN;  // ACC_INT2A       (42)
-    TRISDbits.TRISD9  = IN;  // ACC_INT1A       (43)
+    //TRISDbits.TRISD8  = IN;  // ACC_INT2A       (42) //Traces cut
+    TRISDbits.TRISD8  = IN;  // WHEEL_ENC_1     (42) //Bodge
+    //TRISDbits.TRISD9  = IN;  // ACC_INT1A       (43) //Traces cut
+    TRISDbits.TRISD9  = IN;  // WHEEL_ENC_2     (43) //Bodge
     TRISDbits.TRISD10 = IN;  // GYRO_INT1G      (44)
     TRISDbits.TRISD11 = IN;  // GYRO_DRDY_G     (45)
     
@@ -91,7 +93,7 @@ void initialise_pinmap(void)
     TRISFbits.TRISF2  = OUT; // GRAB_MTR_2      (34)
     TRISFbits.TRISF3  = OUT; // GRAB_MTR_3      (33)
     TRISFbits.TRISF4  = IN;  // V_BATT_SENSE_ADC    (34)
-    TRISFbits.TRISF5  = IN;  // WHEEL_ENC_2     (32)
+    // TRISFbits.TRISF5  = IN;  // WHEEL_ENC_2     (32) // Bodged onto pin 43
     TRISFbits.TRISF6  = OUT; // GRAB_MTR_1      (35)
     
     // TRISG

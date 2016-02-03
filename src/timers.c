@@ -5,6 +5,8 @@
  * Created on 31 January 2016, 23:42
  */
 
+#include "timers.h"
+
 /*
  * Timer 2 is used with output compare modules OC2 and OC3 to drive motor 1 in
  * forward(OC2) or reverse(OC3). The same timer is attached to either module.  
