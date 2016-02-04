@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration device="PIC24FJ64GA006" mcc_version="v2.25.2">
+    <managers>
+        <manager generated="true" name="Pin Manager" reloadPin="manual">
+            <setting name="package" option="TQFP64"/>
+            <setting name="sorting" option="true"/>
+            <file checksum="3395274199" modified="false" name="pin_manager.c" path="mcc_generated_files/pin_manager.c"/>
+            <file checksum="1937324910" modified="false" name="pin_manager.h" path="mcc_generated_files/pin_manager.h"/>
+        </manager>
+        <manager generated="true" name="System" reloadPin="manual">
+            <initializer comment="" name="Initialize">
+                <setting name="RCDIV" option="FRC/2" register="CLKDIV"/>
+                <setting name="DOZE" option="1:8" register="CLKDIV"/>
+                <setting name="DOZEN" option="disabled" register="CLKDIV"/>
+                <setting name="ROI" option="disabled" register="CLKDIV"/>
+            </initializer>
+            <setting name="POSCMOD" option="NONE"/>
+            <setting name="FCKSM" option="CSECME"/>
+            <setting name="OSCIOFNC" option="OFF"/>
+            <setting name="FNOSC" option="FRCDIV"/>
+            <setting name="IESO" option="ON"/>
+            <setting name="WDTPS" option="PS32768"/>
+            <setting name="GCP" option="OFF"/>
+            <setting name="FWDTEN" option="ON"/>
+            <setting name="ICS" option="PGx2"/>
+            <setting name="COE" option="OFF"/>
+            <setting name="WINDIS" option="ON"/>
+            <setting name="JTAGEN" option="ON"/>
+            <setting name="FWPSA" option="PR128"/>
+            <setting name="BKBUG" option="OFF"/>
+            <setting name="GWRP" option="OFF"/>
+            <setting name="Primary Oscillator" option="3500000"/>
+            <setting name="Secondary Oscillator" option="31000"/>
+            <setting name="generateConfigBits" option="true"/>
+            <file checksum="1179549460" modified="false" name="mcc.c" path="mcc_generated_files/mcc.c"/>
+            <file checksum="1100745649" modified="false" name="mcc.h" path="mcc_generated_files/mcc.h"/>
+        </manager>
+    </managers>
+    <modules>
+        <module generated="true" mode="Slave" name="SPI2" order="0" reloadPin="auto" type="spi">
+            <initializer comment="" name="Initialize">
+                <setting name="MSTEN" option="disabled" register="SPI2CON1"/>
+                <setting name="DISSDO" option="disabled" register="SPI2CON1"/>
+                <setting name="PPRE" option="64:1" register="SPI2CON1"/>
+                <setting name="SPRE" option="8:1" register="SPI2CON1"/>
+                <setting name="MODE16" option="disabled" register="SPI2CON1"/>
+                <setting name="SMP" option="Sample at Middle" register="SPI2CON1"/>
+                <setting name="DISSCK" option="disabled" register="SPI2CON1"/>
+                <setting name="CKP" option="Idle:Low, Active:High" register="SPI2CON1"/>
+                <setting name="CKE" option="Idle to Active" register="SPI2CON1"/>
+                <setting name="SPIBEN" option="enabled" register="SPI2CON2"/>
+                <setting name="SPIFE" option="disabled" register="SPI2CON2"/>
+                <setting name="SPIFPOL" option="disabled" register="SPI2CON2"/>
+                <setting name="SISEL" option="SPI_INT_SPIRBF" register="SPI2STAT"/>
+                <setting name="SPIROV" option="disabled" register="SPI2STAT"/>
+                <setting name="SPIEN" option="enabled" register="SPI2STAT"/>
+                <setting name="SPISIDL" option="disabled" register="SPI2STAT"/>
+            </initializer>
+            <setting name="SPII" option="false"/>
+            <setting name="SPFI" option="false"/>
+            <file checksum="997167139" modified="false" name="spi2_1.c" path="mcc_generated_files/spi2_1.c"/>
+            <file checksum="3512602993" modified="false" name="spi2_1.h" path="mcc_generated_files/spi2_1.h"/>
+        </module>
+    </modules>
+</configuration>
