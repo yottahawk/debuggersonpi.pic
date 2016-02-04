@@ -18,9 +18,17 @@
       <itemPath>src/config.h</itemPath>
       <itemPath>src/Encoder1Peripheral.h</itemPath>
       <itemPath>src/Encoder2Peripheral.h</itemPath>
+<<<<<<< HEAD
       <itemPath>src/StateMachine.h</itemPath>
       <itemPath>src/OpenLoop.h</itemPath>
       <itemPath>src/ControlParams.h</itemPath>
+=======
+      <itemPath>src/adc.h</itemPath>
+      <itemPath>src/timers.h</itemPath>
+      <itemPath>src/oc.h</itemPath>
+      <itemPath>src/interrupts.h</itemPath>
+      <itemPath>src/indicators_switches.h</itemPath>
+>>>>>>> 3ec63a60612da17ecdc50df8a21b9bc46cd67d25
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -43,8 +51,16 @@
       <itemPath>src/config.c</itemPath>
       <itemPath>src/Encoder1Peripheral.c</itemPath>
       <itemPath>src/Encoder2Peripheral.c</itemPath>
+<<<<<<< HEAD
       <itemPath>src/StateMachine.c</itemPath>
       <itemPath>src/OpenLoop.c</itemPath>
+=======
+      <itemPath>src/adc.c</itemPath>
+      <itemPath>src/timers.c</itemPath>
+      <itemPath>src/oc.c</itemPath>
+      <itemPath>src/interrupts.c</itemPath>
+      <itemPath>src/indicators_switches.c</itemPath>
+>>>>>>> 3ec63a60612da17ecdc50df8a21b9bc46cd67d25
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -107,7 +123,8 @@
         <property key="enable-short-double" value="false"/>
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
-        <property key="extra-include-directories" value=""/>
+        <property key="extra-include-directories"
+                  value="C:\Program Files (x86)\Microchip\xc16\v1.25\support\generic\h"/>
         <property key="isolate-each-function" value="false"/>
         <property key="keep-inline" value="false"/>
         <property key="oXC16gcc-align-arr" value="false"/>
