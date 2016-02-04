@@ -43,17 +43,19 @@ typedef enum {
     ECDR_REV_RIGHT,  //Closed Loop With Encoders Reverse Right Turn (90) 
             
     //Closed Loop with Analog Sensors states
-    PSNS_FORWARD,    //Closed Loop With PhototSensors Forward drive
-    PSNS_LEFT,       //Closed Loop With PhototSensors Forwards Left turn (90)
-    PSNS_RIGHT,      //Closed Loop With PhototSensors Forwards Right turn (90)
-    PSNS_REVERSE,    //Closed Loop With PhototSensors Reverse
-    PSNS_REV_LEFT,   //Closed Loop With PhototSensors Reverse Left Turn (90)
-    PSNS_REV_RIGHT,  //Closed Loop With PhototSensors Reverse Right Turn (90) 
+    PSNS_FORWARD,    //Closed Loop With PhotoSensors Forward drive
+    PSNS_LEFT,       //Closed Loop With PhotoSensors Forwards Left turn (90)
+    PSNS_RIGHT,      //Closed Loop With PhotoSensors Forwards Right turn (90)
+    PSNS_REVERSE,    //Closed Loop With PhotoSensors Reverse
+    PSNS_REV_LEFT,   //Closed Loop With PhotoSensors Reverse Left Turn (90)
+    PSNS_REV_RIGHT,  //Closed Loop With PhotoSensors Reverse Right Turn (90) 
             
+    //Functions
+    READ_PERIPHERAL, //Read from a peripheral
+    WRITE_PERIPHERAL //Write to a peripheral    
+} state_t;
 
-            
-};
-
+state_t curr_state;
 
 #ifdef	__cplusplus
 }
