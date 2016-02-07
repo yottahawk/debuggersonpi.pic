@@ -4,7 +4,7 @@
  *
  * Created on 02 February 2016, 00:34
  */
-
+#include <xc.h>
 #include "interrupts.h"
 
 /*
@@ -34,8 +34,17 @@ void __attribute__((__interrupt__, auto_psv)) _INT2Interrupt(void)
  */
 void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
 {
-    
-} 
+   CNbuffer[1] = PORTBbits.RB4;     // PUSH_SW
+   CNbuffer[2] = PORTBbits.RB12;    // SENS_CUBE
+   CNbuffer[3] = PORTBbits.RB13;    // SENSE_L
+   CNbuffer[4] = PORTBbits.RB3;     // SNESE_R
+   Nop();
+   Nop();
+   Nop();
+   LATBbits.LATB14 = 1;
+   
+   IFS1bits.CNIF = 0;
+}
  
 /*
  * 
