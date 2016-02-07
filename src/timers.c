@@ -4,6 +4,7 @@
  *
  * Created on 31 January 2016, 23:42
  */
+#include <xc.h>
 
 #include "timers.h"
 

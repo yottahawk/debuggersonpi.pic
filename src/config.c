@@ -8,7 +8,9 @@
  * Created on 31 January 2016, 18:28
  */
 
-// Configuration bits initialise oscillator etc.
+#include <xc.h>
+
+// Configuration bits to initialise oscillator etc.
 // CONFIG2
 #pragma config POSCMOD = XT    // Primary Oscillator Select->XT Oscillator mode selected
 #pragma config OSCIOFNC = OFF    // Primary Oscillator Output Function->OSC2/CLKO/RC15 functions as CLKO (FOSC/2)
@@ -30,9 +32,7 @@
 
 void initialise_pinmap(void)
 {
-    // To read any of the outputs, read the PORT register.
-    
-    // TRIS
+    ///////////////////////TRISx////////////////////////////////////////////////
     // Data direction register (Input=1/Output=0)
     // All pins are inputs by default after reset
     enum IO{OUT=0,IN=1};
@@ -100,14 +100,18 @@ void initialise_pinmap(void)
     // This port contains the SPI and I2C pins, which are automatically set as
     // serial port objects when the modules are enabled.
     
-    // LAT
-    // Write to LAT register to set output values.
+    ////////////////////////////////////LATx////////////////////////////////////
+    // Writes to LAT register to set output values at startup.
+    
+    // LATB
     LATBbits.LATB14 = 0;     // PS_MOTOR_EN - disabled by default
     LATBbits.LATB15 = 0;     // GRAB_MTR_4
     
+    // LATC
     LATCbits.LATC14 = 0;     // GYRO_DEN_G
     LATCbits.LATC15 = 0;     // ACC_CS_A
     
+    //LATD
     LATDbits.LATD0 = 0;      // GYRO_CS_G
     LATDbits.LATD1 = 0;      // M1_FWD
     LATDbits.LATD2 = 0;      // M1_REV
@@ -115,21 +119,27 @@ void initialise_pinmap(void)
     LATDbits.LATD4 = 0;      // M2_REV
     LATDbits.LATD7 = 1;      // PI_SIG - active low signal
     
+    //LATE
     LATEbits.LATE5 = 1;      // BLUE_LED - off
     LATEbits.LATE6 = 1;      // GRN_LED - off
     LATEbits.LATE7 = 1;      // RED_LED - off
-            
+    
+    //LATF
     LATFbits.LATF2 = 0;      // GRAB_MTR_2
     LATFbits.LATF3 = 0;      // GRAB_MTR_3
     LATFbits.LATF6 = 0;      // GRAB_MTR_1
  
+    ////////////////////////////////ODCx////////////////////////////////////////
     // Set open drain output.
+    
     ODCEbits.ODE5  = 1;      // BLUE_LED
     ODCEbits.ODE6  = 1;      // GRN_LED
     ODCEbits.ODE7  = 1;      // RED_LED
     
+    ////////////////////////////////AD1PCFG/////////////////////////////////////
     // Set up ADC inputs within the ADC Port Configuration Register    
     // All bits 0 on reset.
+    
     AD1PCFG = 0xFFFF; // Set all bits to digital mode by default.
     
     AD1PCFGbits.PCFG2  = 0;  // SENS_FRONT
@@ -137,6 +147,5 @@ void initialise_pinmap(void)
     AD1PCFGbits.PCFG8  = 0;  // LINE_R_F
     AD1PCFGbits.PCFG9  = 0;  // LINE_R_B
     AD1PCFGbits.PCFG10 = 0;  // LINE_L_B
-    AD1PCFGbits.PCFG11 = 0;  // LINE_L_F
-    
+    AD1PCFGbits.PCFG11 = 0;  // LINE_L_F  
 }

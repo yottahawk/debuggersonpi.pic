@@ -11,9 +11,11 @@
 
 ///////////////////////////INCLUDES/////////////////////////////////////////////
 
-#include "xc.h" // include processor files - each processor file is guarded.  
+// include processor files - each processor file is guarded.  
+#include <xc.h>
 
-#include "config.h" // Configuration registers, IO ports, 
+// Configuration registers, IO ports,
+#include "config.h"  
 
 // Peripheral init & access methods
 #include "adc.h"
@@ -28,6 +30,7 @@
 // Application layer processing - line tracking, PID, intersection detection, 
 // tracking encoder count, cube front sense, acceleration profiles, turn left/right,
 // grabber motor close/open, 
+// #include files here...........
 
 
 // Communication Interface PIC-PI
@@ -37,6 +40,6 @@
 // #include "topLvlStateM.h"    // LUKE
 
 
-#endif	/* XC_HEADER_TEMPLATE_H */
+#endif	/* XC_HEADER_GUARD */
 
 

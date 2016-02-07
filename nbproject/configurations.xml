@@ -19,6 +19,14 @@
       <itemPath>src/Encoder1Peripheral.h</itemPath>
       <itemPath>src/Encoder2Peripheral.h</itemPath>
       <itemPath>src/spi.h</itemPath>
+      <itemPath>src/ControlParams.h</itemPath>
+      <itemPath>src/OpenLoop.h</itemPath>
+      <itemPath>src/StateMachine.h</itemPath>
+      <itemPath>src/adc.h</itemPath>
+      <itemPath>src/indicators_switches.h</itemPath>
+      <itemPath>src/interrupts.h</itemPath>
+      <itemPath>src/oc.h</itemPath>
+      <itemPath>src/timers.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -284,6 +292,66 @@
         <property key="tracecontrol.tracefilemax" value="10000000"/>
         <property key="voltagevalue" value="3.25"/>
       </RealICEPlatformTool>
+      <item path="mcc_generated_files/adc1.c" ex="true" overriding="false">
+      </item>
+      <item path="mcc_generated_files/adc1.h" ex="true" overriding="false">
+      </item>
+      <item path="mcc_generated_files/spi2.c" ex="true" overriding="false">
+      </item>
+      <item path="mcc_generated_files/spi2.h" ex="true" overriding="false">
+      </item>
+      <item path="src/ControlParams.h" ex="true" overriding="false">
+      </item>
+      <item path="src/Encoder1Peripheral.c" ex="true" overriding="false">
+      </item>
+      <item path="src/Encoder1Peripheral.h" ex="true" overriding="false">
+      </item>
+      <item path="src/Encoder2Peripheral.c" ex="true" overriding="false">
+      </item>
+      <item path="src/Encoder2Peripheral.h" ex="true" overriding="false">
+      </item>
+      <item path="src/OpenLoop.c" ex="true" overriding="false">
+      </item>
+      <item path="src/OpenLoop.h" ex="true" overriding="false">
+      </item>
+      <item path="src/PeripheralTemplate.c" ex="true" overriding="false">
+      </item>
+      <item path="src/PeripheralTemplate.h" ex="true" overriding="false">
+      </item>
+      <item path="src/Sens1Peripheral.c" ex="true" overriding="false">
+      </item>
+      <item path="src/Sens1Peripheral.h" ex="true" overriding="false">
+      </item>
+      <item path="src/Sens2Peripheral.c" ex="true" overriding="false">
+      </item>
+      <item path="src/Sens2Peripheral.h" ex="true" overriding="false">
+      </item>
+      <item path="src/SensCubePeripheral.c" ex="true" overriding="false">
+      </item>
+      <item path="src/SensCubePeripheral.h" ex="true" overriding="false">
+      </item>
+      <item path="src/StateMachine.c" ex="true" overriding="false">
+      </item>
+      <item path="src/StateMachine.h" ex="true" overriding="false">
+      </item>
+      <item path="src/adc.c" ex="true" overriding="false">
+      </item>
+      <item path="src/adc.h" ex="true" overriding="false">
+      </item>
+      <item path="src/indicators_switches.c" ex="true" overriding="false">
+      </item>
+      <item path="src/indicators_switches.h" ex="true" overriding="false">
+      </item>
+      <item path="src/interrupts.c" ex="true" overriding="false">
+      </item>
+      <item path="src/interrupts.h" ex="true" overriding="false">
+      </item>
+      <item path="src/main.h" ex="true" overriding="false">
+      </item>
+      <item path="src/spi.c" ex="true" overriding="false">
+      </item>
+      <item path="src/spi.h" ex="true" overriding="false">
+      </item>
     </conf>
   </confs>
 </configurationDescriptor>
