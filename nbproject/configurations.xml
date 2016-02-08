@@ -19,6 +19,7 @@
       <itemPath>src/Encoder1Peripheral.h</itemPath>
       <itemPath>src/Encoder2Peripheral.h</itemPath>
       <itemPath>src/spi.h</itemPath>
+      <itemPath>src/StateMachine.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
