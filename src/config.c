@@ -37,6 +37,11 @@ void initialise_pinmap(void)
      * Any mods made where the actual circuit differs to the schematic are
      * documented here.
      * 
+     * V_BATT_SENSE_ADC (31) -> RB15 (30)
+     * PI_CS (54)            -> RG9 (8)
+     * GRAB_MTR_4 (30)       -> RE0 (60)
+     * WHEEL_ENC_1 (11)      -> RD8 (42)
+     * WHEEL_ENC_2           -> RD9 (43)
      *
      */
     ///////////////////////TRISx////////////////////////////////////////////////

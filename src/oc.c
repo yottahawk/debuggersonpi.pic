@@ -83,8 +83,8 @@ void OC3init()
     TMR2init();                 // Initialise timer 2
     PR2 = 0x0080;               // Sets PWM period as 31.250 kHz
     
-    OC3R = 0x00;                // Init compare register 1 with 0. 
-    OC3RS = 0x00;               // Init secondary compare register with 0. 
+    OC3R = 0;                // Init compare register 1 with 0. 
+    OC3RS = 0;               // Init secondary compare register with 0. 
     
     T3CONbits.TON = 1;          // Set timer on.
     

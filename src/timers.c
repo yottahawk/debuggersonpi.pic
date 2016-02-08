@@ -4,6 +4,7 @@
  *
  * Created on 31 January 2016, 23:42
  */
+
 #include <xc.h>
 
 #include "timers.h"
@@ -97,7 +98,7 @@ void StartTMR4()
     T4CONbits.TON = 1;
 }
 
-void StopTMR5()
+void StopTMR4()
 {
     T4CONbits.TON = 0;
 }

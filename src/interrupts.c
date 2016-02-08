@@ -7,6 +7,11 @@
 #include <xc.h>
 #include "interrupts.h"
 
+//////////////////////////GLOBAL VARIABLES//////////////////////////////////////
+int CNbuffer[4];
+
+
+//////////////////////////FUNCTIONS/////////////////////////////////////////////
 /*
  * INT1 - WHEEL_ENC_1
  * This ISR should increment the value of a counter every time it is triggered. 
@@ -38,11 +43,16 @@ void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
    CNbuffer[2] = PORTBbits.RB12;    // SENS_CUBE
    CNbuffer[3] = PORTBbits.RB13;    // SENSE_L
    CNbuffer[4] = PORTBbits.RB3;     // SNESE_R
-   Nop();
-   Nop();
-   Nop();
-   LATBbits.LATB14 = 1;
-   
+  
+   switch(CNbuffer[1])
+   {
+       case 0:
+           break;
+       case 1:
+           LATBbits.LATB14 = ~LATBbits.LATB14;
+           break;
+   }
+           
    IFS1bits.CNIF = 0;
 }
  
@@ -63,7 +73,6 @@ void __attribute__((__interrupt__, auto_psv)) _ADC1Interrupt(void)
 {
     
 } 
-
 
 /*
  * Timer 1 expired interrupt

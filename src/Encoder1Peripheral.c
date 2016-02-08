@@ -12,7 +12,7 @@
 
 #include <xc.h>
 #include "Encoder1Peripheral.h"
-#include "Wheel1Peripheral.h"
+// #include "Wheel1Peripheral.h"
 
 char Buffer[BUFFER_LENGTH];
 int Pointer;

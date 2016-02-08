@@ -8,6 +8,7 @@
 
 #include "config.h"
 #include "oc.h"
+#include "motors.h"
 
 // main loop of execution - anything not interrupt driven goes here
 int main(void) 
@@ -20,11 +21,8 @@ int main(void)
     
     // LATBbits.LATB14 = 1; // enable motor power supply.
     
-    // OC2init();
-    // OC2dutyset(125);
-    
-    // OC5init();
-    // OC5dutyset(125);
+    R_motor_constSpeed(REV, 10);
+    L_motor_constSpeed(FWD, 10);
     
     while(1)
     {

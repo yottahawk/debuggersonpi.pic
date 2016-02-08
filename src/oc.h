@@ -27,18 +27,22 @@
  * int between 0 and 127 for a duty cycle between 0% and 100%.
  */
 
+// R - FWD
 void OC2init();
 void OC2dutyset(int newdutycycle);
 void OC2stop();
 
+// R - REV
 void OC3init();
 void OC3dutyset(int newdutycycle);
 void OC3stop();
 
+// L - REV
 void OC4init();
 void OC4dutyset(int newdutycycle);
 void OC4stop();
 
+// L - FWD
 void OC5init();
 void OC5dutyset(int newdutycycle);
 void OC5stop();

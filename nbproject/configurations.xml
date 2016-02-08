@@ -27,6 +27,7 @@
       <itemPath>src/interrupts.h</itemPath>
       <itemPath>src/oc.h</itemPath>
       <itemPath>src/timers.h</itemPath>
+      <itemPath>src/motors.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -57,6 +58,7 @@
       <itemPath>src/interrupts.c</itemPath>
       <itemPath>src/indicators_switches.c</itemPath>
       <itemPath>src/spi.c</itemPath>
+      <itemPath>src/motors.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -263,6 +265,7 @@
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="hwtoolclock.instructionspeed" value="4"/>
         <property key="hwtoolclock.units" value="mips"/>
@@ -611,7 +614,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/interrupts.c" ex="true" overriding="false">
+      <item path="src/interrupts.c" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -623,7 +626,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/interrupts.h" ex="true" overriding="false">
+      <item path="src/interrupts.h" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
