@@ -8,31 +8,43 @@
  * Created on 31 January 2016, 18:28
  */
 
-// Configuration bits initialise oscillator etc.
+#include <xc.h>
+
+// Configuration bits to initialise oscillator etc.
 // CONFIG2
-#pragma config POSCMOD = XT    // Primary Oscillator Select->XT Oscillator mode selected
-#pragma config OSCIOFNC = OFF    // Primary Oscillator Output Function->OSC2/CLKO/RC15 functions as CLKO (FOSC/2)
-#pragma config FCKSM = CSDCMD    // Clock Switching and Monitor->Clock switching and Fail-Safe Clock Monitor are disabled
-#pragma config FNOSC = PRI    // Oscillator Select->Primary Oscillator (XT, HS, EC)
-#pragma config IESO = ON    // Internal External Switch Over Mode->IESO mode (Two-Speed Start-up) enabled
+#pragma config POSCMOD = XT       // Primary Oscillator Select->XT Oscillator mode selected
+#pragma config OSCIOFNC = OFF     // Primary Oscillator Output Function->OSC2/CLKO/RC15 functions as CLKO (FOSC/2)
+#pragma config FCKSM = CSDCMD     // Clock Switching and Monitor->Clock switching and Fail-Safe Clock Monitor are disabled
+#pragma config FNOSC = PRI        // Oscillator Select->Primary Oscillator (XT, HS, EC)
+#pragma config IESO = OFF         // Internal External Switch Over Mode->IESO mode (Two-Speed Start-up) enabled
 
 // CONFIG1
 #pragma config WDTPS = PS32768    // Watchdog Timer Postscaler->1:32,768
-#pragma config FWPSA = PR128    // WDT Prescaler->Prescaler ratio of 1:128
-#pragma config WINDIS = ON    // Watchdog Timer Window->Standard Watchdog Timer enabled,(Windowed-mode is disabled)
-#pragma config FWDTEN = OFF    // Watchdog Timer Enable->Watchdog Timer is disabled
-#pragma config ICS = PGx2    // Comm Channel Select->Emulator/debugger uses EMUC2/EMUD2
-#pragma config COE = OFF    // Set Clip On Emulation Mode->Reset Into Operational Mode
-#pragma config BKBUG = OFF    // Background Debug->Device resets into Operational mode
-#pragma config GWRP = OFF    // General Code Segment Write Protect->Writes to program memory are allowed
-#pragma config GCP = OFF    // General Code Segment Code Protect->Code protection is disabled
-#pragma config JTAGEN = OFF    // JTAG Port Enable->JTAG port is disabled
+#pragma config FWPSA = PR128      // WDT Prescaler->Prescaler ratio of 1:128
+#pragma config WINDIS = ON        // Watchdog Timer Window->Standard Watchdog Timer enabled,(Windowed-mode is disabled)
+#pragma config FWDTEN = OFF       // Watchdog Timer Enable->Watchdog Timer is disabled
+#pragma config ICS = PGx2         // Comm Channel Select->Emulator/debugger uses EMUC2/EMUD2
+#pragma config COE = OFF          // Set Clip On Emulation Mode->Reset Into Operational Mode
+#pragma config BKBUG = OFF        // Background Debug->Device resets into Operational mode
+#pragma config GWRP = OFF         // General Code Segment Write Protect->Writes to program memory are allowed
+#pragma config GCP = OFF          // General Code Segment Code Protect->Code protection is disabled
+#pragma config JTAGEN = OFF       // JTAG Port Enable->JTAG port is disabled
 
 void initialise_pinmap(void)
 {
-    // To read any of the outputs, read the PORT register.
-    
-    // TRIS
+    ///////////////////////MODS/////////////////////////////////////////////////
+    /*
+     * Any mods made where the actual circuit differs to the schematic are
+     * documented here.
+     * 
+     * V_BATT_SENSE_ADC (31) -> RB15 (30)
+     * PI_CS (54)            -> RG9 (8)
+     * GRAB_MTR_4 (30)       -> RE0 (60)
+     * WHEEL_ENC_1 (11)      -> RD8 (42)
+     * WHEEL_ENC_2           -> RD9 (43)
+     *
+     */
+    ///////////////////////TRISx////////////////////////////////////////////////
     // Data direction register (Input=1/Output=0)
     // All pins are inputs by default after reset
     enum IO{OUT=0,IN=1};
@@ -100,14 +112,18 @@ void initialise_pinmap(void)
     // This port contains the SPI and I2C pins, which are automatically set as
     // serial port objects when the modules are enabled.
     
-    // LAT
-    // Write to LAT register to set output values.
+    ////////////////////////////////////LATx////////////////////////////////////
+    // Writes to LAT register to set output values at startup.
+    
+    // LATB
     LATBbits.LATB14 = 0;     // PS_MOTOR_EN - disabled by default
     LATBbits.LATB15 = 0;     // GRAB_MTR_4
     
+    // LATC
     LATCbits.LATC14 = 0;     // GYRO_DEN_G
     LATCbits.LATC15 = 0;     // ACC_CS_A
     
+    //LATD
     LATDbits.LATD0 = 0;      // GYRO_CS_G
     LATDbits.LATD1 = 0;      // M1_FWD
     LATDbits.LATD2 = 0;      // M1_REV
@@ -115,21 +131,27 @@ void initialise_pinmap(void)
     LATDbits.LATD4 = 0;      // M2_REV
     LATDbits.LATD7 = 1;      // PI_SIG - active low signal
     
+    //LATE
     LATEbits.LATE5 = 1;      // BLUE_LED - off
     LATEbits.LATE6 = 1;      // GRN_LED - off
     LATEbits.LATE7 = 1;      // RED_LED - off
-            
+    
+    //LATF
     LATFbits.LATF2 = 0;      // GRAB_MTR_2
     LATFbits.LATF3 = 0;      // GRAB_MTR_3
     LATFbits.LATF6 = 0;      // GRAB_MTR_1
  
+    ////////////////////////////////ODCx////////////////////////////////////////
     // Set open drain output.
+    
     ODCEbits.ODE5  = 1;      // BLUE_LED
     ODCEbits.ODE6  = 1;      // GRN_LED
     ODCEbits.ODE7  = 1;      // RED_LED
     
+    ////////////////////////////////AD1PCFG/////////////////////////////////////
     // Set up ADC inputs within the ADC Port Configuration Register    
     // All bits 0 on reset.
+    
     AD1PCFG = 0xFFFF; // Set all bits to digital mode by default.
     
     AD1PCFGbits.PCFG2  = 0;  // SENS_FRONT
@@ -137,6 +159,5 @@ void initialise_pinmap(void)
     AD1PCFGbits.PCFG8  = 0;  // LINE_R_F
     AD1PCFGbits.PCFG9  = 0;  // LINE_R_B
     AD1PCFGbits.PCFG10 = 0;  // LINE_L_B
-    AD1PCFGbits.PCFG11 = 0;  // LINE_L_F
-    
+    AD1PCFGbits.PCFG11 = 0;  // LINE_L_F  
 }

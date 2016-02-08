@@ -4,9 +4,14 @@
  *
  * Created on 02 February 2016, 00:34
  */
-
+#include <xc.h>
 #include "interrupts.h"
 
+//////////////////////////GLOBAL VARIABLES//////////////////////////////////////
+int CNbuffer[4];
+
+
+//////////////////////////FUNCTIONS/////////////////////////////////////////////
 /*
  * INT1 - WHEEL_ENC_1
  * This ISR should increment the value of a counter every time it is triggered. 
@@ -34,8 +39,22 @@ void __attribute__((__interrupt__, auto_psv)) _INT2Interrupt(void)
  */
 void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
 {
-    
-} 
+   CNbuffer[1] = PORTBbits.RB4;     // PUSH_SW
+   CNbuffer[2] = PORTBbits.RB12;    // SENS_CUBE
+   CNbuffer[3] = PORTBbits.RB13;    // SENSE_L
+   CNbuffer[4] = PORTBbits.RB3;     // SNESE_R
+  
+   switch(CNbuffer[1])
+   {
+       case 0:
+           break;
+       case 1:
+           LATBbits.LATB14 = ~LATBbits.LATB14;
+           break;
+   }
+           
+   IFS1bits.CNIF = 0;
+}
  
 /*
  * 
@@ -54,7 +73,6 @@ void __attribute__((__interrupt__, auto_psv)) _ADC1Interrupt(void)
 {
     
 } 
-
 
 /*
  * Timer 1 expired interrupt
