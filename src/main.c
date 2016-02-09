@@ -19,10 +19,13 @@ int main(void)
     CNEN1bits.CN6IE = 1; // Enable PUSH_CW interrupt-on-change notification.
             
     
-    // LATBbits.LATB14 = 1; // enable motor power supply.
+    LATBbits.LATB14 = 1; // enable motor power supply.
     
-    R_motor_constSpeed(REV, 10);
-    L_motor_constSpeed(FWD, 10);
+    // R_motor_constSpeed(FWD, 125);
+    // L_motor_constSpeed(REV, 125);
+    
+    initDigiPot();
+    SetFeedbackRes(1);
     
     while(1)
     {

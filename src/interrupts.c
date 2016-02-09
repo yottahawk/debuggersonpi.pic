@@ -6,6 +6,7 @@
  */
 #include <xc.h>
 #include "interrupts.h"
+#include "motors.h"
 
 //////////////////////////GLOBAL VARIABLES//////////////////////////////////////
 int CNbuffer[4];
@@ -49,7 +50,8 @@ void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
        case 0:
            break;
        case 1:
-           LATBbits.LATB14 = ~LATBbits.LATB14;
+           // LATBbits.LATB14 = ~LATBbits.LATB14;
+           IncrementWiper();
            break;
    }
            
