@@ -22,13 +22,13 @@
       <itemPath>src/StateMachine.h</itemPath>
       <itemPath>src/ControlParams.h</itemPath>
       <itemPath>src/OpenLoop.h</itemPath>
-      <itemPath>src/StateMachine.h</itemPath>
       <itemPath>src/adc.h</itemPath>
       <itemPath>src/indicators_switches.h</itemPath>
       <itemPath>src/interrupts.h</itemPath>
       <itemPath>src/oc.h</itemPath>
       <itemPath>src/timers.h</itemPath>
       <itemPath>src/motors.h</itemPath>
+      <itemPath>src/i2c.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -60,6 +60,7 @@
       <itemPath>src/indicators_switches.c</itemPath>
       <itemPath>src/spi.c</itemPath>
       <itemPath>src/motors.c</itemPath>
+      <itemPath>src/i2c.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

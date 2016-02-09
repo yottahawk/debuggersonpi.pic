@@ -33,7 +33,7 @@ void OC2init()
     OC2R = 0x00;                // Init compare register 1 with 0. 
     OC2RS = 0x00;               // Init secondary compare register with 0. 
     
-    T2CONbits.TON = 1;          // Set timer on.
+    T2CONbits.TON = 1;          // Set timer2 on.
     
     /* 
     * Now need to setup interrupts if required. 
@@ -86,7 +86,7 @@ void OC3init()
     OC3R = 0;                // Init compare register 1 with 0. 
     OC3RS = 0;               // Init secondary compare register with 0. 
     
-    T3CONbits.TON = 1;          // Set timer on.
+    T2CONbits.TON = 1;          // Set timer2 on.
     
     /* 
     * Now need to setup interrupts if required. 
@@ -140,7 +140,7 @@ void OC4init()
     OC4R = 0x00;                // Init compare register 1 with 0. 
     OC4RS = 0x00;               // Init secondary compare register with 0. 
     
-    T4CONbits.TON = 1;          // Set timer on.
+    T3CONbits.TON = 1;          // Set timer on.
     
     
     /* 
@@ -195,7 +195,7 @@ void OC5init()
     OC5R = 0x00;                // Init compare register 1 with 0. 
     OC5RS = 0x00;               // Init secondary compare register with 0. 
     
-    T5CONbits.TON = 1;          // Set timer on.
+    T3CONbits.TON = 1;          // Set timer on.
     
     /* 
     * Now need to setup interrupts if required. 

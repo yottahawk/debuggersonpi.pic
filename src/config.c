@@ -116,7 +116,7 @@ void initialise_pinmap(void)
     // Writes to LAT register to set output values at startup.
     
     // LATB
-    LATBbits.LATB14 = 0;     // PS_MOTOR_EN - disabled by default
+    LATBbits.LATB14 = 0;     // PS_MOTOR_EN - disabled (pulled low) by default
     LATBbits.LATB15 = 0;     // GRAB_MTR_4
     
     // LATC
