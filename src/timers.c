@@ -88,7 +88,7 @@ void TMR4init(unsigned int period)
     // Following lines set timer period.
     // T_TMR4 = 8*10^6 / ( pre-scaler * period_register )
     T4CONbits.TCKPS = 0b00;     // 1:1 pre-scaler
-    PR1 = period;               // Period register
+    PR4 = period;               // Period register
     
     // Enable/Disable poll timer using StartTMR4() or StopTMR4();)
 }
@@ -101,4 +101,34 @@ void StartTMR4()
 void StopTMR4()
 {
     T4CONbits.TON = 0;
+}
+
+void TMR5init(unsigned int period)
+{
+   /*
+    * TMR5 is used as a general purpose timer that different modules can use. 
+    * Eg.AccelerationCurveProfile, LED flashing, 
+    */ 
+    
+    T5CONbits.TON = 0;          // Initially set timer off.
+    T5CONbits.TSIDL = 0;        // Operation continues in idle mode.
+    T5CONbits.TGATE = 0;        // Gated time accumulation disabled.
+    T5CONbits.TCS = 0;          // use internal clock.
+    
+    // Following lines set timer period.
+    // T_TMR4 = 8*10^6 / ( pre-scaler * period_register )
+    T5CONbits.TCKPS = 0b00;     // 1:1 pre-scaler
+    PR5 = period;               // Period register
+    
+    // Enable/Disable poll timer using StartTMR5() or StopTMR5();)
+}
+
+void StartTMR5()
+{
+    T5CONbits.TON = 1;
+}
+
+void StopTMR5()
+{
+    T5CONbits.TON = 0;
 }

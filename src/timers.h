@@ -28,4 +28,9 @@ void TMR3init();
 // General purpose timer. 
 void TMR4init(unsigned int setPeriod);
 void StartTMR4();
+void StopTMR4();
+
+// General purpose timer. 
+void TMR5init(unsigned int setPeriod);
+void StartTMR5();
 void StopTMR5();

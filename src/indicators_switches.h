@@ -17,7 +17,7 @@
  * momentary button is pressed. This is used to start the processing in the 
  * desired state. 
  */
-void readDIP(unsigned int *tempRegister);
+void readDIP(int *tempRegister);
 
 
 /*

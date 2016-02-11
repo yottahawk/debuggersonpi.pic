@@ -6,29 +6,62 @@
  */
 #include <xc.h>
 #include "interrupts.h"
+
 #include "motors.h"
+#include "led.h"
+#include "indicators_switches.h"
+#include "Encoder1Peripheral.h"
 
 //////////////////////////GLOBAL VARIABLES//////////////////////////////////////
-int CNbuffer[4];
+extern int global_blue_flash;
+extern int global_red_flash;
+extern int global_grn_flash;
 
+int CNbuffer[4];
+int DIPstatus;
+
+unsigned int wheel_left_count = 0;
+unsigned int wheel_right_count = 0;
 
 //////////////////////////FUNCTIONS/////////////////////////////////////////////
-/*
- * INT1 - WHEEL_ENC_1
- * This ISR should increment the value of a counter every time it is triggered. 
- */
+
+
+
 void __attribute__((__interrupt__, auto_psv)) _INT1Interrupt(void)
 {
+    /*
+    * INT1 - WHEEL_ENC_1
+    * This ISR should increment the value of a counter every time it is triggered. 
+    */
     
+    IFS1bits.INT1IF = 0;        // Reset interrupt flag
+    
+    wheel_left_count++;
+    
+    if (wheel_left_count == 0xFFFF) // LED is on?
+    {
+        wheel_left_count = 0;
+        // LATEbits.LATE5 = ~LATEbits.LATE5;
+    }
+
 }
 
-/*
- * INT2 - WHEEL_ENC_2
- * This ISR should increment the value of a counter every time it is triggered. 
- */
+
 void __attribute__((__interrupt__, auto_psv)) _INT2Interrupt(void)
 {
+    /*
+     * INT2 - WHEEL_ENC_2
+     * This ISR should increment the value of a counter every time it is triggered. 
+     */
+    IFS1bits.INT2IF = 0;        // Reset interrupt flag
     
+    wheel_right_count++;
+    
+    if (wheel_right_count == 0x1FFF) // LED is on?
+    {
+        wheel_right_count = 0;
+        LATEbits.LATE7 = ~LATEbits.LATE7;
+    }
 }
 
 /*
@@ -40,22 +73,37 @@ void __attribute__((__interrupt__, auto_psv)) _INT2Interrupt(void)
  */
 void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
 {
-   CNbuffer[1] = PORTBbits.RB4;     // PUSH_SW
-   CNbuffer[2] = PORTBbits.RB12;    // SENS_CUBE
-   CNbuffer[3] = PORTBbits.RB13;    // SENSE_L
-   CNbuffer[4] = PORTBbits.RB3;     // SNESE_R
-  
-   switch(CNbuffer[1])
-   {
-       case 0:
-           break;
-       case 1:
-           // LATBbits.LATB14 = ~LATBbits.LATB14;
-           IncrementWiper();
-           break;
-   }
+   IFS1bits.CNIF = 0;       // Reset interrupt flag 
+    
+//   CNbuffer[1] = PORTBbits.RB4;     // PUSH_SW
+//   CNbuffer[2] = PORTBbits.RB12;    // SENS_CUBE
+//   CNbuffer[3] = PORTBbits.RB13;    // SENSE_L
+//   CNbuffer[4] = PORTBbits.RB3;     // SNESE_R
+//  
+//   switch(CNbuffer[1])
+//   {
+//       case 0:
+//           break;
+//       case 1:
+//           // LATBbits.LATB14 = ~LATBbits.LATB14;
+//           IncrementWiper();
+//           break;
+//   }
            
-   IFS1bits.CNIF = 0;
+//   readDIP( &DIPstatus );
+   
+//   char x = ReadENCODE1();
+//   if (x == 1)
+//   {
+//       led_const_blue_on();
+//   }
+//   else 
+//   {
+//       led_const_blue_off();
+//   }
+   
+    R_motor_constSpeed(FWD, 0);
+    L_motor_constSpeed(REV, 0);
 }
  
 /*
@@ -85,4 +133,19 @@ void __attribute__((__interrupt__, auto_psv)) _ADC1Interrupt(void)
 void __attribute__((__interrupt__, auto_psv)) _T1Interrupt(void)
 {
     
+} 
+
+/*
+ * Timer 5 expired interrupt
+ * This ISR is used as a general purpose timer.
+ */
+void __attribute__((__interrupt__, auto_psv)) _T5Interrupt(void)
+{
+    IFS1bits.T5IF = 0;          // Reset TMR5 interrupt flag
+    
+    if (global_blue_flash == 1){LATEbits.LATE5 = ~LATEbits.LATE5;} // Flash GRN off/on
+    if (global_red_flash == 1){LATEbits.LATE6 = ~LATEbits.LATE6;}  // Flash RED off/on
+    if (global_grn_flash == 1){LATEbits.LATE7 = ~LATEbits.LATE7;}  // Flash BLUE off/on
+    
+    // if (global_grn_flash == 1){LATEbits.LATE7 = ~LATEbits.LATE5;}  // Flash GRN and blue in counterphase
 } 

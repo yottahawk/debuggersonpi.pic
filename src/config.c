@@ -144,9 +144,9 @@ void initialise_pinmap(void)
     ////////////////////////////////ODCx////////////////////////////////////////
     // Set open drain output.
     
-    ODCEbits.ODE5  = 1;      // BLUE_LED
-    ODCEbits.ODE6  = 1;      // GRN_LED
-    ODCEbits.ODE7  = 1;      // RED_LED
+    // ODCEbits.ODE5  = 1;      // BLUE_LED
+    // ODCEbits.ODE6  = 1;      // GRN_LED
+    // ODCEbits.ODE7  = 1;      // RED_LED
     
     ////////////////////////////////AD1PCFG/////////////////////////////////////
     // Set up ADC inputs within the ADC Port Configuration Register    

@@ -8,27 +8,19 @@
 #ifndef ENCODE1PERIPHERAL_H
 #define	ENCODE1PERIPHERAL_H
 
-#ifdef	__cplusplus
-extern "C" {
+
+//Function to read a value directly from the peripheral
+char ReadENCODE1();
+
+//Functions to read and write to the peripheral's buffer
+int WriteENCODE1Buffer(char Data);
+char* ReadENCODE1Buffer(int Count);
+
+int ReadENCODE1Integral();
+int ResetENCODE1Integral();
+
+//Functions to Initiate / Clear
+int InitiateENCODE1();
+int ClearENCODE1Buffer();
+
 #endif
-
-    //Function to read a value directly from the peripheral
-    char ReadENCODE1();
-    
-    //Functions to read and write to the peripheral's buffer
-    int WriteENCODE1Buffer(char Data);
-    char* ReadENCODE1Buffer(int Count);
-    
-    int ReadENCODE1Integral();
-    int ResetENCODE1Integral();
-    
-    //Functions to Initiate / Clear
-    int InitiateENCODE1();
-    int ClearENCODE1Buffer();
-
-#ifdef	__cplusplus
-}
-#endif
-
-#endif	/* ENCODE1PERIPHERAL_H */
-
