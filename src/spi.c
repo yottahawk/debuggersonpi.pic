@@ -1,13 +1,13 @@
 #include "spi.h"
 #include <xc.h>
 #include "StateMachine.h"
+#include "led.h"
+#include "grabber.h"
 
 #define TIMEOUT 10000
 
-const uint8_t DONE = 0xFE;
-
 //Function to write to spi link
-void Write_SPI(uint8_t* buffer, uint16_t length) {
+void Write_SPI(unsigned int* buffer, unsigned int length) {
     //For each byte in the buffer...
     for(int i=0;i<length;i++) {
         while(SPI2STATbits.SPITBF) {} //wait until there is space in the buffer
@@ -15,80 +15,55 @@ void Write_SPI(uint8_t* buffer, uint16_t length) {
     }
 }
 
-void SPI_PSNS(uint8_t Sensor) {
+void SPI_PSNS(uint8_t Sensor, unsigned int Length) {
+    //Error code (to prevent reading longer than buffer)
+    uint8_t error = 0;
+    
+    //Buffer to send data from
+    unsigned int* Buffer; 
+    
     //Get data
-    uint8_t value = 0;
-    if(Sensor==0)       value = ReadPHOTOSENSE1();
-    else if(Sensor==1)  value = ReadPHOTOSENSE2();
-    else if(Sensor==2)  value = ReadPHOTOSENSE3();
-    else if(Sensor==3)  value = ReadPHOTOSENSE4();
-    else if(Sensor==4)  value = ReadPHOTOSENSE5();
-    else                value = ReadPHOTOSENSE6();
+    if(Sensor==0)      error = ReadPHOTOSENSE1(Buffer, Length);
+    else if(Sensor==1) error = ReadPHOTOSENSE2(Buffer, Length);
+    else if(Sensor==2) error = ReadPHOTOSENSE3(Buffer, Length);
+    else if(Sensor==3) error = ReadPHOTOSENSE4(Buffer, Length);
+    else if(Sensor==4) error = ReadPHOTOSENSE5(Buffer, Length);
+    else if(Sensor==5) error = ReadPHOTOSENSE6(Buffer, Length);
+    else if(Sensor==6) error = ReadPHOTOSENSEFRONT(Buffer, Length);
+    else               error = ReadPHOTOSENSECUBE(Buffer, Length);
 
-    //Return data to PI
-    Write_SPI(&value, 1);
+    //Return data to PI (don't return any data if too much has been requested)
+    if(!error) Write_SPI(Buffer, Length);
     Write_SPI(&DONE, 1);
 }
 
 void SPI_COMP() {
-        //Get data
-    uint16_t direction = ReadCOMPASS();
-
-    //separate into msb and lsb parts
-    uint8_t msb = (uint8_t) ((direction & 0xFF00) >> 8);
-    uint8_t lsb = (uint8_t) (direction);
+    //Get data
+    unsigned int direction = ReadCOMPASS();
 
     //Return data to PI
-    Write_SPI(&msb, 1);
-    Write_SPI(&lsb, 1);
+    Write_SPI(&direction, 1);
     Write_SPI(&DONE, 1);
 }
 
 void SPI_ECDR(uint8_t Mode) {
-    if(Mode <= 1) {             //If mode is read buffer
-        //need to read a certain number of bytes
-        uint16_t n = 0;
-        n = ((uint16_t) spi_info.buffer[0] << 8) & 0xFF00;
-        n = n | (((uint16_t) spi_info.buffer[1]) & 0x00FF);     
-        
-        //Get Data
-        uint8_t* encoder_data = 0;
-        if(Mode == 0) ReadENCODE1Buffer(n);
-        else          ReadENCODE2Buffer(n);
-    
-        //Return data to PI
-        Write_SPI(&encoder_data[0], n);
-    }
-    else {
-        //Get data
-        uint16_t integral = 0;
-        if(Mode==2) integral = ReadENCODE1Integral();
-        else        integral = ReadENCODE2Integral();
+    //Get data
+    unsigned int integral = 0;
+    if(Mode==1) integral = ReadENCODE1sum();
+    else        integral = ReadENCODE2sum();
 
-        //separate into msb and lsb parts
-        uint8_t msb = (uint8_t) ((integral & 0xFF00) >> 8);
-        uint8_t lsb = (uint8_t) (integral);
-
-        //Return data to PI
-        Write_SPI(&msb, 1);
-        Write_SPI(&lsb, 1);
-    }
-    
-    //Write DONE to end transaction
+    //Return data to PI & write DONE to end transaction
+    Write_SPI(&integral, 1);
     Write_SPI(&DONE, 1);
 }
 
-void SPI_MOTOR(uint8_t Mode) {
+void SPI_MOTOR(uint8_t Mode, unsigned int Speed) {
     if(Mode<=1) {               //If mode is writing
-        //Build correct structure
-        uint16_t motor_speed = 0;
-        motor_speed = ((uint16_t) spi_info.buffer[0] << 8) & 0xFF00;
-        motor_speed = motor_speed | (((uint16_t) spi_info.buffer[1]) & 0x00FF);
         //send via spi
-        if(Mode==0)     WriteMOTOR1(motor_speed);
-        else if(Mode==1)WriteMOTOR2(motor_speed);
+        if(Mode==0)     WriteMOTOR1(Speed);
+        else if(Mode==1)WriteMOTOR2(Speed);
     } else {                    //if mode is reading
-        uint16_t motor_speed = 0;
+        unsigned int motor_speed = 0;
         if(Mode==2) motor_speed = ReadMOTOR1();
         else        motor_speed = ReadMOTOR2();
         Write_SPI(&motor_speed, 1);
@@ -113,6 +88,20 @@ void SPI_GRABBER(uint8_t Mode) {
     Write_SPI(&DONE, 1);        //Write "DONE" signal to PI   
 }
 
+void SPI_LED(unsigned int Mode, unsigned int period) {
+    //Depending on which signal the PI has sent, turn R, G or B on, or turn everything off
+    if(Mode==0)     led_const_red_on();
+    else if(Mode==1)led_const_grn_on();
+    else if(Mode==2)led_const_blue_on();
+    else if(Mode==3)led_flash_red_on(period);
+    else if(Mode==4)led_flash_grn_on(period);
+    else if(Mode==5)led_flash_blue_on(period);
+    else            led_TMR5_off_all();
+    
+    //Write done to spi to finish transaction
+    Write_SPI(&DONE,1);
+}
+
 void Initialise_SPI() {
     //Clear SPI2BUF register
     SPI2BUF = 0x0000;
@@ -128,16 +117,16 @@ void Initialise_SPI() {
     IPC8bits.SPI2IP2 = 0;
     //Set interrupt to occur when receieve buffer has data
     SPI2STATbits.SISEL0 = 1;
-    SPI2STATbits.SISEL1 = 0;
+    SPI2STATbits.SISEL1 = 1;
     SPI2STATbits.SISEL2 = 0;
    
-    //Install interrupt to IVT
+    /*//Install interrupt to IVT (not required since using correct interrupt name
     int* IVT_LOC = 0x000056;
     *(IVT_LOC) = &SPI_Interrupt;
-    
+    */
     //Setup SPI2CON1 for slave mode
     SPI2CON1bits.DISSDO = 0;  //Data out is controlled by module
-    SPI2CON1bits.MODE16 = 0;  //8-bit data transfer
+    SPI2CON1bits.MODE16 = 1;  //16-bit data transfer
     SPI2CON1bits.CKE = 0;     //clocks data on idle to high 
     SPI2CON1bits.SSEN = 0;    //Slave select not used by modeul
     SPI2CON1bits.CKP  = 0;    //Clock is high when clock is high!
@@ -149,58 +138,21 @@ void Initialise_SPI() {
     
     SPI2CON1bits.SMP = 0;     //Slave mode
     SPI2STATbits.SPIROV = 0;  //Clear SPIROV bit
-    SPI2CON2bits.SPIBEN = 1;  //Enable 8-byte buffer
+    SPI2CON2bits.SPIBEN = 0;  //Enable 16-byte buffer
     SPI2STATbits.SPIEN = 1;   //Enable SPI operation
 }
 
 //SPI Interrupt code
-void SPI_Interrupt() {
-    //timeout variable
-    uint16_t n = 0;
-    
+
+void __attribute__((__interrupt__, auto_psv)) _SPI2Interrupt(void) {   
     //When interrupt triggers, data has been received in Buffer.
     //First data in buffer is always command word!
-    uint8_t command = (uint8_t) SPI2BUF;
-    
-    //compare command word to known states - if bit7 = 0, then is a state
-    char IS_STATE = 0;
-    if ((command & 0x80) > 0) {
-        Next_State = (state_t) command; //if a state, change next state to it   
-        SPI2BUF = 0xFE;                 //Send "DONE" to PI        
-    }
-    else {
-        //if it isn't a state, its a the PI calling a function
-        //if this is the case, we want to read the next two bytes in the buffer
-        uint8_t data1, data2;
-        
-        n = 0;                                              //Set timeout to 0  
-        while((SPI2STATbits.SRXMPT) & (++n < TIMEOUT)) {}   //Wait until receive buffer has data in
-        //if (n >= TIMEOUT)                                       
-        data1 = (uint8_t) SPI2BUF;
-
-        n = 0;                                              //Set timeout to 0  
-        while((SPI2STATbits.SRXMPT) & (++n < TIMEOUT)) {}   //Wait until receive buffer has data in
-        //if (n >= TIMEOUT)
-        data2 = (uint8_t) SPI2BUF;
-        
-        //combine the next 2 bytes to make a 16-bit word - this is the number of bytes to follow
-        uint16_t byte_num = (((uint16_t) data1) << 8) | (((uint16_t) data2) & 0x00FF);
-        
-        //wait for the next BYTE_NUM bytes if any fail to come before timeout then the whole thing is null
-        for(int i=0;i<byte_num;i++) {
-            n = 0;
-            while((SPI2STATbits.SRXMPT) & (++n < TIMEOUT)) {}
-            //if(n >= TIMEOUT)
-            spi_info.buffer[i] = SPI2BUF;
-        }
-
-        //Save the spi_info command and number of bytes
-        spi_info.command = command;
-        spi_info.number_of_bytes = byte_num;
-    }
+    spi_info.command = (unsigned int) SPI2BUF;
+    //Remaining data goes in "info" buffer
+    for(int i=0;i<3;i++) spi_info.info[i] = (unsigned int) SPI2BUF;
   
     //Ensure the receive buffer is empty;
-    while(!SPI2STATbits.SRXMPT) {command = SPI2BUF;}
+    while(!SPI2STATbits.SRXMPT) unsigned int empty = SPI2BUF;
     
     //Clear interrupt flag
     IFS2bits.SPI2IF = 0;
@@ -208,68 +160,91 @@ void SPI_Interrupt() {
 
 //Discrete SPI function handler
 void SPI_Function() {
-    //This function is called if the PI wants to call certain functions
-    //behaviour depends on the function the PI is calling
-    switch ((command_t) spi_info.command) {
-        case OPEN_GRABBER: {
-            SPI_GRABBER(0);
-            break;}
-        case CLOSE_GRABBER: {
-            SPI_GRABBER(1);
-            break;}
-        case READ_GRABBER: {
-            SPI_GRABBER(2);
-            break;}
-        case WRITE_MOTOR1: {
-            SPI_MOTOR(0);
-            break;}
-        case WRITE_MOTOR2: {
-            SPI_MOTOR(1);
-            break;}
-        case READ_MOTOR1: {
-            SPI_MOTOR(2);
-            break;}
-        case READ_MOTOR2: {
-            SPI_MOTOR(3);
-            break;}
-        case READ_ECDR1: {
-            SPI_ECDR(0);
-            break;}
-        case READ_ECDR2: {
-            SPI_ECDR(1);
-            break;}
-        case READ_ECDR1_INT: {
-            SPI_ECDR(2);
-            break;}
-        case READ_ECDR2_INT: {
-            SPI_ECDR(3);
-            break;}
-        case READ_COMP: {
-            SPI_COMP();
-            break;}
-        case READ_PSNS1: {
-            SPI_PSNS(0);
-            break;}
-        case READ_PSNS2: {
-            SPI_PSNS(1);
-            break;}
-        case READ_PSNS3: {
-            SPI_PSNS(2);
-            break;}
-        case READ_PSNS4: {
-            SPI_PSNS(3);
-            break;}
-        case READ_PSNS5: {
-            SPI_PSNS(4);
-            break;}
-        case READ_PSNS6: {
-            SPI_PSNS(5);
-            break;}
-        default:    //do nothing in default case
+    //Check if command is a state change or a function call
+    if (spi_info.command >= 0x0080) {
+        Next_State = (state_t) spi_info.command;    //if a state, change next state to it   
+        
+        //Set stop conditions
+        if(spi_info.info[0]==0)     state_conditions.stop = TIME;
+        else if(spi_info.info[0]==1)state_conditions.stop = DISTANCE;
+        else                        state_conditions.stop = NONE;
+        
+        //set stop condition value
+        state_conditions.value = spi_info.info[1];
+        
+        Write_SPI(&DONE, 1);                        //Send "DONE" to PI   
+    } else {
+        //This function is called if the PI wants to call certain functions
+        //behaviour depends on the function the PI is calling
+        switch ((command_t) spi_info.command) {
+            case OPEN_GRABBER: {
+                SPI_GRABBER(0);
+                break;}
+            case CLOSE_GRABBER: {
+                SPI_GRABBER(1);
+                break;}
+            case READ_GRABBER: {
+                SPI_GRABBER(2);
+                break;}
+            case WRITE_MOTOR_LEFT: {
+                SPI_MOTOR(0, spi_info.info[0]);
+                break;}
+            case WRITE_MOTOR_RIGHT: {
+                SPI_MOTOR(1, spi_info.info[0]);
+                break;}
+            case READ_MOTOR_LEFT: {
+                SPI_MOTOR(2);
+                break;}
+            case READ_MOTOR_RIGHT: {
+                SPI_MOTOR(3);
+                break;}
+            case READ_ECDR1: {
+                SPI_ECDR(1);
+                break;}
+            case READ_ECDR2: {
+                SPI_ECDR(2);
+                break;}
+            case READ_ECDR1_SUM: {
+                SPI_ECDR(1);
+                break;}
+            case READ_ECDR2_SUM: {
+                SPI_ECDR(2);
+                break;}
+            case READ_COMP: {
+                SPI_COMP();
+                break;}
+            case READ_PSNS1: {
+                SPI_PSNS(0,spi_info.info[0]);
+                break;}
+            case READ_PSNS2: {
+                SPI_PSNS(1,spi_info.info[0]);
+                break;}
+            case READ_PSNS3: {
+                SPI_PSNS(2,spi_info.info[0]);
+                break;}
+            case READ_PSNS4: {
+                SPI_PSNS(3,spi_info.info[0]);
+                break;}
+            case READ_PSNS5: {
+                SPI_PSNS(4,spi_info.info[0]);
+                break;}
+            case READ_PSNS6: {
+                SPI_PSNS(5,spi_info.info[0]);
+                break;}
+            case READ_PSNSFNT: {
+                SPI_PSNS(6,spi_info.info[0]);
+                break;}
+            case READ_PSNSCBE: {
+                SPI_PSNS(7,spi_info.info[0]);
+                break;}
+            case WRITE_LED: {
+                SPI_LED(spi_info.info[0], spi_info.info[1]);
+                break;}
+            default:    //do nothing in default case
+        }        
     }
-    
+       
     //clear spi_info structure
     spi_info.command = 0;
-    spi_info.number_of_bytes = 0;
-    for(int i=0;i<256;i++) spi_info.buffer[i] = 0;
+    for(int i=0;i<3;i++) spi_info.info[i] = 0;
 }

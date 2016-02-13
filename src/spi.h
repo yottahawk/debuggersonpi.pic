@@ -15,17 +15,18 @@ extern "C" {
 #endif
     //structure holding data for discrete spi_function
     typedef struct {
-        uint8_t      command;            //command byte
-        uint16_t     number_of_bytes;    //number of bytes
-        uint8_t      buffer[256];        //Input buffer (Note: DIFFERENT to output buffer)
+        unsigned int    command;    //command word
+        unsigned int    info[3];    //3 info bytes
     } spi_info_t;
     spi_info_t spi_info;
+    
+    const unsigned int DONE = 0x00FE;
     
     //Initialise SPI code - includes interrupt setup
     void Initialise_SPI();
     
     //SPI Interrupt code
-    void SPI_Interrupt();
+    void __attribute__((__interrupt__, auto_psv)) _SPI2Interrupt(void);
     
     //Discrete SPI function handler
     void SPI_Function();

@@ -15,6 +15,7 @@
 #include "interrupts.h"
 #include "indicators_switches.h"
 #include "Encoder1Peripheral.h"
+#include "spi.h"
 
 ////////////////////////////////////FUNCTIONS///////////////////////////////////
 
@@ -40,6 +41,7 @@ int main(void)
     
     while(1)
     {  
+        if(spi_info.command) SPI_Function();
     }
     
     return 0;

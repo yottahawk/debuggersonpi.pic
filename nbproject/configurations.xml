@@ -30,6 +30,7 @@
       <itemPath>src/motors.h</itemPath>
       <itemPath>src/i2c.h</itemPath>
       <itemPath>src/led.h</itemPath>
+      <itemPath>src/grabber.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -63,6 +64,7 @@
       <itemPath>src/motors.c</itemPath>
       <itemPath>src/i2c.c</itemPath>
       <itemPath>src/led.c</itemPath>
+      <itemPath>src/grabber.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

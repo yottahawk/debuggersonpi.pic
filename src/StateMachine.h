@@ -59,16 +59,16 @@ typedef enum {
     READ_GRABBER = 0x03,
             
     //Motor Commands
-    WRITE_MOTOR1 = 0x04,
-    READ_MOTOR1 = 0x05,
-    WRITE_MOTOR2 = 0x06,
-    READ_MOTOR2 = 0x07,
+    WRITE_MOTOR_LEFT = 0x04,
+    READ_MOTOR_LEFT = 0x05,
+    WRITE_MOTOR_RIGHT = 0x06,
+    READ_MOTOR_RIGHT = 0x07,
             
     //Encoder Commands
-    READ_ECDR1 = 0x08,
-    READ_ECDR1_INT = 0x09,
-    READ_ECDR2 = 0x0A,
-    READ_ECDR2_INT = 0x0B,
+    READ_ECDR1      = 0x08,
+    READ_ECDR1_SUM  = 0x09,
+    READ_ECDR2      = 0x0A,
+    READ_ECDR2_SUM  = 0x0B,
             
     //Compass commands
     READ_COMP = 0x0C,
@@ -79,8 +79,23 @@ typedef enum {
     READ_PSNS3 = 0x0F,
     READ_PSNS4 = 0x10,
     READ_PSNS5 = 0x11,
-    READ_PSNS6 = 0x12
+    READ_PSNS6 = 0x12,
+    READ_PSNSFNT = 0x13,
+    READ_PSNSCBE = 0x14,
+            
+    //Operate LED
+    WRITE_LED = 0x15
 } command_t;
+
+typedef enum {
+    TIME, DISTANCE, NONE
+} condition_t;
+
+typedef struct {
+    condition_t stop,
+    uint16_t value
+} state_conditions_t;
+state_conditions_t state_conditions;
 
 state_t Curr_State, Next_State; 
 
