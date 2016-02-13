@@ -15,16 +15,7 @@
 #include "oc.h"
 #include "timers.h"
 #include "i2c.h"
-// #include "Encoder1Peripheral.c"
-// #include "Encoder2Peripheral.c"
-
-///////////////////////////////////TYPEDEFS/////////////////////////////////////
-
-//typedef enum 
-//{
-//    FWD = 0,
-//    REV 
-//} motor_direction ;
+#include "wheelEncoders.h"
 
 ///////////////////////////////////DEFINES//////////////////////////////////////
 
@@ -34,6 +25,31 @@
 
 
 ///////////////////////////////////FUNCTIONS////////////////////////////////////
+
+void enableMotorPSU()
+{
+    /*
+     * Sets the enable line high, starting the power supply for the two drive motors.
+     * This does not need to be disabled when the motors are not running.
+     * 
+     * The motors will still run if the supply is off, except they will be driven 
+     * from the battery supply voltage. This is not an ideal load case for the batteries.
+     */
+    
+    LATBbits.LATB14 = 1;    // enable motor power supply
+}
+
+void disableMotorPSU()
+{
+    /*
+     * Sets the enable line low, disabling the power supply for the two drive motors.
+     * 
+     * The motors will still run if the supply is off, except they will be driven 
+     * from the battery supply voltage. This is not an ideal load case for the batteries.
+     */
+    
+    LATBbits.LATB14 = 0;    // disable motor power supply
+}
 
 void L_motor_counts_constSpeed(int delta_count, motor_direction direction, int speed)
 {

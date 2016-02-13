@@ -15,6 +15,10 @@ typedef enum
 
 /////////////////////////////////FUNCTIONS//////////////////////////////////////
 
+void enableMotorPSU();
+void disableMotorPSU();
+
+
 void L_motor_counts_constSpeed(int delta_count, motor_direction direction, int speed);
 void R_motor_counts_constSpeed(int delta_count, motor_direction direction, int speed);
 

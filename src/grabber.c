@@ -2,6 +2,6 @@
 #include <xc.h>
 
 //Stubs
-void OpenGRABBER() {}
-void CloseGRABBER() {}
-unsigned int ReadGRABBER() {}
+void OpenGRABBER() {};
+void CloseGRABBER() {};
+unsigned int ReadGRABBER() {};

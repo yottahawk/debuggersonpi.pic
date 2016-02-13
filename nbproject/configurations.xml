@@ -16,8 +16,6 @@
       <itemPath>src/SensCubePeripheral.h</itemPath>
       <itemPath>src/main.h</itemPath>
       <itemPath>src/config.h</itemPath>
-      <itemPath>src/Encoder1Peripheral.h</itemPath>
-      <itemPath>src/Encoder2Peripheral.h</itemPath>
       <itemPath>src/spi.h</itemPath>
       <itemPath>src/StateMachine.h</itemPath>
       <itemPath>src/ControlParams.h</itemPath>
@@ -31,6 +29,7 @@
       <itemPath>src/i2c.h</itemPath>
       <itemPath>src/led.h</itemPath>
       <itemPath>src/grabber.h</itemPath>
+      <itemPath>src/wheelEncoders.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -51,8 +50,6 @@
       <itemPath>src/SensCubePeripheral.c</itemPath>
       <itemPath>src/main.c</itemPath>
       <itemPath>src/config.c</itemPath>
-      <itemPath>src/Encoder1Peripheral.c</itemPath>
-      <itemPath>src/Encoder2Peripheral.c</itemPath>
       <itemPath>src/StateMachine.c</itemPath>
       <itemPath>src/OpenLoop.c</itemPath>
       <itemPath>src/adc.c</itemPath>
@@ -65,6 +62,7 @@
       <itemPath>src/i2c.c</itemPath>
       <itemPath>src/led.c</itemPath>
       <itemPath>src/grabber.c</itemPath>
+      <itemPath>src/wheelEncoders.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -129,7 +127,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="extra-include-directories"
-                  value="C:\Program Files (x86)\Microchip\xc16\v1.25\support\generic\h;C:\Program Files (x86)\Microchip\xc16\v1.25\support\PIC24F\h"/>
+                  value="C:\Program Files (x86)\Microchip\xc16\v1.25\support\generic\h;C:\Program Files (x86)\Microchip\xc16\v1.25\support\PIC24F\h;..\..\..\..\..\Program Files (x86)\Microchip\xc16\v1.25\include"/>
         <property key="isolate-each-function" value="false"/>
         <property key="keep-inline" value="false"/>
         <property key="oXC16gcc-align-arr" value="false"/>
@@ -271,7 +269,6 @@
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="true"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="hwtoolclock.instructionspeed" value="4"/>
         <property key="hwtoolclock.units" value="mips"/>
@@ -369,54 +366,6 @@
         </C30Global>
       </item>
       <item path="src/ControlParams.h" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Encoder1Peripheral.c" ex="false" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Encoder1Peripheral.h" ex="false" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Encoder2Peripheral.c" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Encoder2Peripheral.h" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -595,6 +544,8 @@
         </C30-LD>
         <C30Global>
         </C30Global>
+      </item>
+      <item path="src/grabber.c" ex="true" overriding="false">
       </item>
       <item path="src/indicators_switches.c" ex="false" overriding="false">
         <C30>

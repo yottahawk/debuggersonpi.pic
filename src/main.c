@@ -14,7 +14,7 @@
 #include "led.h"
 #include "interrupts.h"
 #include "indicators_switches.h"
-#include "Encoder1Peripheral.h"
+#include "wheelEncoders.h"
 #include "spi.h"
 
 ////////////////////////////////////FUNCTIONS///////////////////////////////////
@@ -22,26 +22,25 @@
 // main loop of execution - anything not interrupt driven goes here
 int main(void) 
 {
-    initialise_pinmap();
+    /* Setup all pins as inputs/outputs and drive outputs to default values */
+    initialise_pinmap();            
     
-    IEC1bits.CNIE = 1;      // Enable CN interrupts
-    CNEN1bits.CN6IE = 1;    // Enable PUSH_CW interrupt-on-change notification.
-            
-    LATBbits.LATB14 = 1;    // enable motor power supply.
-    led_init_timer();             // enables tmr5 interrupts for led flashing routines.
+
+    IEC1bits.CNIE = 1;              // Enable CN interrupts
+    CNEN1bits.CN6IE = 1;            // Enable PUSH_CW interrupt-on-change notification.
+    
+    
+    led_init_timer();               // enables tmr5 interrupts for led flashing routines.
+    
+    // Drive motor wheels for testing purposes.
+    enableMotorPSU();               // Set enable line to enable psu.
     
     R_motor_constSpeed(FWD, 25);
     L_motor_constSpeed(REV, 25);
-   
-    // Enable INT1 interrupts, triggering on negative edge of WHEEL_ENC_1 signal.
-    IEC1bits.INT1IE = 1;    // Enable interrupt 
-    
-    // Enable INT2 interrupts, triggering on negative edge of WHEEL_ENC_2 signal.
-    IEC1bits.INT2IE = 1;    // Enable interrupt 
     
     while(1)
     {  
-        if(spi_info.command) SPI_Function();
+      //  if(spi_info.command) SPI_Function();
     }
     
     return 0;

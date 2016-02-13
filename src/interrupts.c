@@ -10,7 +10,7 @@
 #include "motors.h"
 #include "led.h"
 #include "indicators_switches.h"
-#include "Encoder1Peripheral.h"
+#include "wheelEncoders.h"
 
 //////////////////////////GLOBAL VARIABLES//////////////////////////////////////
 extern int global_blue_flash;
@@ -23,27 +23,22 @@ int DIPstatus;
 unsigned int wheel_left_count = 0;
 unsigned int wheel_right_count = 0;
 
+//////////////////////////EXTERNAL GLOBAL VARIABLES/////////////////////////////
+
+extern int GLOBAL_enc1_count; // wheelEncoders.c
+extern int GLOBAL_enc2_count; // wheelEncoders.c
+
 //////////////////////////FUNCTIONS/////////////////////////////////////////////
-
-
 
 void __attribute__((__interrupt__, auto_psv)) _INT1Interrupt(void)
 {
     /*
     * INT1 - WHEEL_ENC_1
-    * This ISR should increment the value of a counter every time it is triggered. 
+    * This ISR increments the value of the encoder 2 counter when triggered. 
     */
-    
     IFS1bits.INT1IF = 0;        // Reset interrupt flag
     
-    wheel_left_count++;
-    
-    if (wheel_left_count == 0xFFFF) // LED is on?
-    {
-        wheel_left_count = 0;
-        // LATEbits.LATE5 = ~LATEbits.LATE5;
-    }
-
+    GLOBAL_enc1_count++;
 }
 
 
@@ -51,17 +46,11 @@ void __attribute__((__interrupt__, auto_psv)) _INT2Interrupt(void)
 {
     /*
      * INT2 - WHEEL_ENC_2
-     * This ISR should increment the value of a counter every time it is triggered. 
+     * This ISR increments the value of the encoder 2 counter when triggered. 
      */
     IFS1bits.INT2IF = 0;        // Reset interrupt flag
     
-    wheel_right_count++;
-    
-    if (wheel_right_count == 0x1FFF) // LED is on?
-    {
-        wheel_right_count = 0;
-        LATEbits.LATE7 = ~LATEbits.LATE7;
-    }
+    GLOBAL_enc2_count++;
 }
 
 /*
@@ -73,6 +62,21 @@ void __attribute__((__interrupt__, auto_psv)) _INT2Interrupt(void)
  */
 void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
 {
+    /*
+     * This ISR is triggered by any of the enabled interrupt-on-change inputs when
+     * that particular pin is enabled. 
+     * 
+     * There are 4 interrupt-on-change inputs that may trigger the interrupt.
+     * PUSH_SW
+     * SENS_FRONT
+     * SENS_L
+     * SENS_R
+     * 
+     * The PUSH_SW input is triggered by the user pressing the momentary button.
+     * It is used to trigger the start/stop of programs/test states.
+     * 
+     * The three SENS inputs are connected to 
+     */
    IFS1bits.CNIF = 0;       // Reset interrupt flag 
     
 //   CNbuffer[1] = PORTBbits.RB4;     // PUSH_SW
@@ -91,19 +95,7 @@ void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
 //   }
            
 //   readDIP( &DIPstatus );
-   
-//   char x = ReadENCODE1();
-//   if (x == 1)
-//   {
-//       led_const_blue_on();
-//   }
-//   else 
-//   {
-//       led_const_blue_off();
-//   }
-   
-    R_motor_constSpeed(FWD, 0);
-    L_motor_constSpeed(REV, 0);
+  
 }
  
 /*
@@ -147,5 +139,4 @@ void __attribute__((__interrupt__, auto_psv)) _T5Interrupt(void)
     if (global_red_flash == 1){LATEbits.LATE6 = ~LATEbits.LATE6;}  // Flash RED off/on
     if (global_grn_flash == 1){LATEbits.LATE7 = ~LATEbits.LATE7;}  // Flash BLUE off/on
     
-    // if (global_grn_flash == 1){LATEbits.LATE7 = ~LATEbits.LATE5;}  // Flash GRN and blue in counterphase
 } 
