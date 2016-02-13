@@ -14,7 +14,22 @@
  * easily large enough to store the count for a couple of seconds of operation.
  */
 
-//////////////////////////////////FUNCTIONS/////////////////////////////////////
+#ifndef debuggersonpi_pic_wheelencoders_h
+#define debuggersonpi_pic_wheelencoders_h
+
+/////////////////////////////////////INCLUDES///////////////////////////////////
+
+#include "xc.h"
+
+/////////////////////////////////////DEFINES////////////////////////////////////
+
+//////////////////////////////////GLOBAL VARIABLES//////////////////////////////
+
+// Counter registers accessed by interrupts to increment
+extern int GLOBAL_enc1_count;
+extern int GLOBAL_enc2_count;
+
+////////////////////////////////FUNCTION DECLARATIONS///////////////////////////
 
 // Initialise interrupts (counter increments happen within the ISR) 
 void enc1_setupInterrupt();
@@ -46,17 +61,6 @@ void encAvg_writeCounterLimitDistance(int distance_mm);
 // Call this function every poll loop to check the limit condition, and set flag if true.
 void enc_flagCounterComplete();
 
+////////////////////////////////////////////////////////////////////////////////
+#endif //debuggersonpi_pic_wheelencoders_h
 
-////Function to read a value directly from the peripheral
-//char ReadENCODE1();
-//
-////Functions to read and write to the peripheral's buffer
-//int WriteENCODE1Buffer(char Data);
-//char* ReadENCODE1Buffer(int Count);
-//
-//int ReadENCODE1Integral();
-//int ResetENCODE1Integral();
-//
-////Functions to Initiate / Clear
-//int InitiateENCODE1();
-//int ClearENCODE1Buffer();

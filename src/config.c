@@ -8,7 +8,7 @@
  * Created on 31 January 2016, 18:28
  */
 
-#include <xc.h>
+#include "config.h"
 
 // Configuration bits to initialise oscillator etc.
 // CONFIG2

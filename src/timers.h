@@ -12,6 +12,19 @@
  * Revision history: 
  */
 
+#ifndef debuggersonpi_pic_timers_h
+#define debuggersonpi_pic_timers_h
+
+/////////////////////////////////////INCLUDES///////////////////////////////////
+
+#include "xc.h"
+
+/////////////////////////////////////DEFINES////////////////////////////////////
+
+//////////////////////////////////GLOBAL VARIABLES//////////////////////////////
+
+////////////////////////////////FUNCTION DECLARATIONS///////////////////////////
+
 // Initialises TMR1 as the poll timers with an 8ms period.
 void POllTMRinit();
 void StartPollTMR();
@@ -34,3 +47,7 @@ void StopTMR4();
 void TMR5init(unsigned int setPeriod);
 void StartTMR5();
 void StopTMR5();
+
+#endif //debuggersonpi_pic_timers_h
+
+

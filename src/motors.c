@@ -7,24 +7,21 @@
  * Created on February 7, 2016, 10:15 PM
  */
 
-///////////////////////////////////INCLUDES/////////////////////////////////////
+/////////////////////////////////////INCLUDES///////////////////////////////////
 
-#include "xc.h"
 #include "motors.h"
 
-#include "oc.h"
-#include "timers.h"
-#include "i2c.h"
-#include "wheelEncoders.h"
-
-///////////////////////////////////DEFINES//////////////////////////////////////
+/////////////////////////////////////DEFINES////////////////////////////////////
 
 #define BAUD_RATE 79 // sets a i2c clock rate of 50 kHz
 #define DIGIPOT_ADDRESS_WRITE 0b01011100 // 7 bit address of digipot + 0 for write
 #define DIGIPOT_ADDRESS_READ 0b01011101 // 7 bit address of digipot + 1 for read
 
+//////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 
-///////////////////////////////////FUNCTIONS////////////////////////////////////
+//////////////////////////////TYPEDEFS,ENUMS,STRUCTS////////////////////////////
+
+///////////////////////////////FUNCTION DEFINITIONS/////////////////////////////
 
 void enableMotorPSU()
 {
@@ -51,7 +48,7 @@ void disableMotorPSU()
     LATBbits.LATB14 = 0;    // disable motor power supply
 }
 
-void L_motor_counts_constSpeed(int delta_count, motor_direction direction, int speed)
+void L_motor_counts_constSpeed(int delta_count, motor_direction_type direction, int speed)
 {
     /*
      * Drive the left motor a defined number of counts, at a defined
@@ -62,7 +59,7 @@ void L_motor_counts_constSpeed(int delta_count, motor_direction direction, int s
     
 }
 
-void R_motor_counts_constSpeed(int delta_count, motor_direction direction, int speed)
+void R_motor_counts_constSpeed(int delta_count, motor_direction_type direction, int speed)
 {
     /*
      * Drive the left motor a defined number of counts, at a defined
@@ -73,7 +70,7 @@ void R_motor_counts_constSpeed(int delta_count, motor_direction direction, int s
     
 }
 
-void L_motor_constSpeed(motor_direction direction, int speed)
+void L_motor_constSpeed(motor_direction_type direction, int speed)
 {
     /*
      * Drive the left motor at a defined constant speed.
@@ -93,7 +90,7 @@ void L_motor_constSpeed(motor_direction direction, int speed)
     
 }
 
-void R_motor_constSpeed(motor_direction direction, int speed)
+void R_motor_constSpeed(motor_direction_type direction, int speed)
 {
     /*
      * Drive the left motor at a defined constant speed.

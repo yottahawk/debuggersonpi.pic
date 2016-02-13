@@ -12,13 +12,25 @@
  * the state machine, and start the state machine.
  */
 
+#ifndef debuggersonpi_pic_indicators_switches_h
+#define debuggersonpi_pic_indicators_switches_h
+
+/////////////////////////////////////INCLUDES///////////////////////////////////
+
+#include "xc.h"
+
+/////////////////////////////////////DEFINES////////////////////////////////////
+
+//////////////////////////////////GLOBAL VARIABLES//////////////////////////////
+
+////////////////////////////////FUNCTION DECLARATIONS///////////////////////////
+
 /*
  * The DIP switches will be used to configure the desired state to enter when the 
  * momentary button is pressed. This is used to start the processing in the 
  * desired state. 
  */
 void readDIP(int *tempRegister);
-
 
 /*
  * The tri-colour led  will be switchable on/off independently using the below
@@ -33,3 +45,5 @@ void blueLedOff(void);
 
 void redLedOn(void);
 void redLedOff(void);
+
+#endif //debuggersonpi_pic_indicators_switches_h

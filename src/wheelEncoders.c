@@ -8,7 +8,13 @@
 // WHEEL_ENC_1 is located on port D8 (pin 42)
 // WHEEL_ENC_2 is located on port D9 (pin 43)
 
-////////////////////////////////DEFINES/////////////////////////////////////////
+/////////////////////////////////////INCLUDES///////////////////////////////////
+
+#include "wheelEncoders.h"
+
+#include "math.h"
+
+/////////////////////////////////////DEFINES////////////////////////////////////
 
 #define WHEELDIAMETER_MM 70
 #define PI 3.14
@@ -16,34 +22,25 @@
 #define ENCODERSPOKES 32
 #define TRAVELPERSPOKE_MM 6.9
 
-#define BUFFER_LENGTH 256
-#define BIT_MASK 0x100         
-#define PIC_PORT PORTD
-#define PIC_TRIS TRISD
-
-////////////////////////////////INCLUDES///////////////////////////////////////
-#include <xc.h>
-#include "math.h"
-
-#include "wheelEncoders.h"
-
-////////////////////////////////GLOBAL VARIABLES////////////////////////////////
+//////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 
 // Counter registers to store the current count.
-int GLOBAL_enc1_count;
-int GLOBAL_enc2_count;
+int GLOBAL_enc1_count = 0;
+int GLOBAL_enc2_count = 0;
 
 // Store current stop condition for count. DO NOT ACCESS DIRECTLY, use access method.
-int GLOBAL_enc1_limit;
-int GLOBAL_enc2_limit;
-int GLOBAL_encAverage_limit;
+int GLOBAL_enc1_limit = 0;
+int GLOBAL_enc2_limit = 0;
+int GLOBAL_encAverage_limit = 0;
 
 // Global flags for counter complete
-int GLOBAL_enc1_complete;
-int GLOBAL_enc2_complete;
-int GLOBAL_encAverage_complete;
+int GLOBAL_enc1_complete = 0;
+int GLOBAL_enc2_complete = 0;
+int GLOBAL_encAverage_complete = 0;
 
-////////////////////////////////FUNCTIONS///////////////////////////////////////
+//////////////////////////////TYPEDEFS,ENUMS,STRUCTS////////////////////////////
+
+///////////////////////////////FUNCTION DEFINITIONS/////////////////////////////
 
 void enc1_setupInterrupt()
 {

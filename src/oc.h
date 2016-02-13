@@ -14,10 +14,9 @@
  * The wheels.h and wheels.c files use these lowest level methods to control the 
  * movement of the robot at a higher level.
  * 
- * Revision history: 
- */
-
-/*
+ * 
+ * 
+ * 
  * To start the Output Compare modules, first call the init() methods. 
  * This init's the OC module as well as the associated timer used to run it. 
  * The modules utilise the following timers...
@@ -25,7 +24,25 @@
  * TMR3 = OC4 and OC5 (Motor 2)
  * The dutyset() methods can now be used to change the PWM duty cycle, passing an 
  * int between 0 and 127 for a duty cycle between 0% and 100%.
+ *
+ * 
+ * Revision history: 
  */
+
+#ifndef debuggersonpi_pic_oc_h
+#define debuggersonpi_pic_oc_h
+
+/////////////////////////////////////INCLUDES///////////////////////////////////
+
+#include "xc.h"
+
+#include "timers.h"
+
+/////////////////////////////////////DEFINES////////////////////////////////////
+
+//////////////////////////////////GLOBAL VARIABLES//////////////////////////////
+
+////////////////////////////////FUNCTION DECLARATIONS///////////////////////////
 
 // R - FWD
 void OC2init();
@@ -46,3 +63,8 @@ void OC4stop();
 void OC5init();
 void OC5dutyset(int newdutycycle);
 void OC5stop();
+
+#endif //debuggersonpi_pic_oc_h
+
+
+
