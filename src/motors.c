@@ -48,7 +48,7 @@ void disableMotorPSU()
     LATBbits.LATB14 = 0;    // disable motor power supply
 }
 
-void L_motor_counts_constSpeed(int delta_count, motor_direction_type direction, int speed)
+void L_motor_counts_constSpeed(int delta_count, motor_direction_type direction, unsigned int speed)
 {
     /*
      * Drive the left motor a defined number of counts, at a defined
@@ -59,7 +59,7 @@ void L_motor_counts_constSpeed(int delta_count, motor_direction_type direction, 
     
 }
 
-void R_motor_counts_constSpeed(int delta_count, motor_direction_type direction, int speed)
+void R_motor_counts_constSpeed(int delta_count, motor_direction_type direction, unsigned int speed)
 {
     /*
      * Drive the left motor a defined number of counts, at a defined
@@ -70,7 +70,7 @@ void R_motor_counts_constSpeed(int delta_count, motor_direction_type direction, 
     
 }
 
-void L_motor_constSpeed(motor_direction_type direction, int speed)
+void L_motor_constSpeed(motor_direction_type direction, unsigned int speed)
 {
     /*
      * Drive the left motor at a defined constant speed.
@@ -90,7 +90,7 @@ void L_motor_constSpeed(motor_direction_type direction, int speed)
     
 }
 
-void R_motor_constSpeed(motor_direction_type direction, int speed)
+void R_motor_constSpeed(motor_direction_type direction, unsigned int speed)
 {
     /*
      * Drive the left motor at a defined constant speed.
@@ -110,6 +110,7 @@ void R_motor_constSpeed(motor_direction_type direction, int speed)
     
 }
 
+//Note: Int has negativity,and can therefore express direction
 int  L_motor_SpeedGet() {}
 int  R_motor_SpeedGet() {}
 

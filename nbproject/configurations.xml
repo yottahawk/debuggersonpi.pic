@@ -4,6 +4,18 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="MCC Generated Files"
+                     displayName="MCC Generated Files"
+                     projectFiles="true">
+        <itemPath>mcc_generated_files/spi2.h</itemPath>
+        <itemPath>mcc_generated_files/adc1.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="src" displayName="src" projectFiles="true">
+        <itemPath>src/linefollow.c</itemPath>
+        <itemPath>src/newfile.c</itemPath>
+        <itemPath>src/pid.c</itemPath>
+        <itemPath>src/wheelEncoders.c</itemPath>
+      </logicalFolder>
       <itemPath>src/PeripheralTemplate.h</itemPath>
       <itemPath>src/Sens1Peripheral.h</itemPath>
       <itemPath>src/Sens2Peripheral.h</itemPath>
@@ -23,9 +35,12 @@
       <itemPath>src/i2c.h</itemPath>
       <itemPath>src/led.h</itemPath>
       <itemPath>src/grabber.h</itemPath>
-      <itemPath>src/wheelEncoders.h</itemPath>
-      <itemPath>src/linefollow.h</itemPath>
-      <itemPath>src/pid.h</itemPath>
+      <itemPath>src/compass.h</itemPath>
+      <itemPath>src/Sens3.h</itemPath>
+      <itemPath>src/Sens4.h</itemPath>
+      <itemPath>src/Sens5.h</itemPath>
+      <itemPath>src/Sens6.h</itemPath>
+      <itemPath>src/SensFRONT.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -34,6 +49,12 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <logicalFolder name="MCC Generated Files"
+                     displayName="MCC Generated Files"
+                     projectFiles="true">
+        <itemPath>mcc_generated_files/adc1.c</itemPath>
+        <itemPath>mcc_generated_files/spi2.c</itemPath>
+      </logicalFolder>
       <itemPath>src/PeripheralTemplate.c</itemPath>
       <itemPath>src/Sens1Peripheral.c</itemPath>
       <itemPath>src/Sens2Peripheral.c</itemPath>
@@ -52,9 +73,12 @@
       <itemPath>src/i2c.c</itemPath>
       <itemPath>src/led.c</itemPath>
       <itemPath>src/grabber.c</itemPath>
-      <itemPath>src/wheelEncoders.c</itemPath>
-      <itemPath>src/linefollow.c</itemPath>
-      <itemPath>src/pid.c</itemPath>
+      <itemPath>src/compass.c</itemPath>
+      <itemPath>src/Sens3.c</itemPath>
+      <itemPath>src/Sens4.c</itemPath>
+      <itemPath>src/Sens5.c</itemPath>
+      <itemPath>src/Sens6.c</itemPath>
+      <itemPath>src/SensFRONT.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -119,7 +143,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="extra-include-directories"
-                  value="C:\Program Files (x86)\Microchip\xc16\v1.25\support\generic\h;C:\Program Files (x86)\Microchip\xc16\v1.25\support\PIC24F\h;..\..\..\..\..\Program Files (x86)\Microchip\xc16\v1.25\include"/>
+                  value="C:\Program Files (x86)\Microchip\xc16\v1.25\support\generic\h;C:\Program Files (x86)\Microchip\xc16\v1.25\support\PIC24F\h"/>
         <property key="isolate-each-function" value="false"/>
         <property key="keep-inline" value="false"/>
         <property key="oXC16gcc-align-arr" value="false"/>
@@ -261,6 +285,7 @@
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="hwtoolclock.instructionspeed" value="4"/>
         <property key="hwtoolclock.units" value="mips"/>
@@ -309,6 +334,54 @@
         <property key="tracecontrol.tracefilemax" value="10000000"/>
         <property key="voltagevalue" value="3.25"/>
       </RealICEPlatformTool>
+      <item path="mcc_generated_files/adc1.c" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
+      <item path="mcc_generated_files/adc1.h" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
+      <item path="mcc_generated_files/spi2.c" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
+      <item path="mcc_generated_files/spi2.h" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
       <item path="src/ControlParams.h" ex="true" overriding="false">
         <C30>
         </C30>
@@ -488,8 +561,6 @@
         </C30-LD>
         <C30Global>
         </C30Global>
-      </item>
-      <item path="src/grabber.c" ex="true" overriding="false">
       </item>
       <item path="src/indicators_switches.c" ex="false" overriding="false">
         <C30>

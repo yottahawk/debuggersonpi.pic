@@ -17,7 +17,7 @@ extern "C" {
     
     //Functions to read and write to the peripheral's buffer
     int WriteSENS1Buffer(char Data);
-    char* ReadSENS1Buffer(int Count);
+    void ReadSENS1Buffer(unsigned int* Dest, int Count);
     
     //Functions to Initiate / Clear
     int InitiateSENS1();

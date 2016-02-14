@@ -6,7 +6,7 @@
  */
 
 ////////////////////////////////////INCLUDES////////////////////////////////////
-#include "xc.h"
+#include <xc.h>
 
 #include "config.h"
 #include "oc.h"
@@ -40,7 +40,7 @@ int main(void)
     
     while(1)
     {  
-      //  if(spi_info.command) SPI_Function();
+        if(spi_info.command) SPI_Function();
     }
     
     return 0;

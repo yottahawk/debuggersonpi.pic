@@ -17,7 +17,7 @@ extern "C" {
     
     //Functions to read and write to the peripheral's buffer
     int WriteSENSCUBEBuffer(char Data);
-    char* ReadSENSCUBEBuffer(int Count);
+    void ReadSENSCUBEBuffer(unsigned int* Dest, int Count);
     
     //Functions to Initiate / Clear
     int InitiateSENSCUBE();
