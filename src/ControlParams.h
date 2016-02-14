@@ -5,12 +5,17 @@
  * Created on 03 February 2016, 23:27
  */
 
-#ifndef CONTROLPARAMS_H
-#define	CONTROLPARAMS_H
+#ifndef debuggersonpi_pic_controlparams_h
+#define debuggersonpi_pic_controlparams_h
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
+/////////////////////////////////////INCLUDES///////////////////////////////////
+
+#include "xc.h"
+
+#include "adc.h"
+#include "pid.h"
+
+/////////////////////////////////////DEFINES////////////////////////////////////
 
 //Control Parameters relating to wheels
 #define MAX_VELOCITY 1          //Maximum velocity in (m/s)
@@ -21,11 +26,12 @@ extern "C" {
     
 //Control Parameters for timing
 #define TIMESTEP 1              //Polling timer interval in us
-    
-    
-#ifdef	__cplusplus
-}
-#endif
 
-#endif	/* CONTROLPARAMS_H */
+//////////////////////////////////GLOBAL VARIABLES//////////////////////////////
+
+////////////////////////////////FUNCTION DECLARATIONS///////////////////////////
+
+#endif //debuggersonpi_pic_controlparams_h
+
+
 

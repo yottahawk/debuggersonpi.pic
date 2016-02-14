@@ -5,14 +5,22 @@
  * Created on 03 February 2016, 23:24
  */
 
-#ifndef OPENLOOP_H
-#define	OPENLOOP_H
+#ifndef debuggersonpi_pic_openloop_h
+#define debuggersonpi_pic_openloop_h
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
+/////////////////////////////////////INCLUDES///////////////////////////////////
 
-//declarations for open loop functions
+#include "xc.h"
+
+#include "ControlParams.h"
+// #include "Motor1Peripheral.h"
+
+/////////////////////////////////////DEFINES////////////////////////////////////
+
+//////////////////////////////////GLOBAL VARIABLES//////////////////////////////
+
+////////////////////////////////FUNCTION DECLARATIONS///////////////////////////
+
 void ol_forward();
 void ol_reverse();
 void ol_fwd_left();
@@ -20,9 +28,5 @@ void ol_fwd_right();
 void ol_rev_left();
 void ol_rev_right();
 
-#ifdef	__cplusplus
-}
-#endif
-
-#endif	/* OPENLOOP_H */
+#endif //debuggersonpi_pic_openloop_h
 

@@ -7,35 +7,48 @@
  * Created on February 7, 2016, 10:15 PM
  */
 
-///////////////////////////////////INCLUDES/////////////////////////////////////
+/////////////////////////////////////INCLUDES///////////////////////////////////
 
-#include "xc.h"
 #include "motors.h"
 
-#include "oc.h"
-#include "timers.h"
-#include "i2c.h"
-// #include "Encoder1Peripheral.c"
-// #include "Encoder2Peripheral.c"
-
-///////////////////////////////////TYPEDEFS/////////////////////////////////////
-
-//typedef enum 
-//{
-//    FWD = 0,
-//    REV 
-//} motor_direction ;
-
-///////////////////////////////////DEFINES//////////////////////////////////////
+/////////////////////////////////////DEFINES////////////////////////////////////
 
 #define BAUD_RATE 79 // sets a i2c clock rate of 50 kHz
 #define DIGIPOT_ADDRESS_WRITE 0b01011100 // 7 bit address of digipot + 0 for write
 #define DIGIPOT_ADDRESS_READ 0b01011101 // 7 bit address of digipot + 1 for read
 
+//////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 
-///////////////////////////////////FUNCTIONS////////////////////////////////////
+//////////////////////////////TYPEDEFS,ENUMS,STRUCTS////////////////////////////
 
-void L_motor_counts_constSpeed(int delta_count, motor_direction direction, int speed)
+///////////////////////////////FUNCTION DEFINITIONS/////////////////////////////
+
+void enableMotorPSU()
+{
+    /*
+     * Sets the enable line high, starting the power supply for the two drive motors.
+     * This does not need to be disabled when the motors are not running.
+     * 
+     * The motors will still run if the supply is off, except they will be driven 
+     * from the battery supply voltage. This is not an ideal load case for the batteries.
+     */
+    
+    LATBbits.LATB14 = 1;    // enable motor power supply
+}
+
+void disableMotorPSU()
+{
+    /*
+     * Sets the enable line low, disabling the power supply for the two drive motors.
+     * 
+     * The motors will still run if the supply is off, except they will be driven 
+     * from the battery supply voltage. This is not an ideal load case for the batteries.
+     */
+    
+    LATBbits.LATB14 = 0;    // disable motor power supply
+}
+
+void L_motor_counts_constSpeed(int delta_count, motor_direction_type direction, int speed)
 {
     /*
      * Drive the left motor a defined number of counts, at a defined
@@ -46,7 +59,7 @@ void L_motor_counts_constSpeed(int delta_count, motor_direction direction, int s
     
 }
 
-void R_motor_counts_constSpeed(int delta_count, motor_direction direction, int speed)
+void R_motor_counts_constSpeed(int delta_count, motor_direction_type direction, int speed)
 {
     /*
      * Drive the left motor a defined number of counts, at a defined
@@ -57,7 +70,7 @@ void R_motor_counts_constSpeed(int delta_count, motor_direction direction, int s
     
 }
 
-void L_motor_constSpeed(motor_direction direction, int speed)
+void L_motor_constSpeed(motor_direction_type direction, int speed)
 {
     /*
      * Drive the left motor at a defined constant speed.
@@ -77,7 +90,7 @@ void L_motor_constSpeed(motor_direction direction, int speed)
     
 }
 
-void R_motor_constSpeed(motor_direction direction, int speed)
+void R_motor_constSpeed(motor_direction_type direction, int speed)
 {
     /*
      * Drive the left motor at a defined constant speed.

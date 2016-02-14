@@ -1,16 +1,21 @@
 /* 
- * File:   grabber.h
- * Author: Luke
- *
- * Created on 13 February 2016, 10:02
+ * File: linefollow.h  
+ * Author: Harry Callahan
+ * 
+ * Comments: Methods to control line following mode.  
+ * 
+ * Revision history: 
  */
 
-#ifndef debuggersonpi_pic_grabber_h
-#define debuggersonpi_pic_grabber_h
+#ifndef debuggersonpi_pic_linefollow_h
+#define debuggersonpi_pic_linefollow_h
 
 /////////////////////////////////////INCLUDES///////////////////////////////////
 
 #include "xc.h"
+
+#include "adc.h"
+#include "pid.h"
 
 /////////////////////////////////////DEFINES////////////////////////////////////
 
@@ -18,12 +23,4 @@
 
 ////////////////////////////////FUNCTION DECLARATIONS///////////////////////////
 
-void OpenGRABBER();
-void CloseGRABBER();
-unsigned int ReadGRABBER();
-
 #endif //debuggersonpi_pic_linefollow_h
-
-
-
-
