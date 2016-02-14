@@ -97,6 +97,9 @@ void R_motor_constSpeed(motor_direction direction, int speed)
     
 }
 
+int  L_motor_SpeedGet() {}
+int  R_motor_SpeedGet() {}
+
 void SetFeedbackRes(int resistance)
 {
     char x;

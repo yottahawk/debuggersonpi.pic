@@ -57,11 +57,16 @@ void SPI_ECDR(uint8_t Mode) {
     Write_SPI(&DONE, 1);
 }
 
-void SPI_MOTOR(uint8_t Mode, unsigned int Speed) {
+void SPI_MOTOR(uint8_t Mode, unsigned int Speed, unsigned int direction) {
     if(Mode<=1) {               //If mode is writing
         //send via spi
-        if(Mode==0)     WriteMOTOR1(Speed);
-        else if(Mode==1)WriteMOTOR2(Speed);
+        if(Mode==0) {
+            if(direction > 0) L_motor_constSpeed(FWD, (int) Speed);
+            else              L_motor_constSpeed(REV, (int) Speed);
+        } else if(Mode==1) {
+            if(direction > 0) R_motor_constSpeed(FWD, (int) Speed);
+            else              R_motor_constSpeed(REV, (int) Speed);
+        }
     } else {                    //if mode is reading
         unsigned int motor_speed = 0;
         if(Mode==2) motor_speed = ReadMOTOR1();
@@ -187,10 +192,10 @@ void SPI_Function() {
                 SPI_GRABBER(2);
                 break;}
             case WRITE_MOTOR_LEFT: {
-                SPI_MOTOR(0, spi_info.info[0]);
+                SPI_MOTOR(0, spi_info.info[0], spi_info.info[1]);
                 break;}
             case WRITE_MOTOR_RIGHT: {
-                SPI_MOTOR(1, spi_info.info[0]);
+                SPI_MOTOR(1, spi_info.info[0], spi_info.info[1]);
                 break;}
             case READ_MOTOR_LEFT: {
                 SPI_MOTOR(2);
