@@ -9,6 +9,8 @@
 
 #include "interrupts.h"
 
+#include "compass.h"
+
 /////////////////////////////////////DEFINES////////////////////////////////////
 
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
@@ -69,23 +71,38 @@ void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
      */
    IFS1bits.CNIF = 0;       // Reset interrupt flag 
     
-//   CNbuffer[1] = PORTBbits.RB4;     // PUSH_SW
-//   CNbuffer[2] = PORTBbits.RB12;    // SENS_CUBE
-//   CNbuffer[3] = PORTBbits.RB13;    // SENSE_L
-//   CNbuffer[4] = PORTBbits.RB3;     // SNESE_R
-//  
-//   switch(CNbuffer[1])
-//   {
-//       case 0:
-//           break;
-//       case 1:
-//           // LATBbits.LATB14 = ~LATBbits.LATB14;
-//           IncrementWiper();
-//           break;
-//   }
+   CNbuffer[1] = PORTBbits.RB4;     // PUSH_SW
+   CNbuffer[2] = PORTBbits.RB12;    // SENS_CUBE
+   CNbuffer[3] = PORTBbits.RB13;    // SENSE_L
+   CNbuffer[4] = PORTBbits.RB3;     // SNESE_R
+  
+   unsigned char A;
+   
+   unsigned char Xupper;
+   unsigned char Xlower;
+   unsigned char Yupper;
+   unsigned char Ylower;
+   
+   switch(CNbuffer[1])
+   {
+       case 0:
+           break;
+       case 1:
+           
+           Xupper = readCompass(X_MSB_Reg);
+           Xlower = readCompass(X_LSB_Reg);
+           Yupper = readCompass(Y_MSB_Reg);
+           Ylower = readCompass(Y_LSB_Reg);
+           
+           Nop();
+           
+           readCompassData();
+                   
+           break;
+   }
            
 //   readDIP( &DIPstatus );
-  
+    
 }
  
 /*

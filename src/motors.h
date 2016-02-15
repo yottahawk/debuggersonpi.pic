@@ -23,8 +23,7 @@
 
 ////////////////////////////////TYPEDEFS,ENUMS,STRUCTS//////////////////////////
 
-// This enum is used as an argument to a function, but is never instantiated. There
-// is no need to initialise a state of FWD or REV.
+// This enum is used as an argument to a function, but is never instantiated. 
 typedef enum 
 { 
     FWD = 0,
@@ -36,19 +35,15 @@ typedef enum
 void enableMotorPSU();
 void disableMotorPSU();
 
-
 void L_motor_counts_constSpeed(int delta_count, motor_direction_type direction, int speed);
 void R_motor_counts_constSpeed(int delta_count, motor_direction_type direction, int speed);
 
 void L_motor_constSpeed(motor_direction_type direction, int speed);
 void R_motor_constSpeed(motor_direction_type direction, int speed);
 
-void SetFeedbackRes(int resistance);
-
-void SetMotorVoltage(int voltage);
-
 void initDigiPot();
-
+void SetFeedbackRes(int resistance);
+void SetMotorVoltage(int voltage);
 void IncrementWiper();
 
 ////////////////////////////////////////////////////////////////////////////////

@@ -59,15 +59,15 @@ void i2c_start()
     while (I2C1CONbits.SEN){}                   
 }
 
-void i2c_restart()
+void i2c_repeatstart()
 {
-   I2C1CONbits.RSEN = 1;                        //Initiate restart condition
+   I2C1CONbits.RSEN = 1;                        //Initiate repeatedstart condition
     
    // Wait for hardware to automatically clear the reset bit
    while (I2C1CONbits.RSEN){}
 }
 
-char send_i2c_byte(int data)
+unsigned char send_i2c_byte(unsigned char data)
 {
    while (I2C1STATbits.TBF){}                   // Wait for transmission to complete
   
@@ -78,11 +78,46 @@ char send_i2c_byte(int data)
    while (I2C1STATbits.TRSTAT){};
 
    // Check for ACK from slave, abort if not found
-   if (I2C1STATbits.ACKSTAT == 1)
+   if (I2C1STATbits.ACKSTAT == 1) // Slave sends NACK
    {
-      i2c_restart();
+      led_const_grn_on();
       return(1);
    }
    
    return(0);               // transmission completed successfully
+}
+
+unsigned char i2c_read_ack()
+{
+   unsigned char temp = 0; 
+   
+   // Check lower 5 bits of I2C1CON register are all 0
+   if (!(I2C1CON & 0x001F)){};
+   
+   //set I2C module to receive
+   I2C1CONbits.RCEN = 1;
+   
+   while (I2C1CONbits.RCEN){};
+   while (!I2C1STATbits.RBF){};
+   temp = I2C1RCV; //get data from I2C1RCV register
+   
+   I2C1CONbits.ACKEN = 1;       // Ack
+   
+   //return data
+   return temp;
+}
+
+unsigned char i2c_read_no_ack()
+{
+   unsigned char temp = 0; 
+    
+   //set I2C module to receive
+   I2C1CONbits.RCEN = 1;
+   
+   while (!I2C1STATbits.RBF){};
+        
+   temp = I2C1RCV; //get data from I2C1RCV register
+   
+   //return data
+   return temp;
 }

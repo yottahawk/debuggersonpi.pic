@@ -26,6 +26,7 @@
       <itemPath>src/wheelEncoders.h</itemPath>
       <itemPath>src/linefollow.h</itemPath>
       <itemPath>src/pid.h</itemPath>
+      <itemPath>src/compass.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -55,6 +56,7 @@
       <itemPath>src/wheelEncoders.c</itemPath>
       <itemPath>src/linefollow.c</itemPath>
       <itemPath>src/pid.c</itemPath>
+      <itemPath>src/compass.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -490,6 +492,16 @@
         </C30Global>
       </item>
       <item path="src/grabber.c" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
       </item>
       <item path="src/indicators_switches.c" ex="false" overriding="false">
         <C30>
