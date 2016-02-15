@@ -81,8 +81,12 @@ int main(void)
     
     while(1)
     {  
-        if(spi_info.command) SPI_Function();
+<<<<<<< HEAD
+      //  if(spi_info.command) SPI_Function();
         Nop();
+=======
+        if(spi_info.command) SPI_Function();
+>>>>>>> origin/master
     }
     
     return 0;

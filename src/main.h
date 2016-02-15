@@ -26,6 +26,7 @@
 // #include "spi.h"     // HARRY
 // #include "i2c.h"     // HARRY    
 // #include "grabmtr.h" // HARRY
+// #include "compass.h" //
 
 // Application layer processing - line tracking, PID, intersection detection, 
 // tracking encoder count, cube front sense, acceleration profiles, turn left/right,

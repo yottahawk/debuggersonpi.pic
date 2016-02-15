@@ -3,6 +3,17 @@
 #include "StateMachine.h"
 #include "led.h"
 #include "grabber.h"
+#include "Sens1Peripheral.h"
+#include "Sens2Peripheral.h"
+#include "Sens3.h"
+#include "Sens4.h"
+#include "Sens5.h"
+#include "Sens6.h"
+#include "SensCubePeripheral.h"
+#include "SensFRONT.h"
+#include "compass.h"
+#include "wheelEncoders.h"
+#include "motors.h"
 
 #define TIMEOUT 10000
 
@@ -15,7 +26,7 @@ void Write_SPI(unsigned int* buffer, unsigned int length) {
     }
 }
 
-void SPI_PSNS(uint8_t Sensor, unsigned int Length) {
+void SPI_PSNS(uint8_t Sensor, unsigned int Length, unsigned int Clear) {
     //Error code (to prevent reading longer than buffer)
     uint8_t error = 0;
     
@@ -23,17 +34,28 @@ void SPI_PSNS(uint8_t Sensor, unsigned int Length) {
     unsigned int* Buffer; 
     
     //Get data
-    if(Sensor==0)      error = ReadPHOTOSENSE1(Buffer, Length);
-    else if(Sensor==1) error = ReadPHOTOSENSE2(Buffer, Length);
-    else if(Sensor==2) error = ReadPHOTOSENSE3(Buffer, Length);
-    else if(Sensor==3) error = ReadPHOTOSENSE4(Buffer, Length);
-    else if(Sensor==4) error = ReadPHOTOSENSE5(Buffer, Length);
-    else if(Sensor==5) error = ReadPHOTOSENSE6(Buffer, Length);
-    else if(Sensor==6) error = ReadPHOTOSENSEFRONT(Buffer, Length);
-    else               error = ReadPHOTOSENSECUBE(Buffer, Length);
+    if(Sensor==0)      ReadSENS1Buffer(Buffer, Length);
+    else if(Sensor==1) ReadSENS2Buffer(Buffer, Length);
+    else if(Sensor==2) ReadSENS3Buffer(Buffer, Length);
+    else if(Sensor==3) ReadSENS4Buffer(Buffer, Length);
+    else if(Sensor==4) ReadSENS5Buffer(Buffer, Length);
+    else if(Sensor==5) ReadSENS6Buffer(Buffer, Length);
+    else if(Sensor==6) ReadSENSFRONTBuffer(Buffer, Length);
+    else               ReadSENSCUBEBuffer(Buffer, Length);
 
-    //Return data to PI (don't return any data if too much has been requested)
-    if(!error) Write_SPI(Buffer, Length);
+    if(Clear) {
+        if(Sensor==0)      ClearSENS1Buffer();
+        else if(Sensor==1) ClearSENS2Buffer();
+        else if(Sensor==2) ClearSENS3Buffer();
+        else if(Sensor==3) ClearSENS4Buffer();
+        else if(Sensor==4) ClearSENS5Buffer();
+        else if(Sensor==5) ClearSENS6Buffer();
+        else if(Sensor==6) ClearSENSFRONTBuffer();
+        else               ClearSENSCUBEBuffer();        
+    }
+    
+    //Return data to PI
+    Write_SPI(Buffer, Length);
     Write_SPI(&DONE, 1);
 }
 
@@ -46,26 +68,37 @@ void SPI_COMP() {
     Write_SPI(&DONE, 1);
 }
 
-void SPI_ECDR(uint8_t Mode) {
+void SPI_ECDR(uint8_t Mode, unsigned int Reset) {
     //Get data
-    unsigned int integral = 0;
-    if(Mode==1) integral = ReadENCODE1sum();
-    else        integral = ReadENCODE2sum();
+    int integral = 0;
+    if(Mode==1) {
+        if(Reset) integral = enc1_resetAndStore();
+        else      integral = enc1_readValue();
+    }
+    else {
+        if(Reset) integral = enc2_resetAndStore();
+        else      integral = enc2_readValue();
+    }
 
     //Return data to PI & write DONE to end transaction
     Write_SPI(&integral, 1);
     Write_SPI(&DONE, 1);
 }
 
-void SPI_MOTOR(uint8_t Mode, unsigned int Speed) {
+void SPI_MOTOR(uint8_t Mode, unsigned int Speed, unsigned int direction) {
     if(Mode<=1) {               //If mode is writing
         //send via spi
-        if(Mode==0)     WriteMOTOR1(Speed);
-        else if(Mode==1)WriteMOTOR2(Speed);
+        if(Mode==0) {
+            if(direction > 0) L_motor_constSpeed(FWD, Speed);
+            else              L_motor_constSpeed(REV, Speed);
+        } else if(Mode==1) {
+            if(direction > 0) R_motor_constSpeed(FWD, Speed);
+            else              R_motor_constSpeed(REV, Speed);
+        }
     } else {                    //if mode is reading
-        unsigned int motor_speed = 0;
-        if(Mode==2) motor_speed = ReadMOTOR1();
-        else        motor_speed = ReadMOTOR2();
+        int motor_speed = 0;
+        if(Mode==2) motor_speed = L_motor_SpeedGet();
+        else        motor_speed = R_motor_SpeedGet();
         Write_SPI(&motor_speed, 1);
     }
     
@@ -143,7 +176,6 @@ void Initialise_SPI() {
 }
 
 //SPI Interrupt code
-
 void __attribute__((__interrupt__, auto_psv)) _SPI2Interrupt(void) {   
     //When interrupt triggers, data has been received in Buffer.
     //First data in buffer is always command word!
@@ -187,10 +219,10 @@ void SPI_Function() {
                 SPI_GRABBER(2);
                 break;}
             case WRITE_MOTOR_LEFT: {
-                SPI_MOTOR(0, spi_info.info[0]);
+                SPI_MOTOR(0, spi_info.info[0], spi_info.info[1]);
                 break;}
             case WRITE_MOTOR_RIGHT: {
-                SPI_MOTOR(1, spi_info.info[0]);
+                SPI_MOTOR(1, spi_info.info[0], spi_info.info[1]);
                 break;}
             case READ_MOTOR_LEFT: {
                 SPI_MOTOR(2);
@@ -199,43 +231,43 @@ void SPI_Function() {
                 SPI_MOTOR(3);
                 break;}
             case READ_ECDR1: {
-                SPI_ECDR(1);
+                SPI_ECDR(1, spi_info.info[0]);
                 break;}
             case READ_ECDR2: {
-                SPI_ECDR(2);
+                SPI_ECDR(2, spi_info.info[0]);
                 break;}
             case READ_ECDR1_SUM: {
-                SPI_ECDR(1);
+                SPI_ECDR(1, spi_info.info[0]);
                 break;}
             case READ_ECDR2_SUM: {
-                SPI_ECDR(2);
+                SPI_ECDR(2, spi_info.info[0]);
                 break;}
             case READ_COMP: {
                 SPI_COMP();
                 break;}
             case READ_PSNS1: {
-                SPI_PSNS(0,spi_info.info[0]);
+                SPI_PSNS(0,spi_info.info[0],spi_info.info[1]);
                 break;}
             case READ_PSNS2: {
-                SPI_PSNS(1,spi_info.info[0]);
+                SPI_PSNS(1,spi_info.info[0],spi_info.info[1]);
                 break;}
             case READ_PSNS3: {
-                SPI_PSNS(2,spi_info.info[0]);
+                SPI_PSNS(2,spi_info.info[0],spi_info.info[1]);
                 break;}
             case READ_PSNS4: {
-                SPI_PSNS(3,spi_info.info[0]);
+                SPI_PSNS(3,spi_info.info[0],spi_info.info[1]);
                 break;}
             case READ_PSNS5: {
-                SPI_PSNS(4,spi_info.info[0]);
+                SPI_PSNS(4,spi_info.info[0],spi_info.info[1]);
                 break;}
             case READ_PSNS6: {
-                SPI_PSNS(5,spi_info.info[0]);
+                SPI_PSNS(5,spi_info.info[0],spi_info.info[1]);
                 break;}
             case READ_PSNSFNT: {
-                SPI_PSNS(6,spi_info.info[0]);
+                SPI_PSNS(6,spi_info.info[0],spi_info.info[1]);
                 break;}
             case READ_PSNSCBE: {
-                SPI_PSNS(7,spi_info.info[0]);
+                SPI_PSNS(7,spi_info.info[0],spi_info.info[1]);
                 break;}
             case WRITE_LED: {
                 SPI_LED(spi_info.info[0], spi_info.info[1]);

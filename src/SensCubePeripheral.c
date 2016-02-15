@@ -8,7 +8,7 @@
 #define BUFFER_LENGTH 256
 #define BIT_MASK 0x20;
 
-#include "RelevantLibrary"
+#include <xc.h>
 #include "SensCubePeripheral.h"
 
 char Buffer[BUFFER_LENGTH];
@@ -40,7 +40,7 @@ int WriteSENSCUBEBuffer(char Data) {
     
     //Integral Code?
 }
-char* ReadSENSCUBEBuffer(int Count){
+void ReadSENSCUBEBuffer(unsigned int* Dest, int Count){
     /*
      * Returns a pointer to a buffer of the required size
      * 
