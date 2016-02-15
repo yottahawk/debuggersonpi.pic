@@ -10,12 +10,6 @@
         <itemPath>mcc_generated_files/spi2.h</itemPath>
         <itemPath>mcc_generated_files/adc1.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="src" displayName="src" projectFiles="true">
-        <itemPath>src/linefollow.c</itemPath>
-        <itemPath>src/newfile.c</itemPath>
-        <itemPath>src/pid.c</itemPath>
-        <itemPath>src/wheelEncoders.c</itemPath>
-      </logicalFolder>
       <itemPath>src/PeripheralTemplate.h</itemPath>
       <itemPath>src/Sens1Peripheral.h</itemPath>
       <itemPath>src/Sens2Peripheral.h</itemPath>
@@ -38,10 +32,11 @@
       <itemPath>src/compass.h</itemPath>
       <itemPath>src/Sens3.h</itemPath>
       <itemPath>src/Sens4.h</itemPath>
-      <itemPath>src/compass.h</itemPath>
       <itemPath>src/Sens5.h</itemPath>
       <itemPath>src/Sens6.h</itemPath>
       <itemPath>src/SensFRONT.h</itemPath>
+      <itemPath>src/linefollow.h</itemPath>
+      <itemPath>src/wheelEncoders.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -77,10 +72,10 @@
       <itemPath>src/compass.c</itemPath>
       <itemPath>src/Sens3.c</itemPath>
       <itemPath>src/Sens4.c</itemPath>
-      <itemPath>src/compass.c</itemPath>
       <itemPath>src/Sens5.c</itemPath>
       <itemPath>src/Sens6.c</itemPath>
       <itemPath>src/SensFRONT.c</itemPath>
+      <itemPath>src/wheelEncoders.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -492,6 +487,102 @@
         <C30Global>
         </C30Global>
       </item>
+      <item path="src/Sens3.c" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
+      <item path="src/Sens3.h" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
+      <item path="src/Sens4.c" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
+      <item path="src/Sens4.h" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
+      <item path="src/Sens5.c" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
+      <item path="src/Sens5.h" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
+      <item path="src/Sens6.c" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
+      <item path="src/Sens6.h" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
       <item path="src/SensCubePeripheral.c" ex="true" overriding="false">
         <C30>
         </C30>
@@ -505,6 +596,30 @@
         </C30Global>
       </item>
       <item path="src/SensCubePeripheral.h" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
+      <item path="src/SensFRONT.c" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
+      <item path="src/SensFRONT.h" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -564,6 +679,7 @@
         <C30Global>
         </C30Global>
       </item>
+      <item path="src/grabber.c" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -574,6 +690,19 @@
         </C30-LD>
         <C30Global>
         </C30Global>
+      </item>
+      <item path="src/grabber.h" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
+      </item>
       <item path="src/indicators_switches.c" ex="false" overriding="false">
         <C30>
         </C30>

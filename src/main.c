@@ -37,37 +37,19 @@ int main(void)
     // Drive motor wheels for testing purposes.
     enableMotorPSU();               // Set enable line to enable psu.
     
-    //R_motor_constSpeed(FWD, 25);
-    //L_motor_constSpeed(REV, 25);
+    //R_motor_constSpeed(FWD, 125);
+    L_motor_constSpeed(REV, 65);
     
     int i = 0;
     for (i; i<= 1000; i++)
     {
        initCompass(); 
     }
-    
-    
-    
-    unsigned char A = readCompass(Config_Reg_A);
-    unsigned char B = readCompass(Config_Reg_B);
-    unsigned char M = readCompass(Mode_Reg);
-    
-    A = readCompass(Config_Reg_A);
-    B = readCompass(Config_Reg_B);
-    M = readCompass(Mode_Reg);
-    
-    A = readCompass(Config_Reg_A);
-    B = readCompass(Config_Reg_B);
-    M = readCompass(Mode_Reg);
-    
-    A = readCompass(Config_Reg_A);
-    B = readCompass(Config_Reg_B);
-    M = readCompass(Mode_Reg);
-    
-    A = readCompass(Config_Reg_A);
-    B = readCompass(Config_Reg_B);
-    M = readCompass(Mode_Reg);
-    
+//    
+//
+//    unsigned char A = readCompass(Config_Reg_A);
+//    unsigned char B = readCompass(Config_Reg_B);
+//    unsigned char M = readCompass(Mode_Reg);
     
 //    readCompassData(); // dummy read
 //    
@@ -81,8 +63,8 @@ int main(void)
     
     while(1)
     {  
-        if(spi_info.command) SPI_Function();
-        Nop();
+        // if(spi_info.command) SPI_Function();
+        
     }
     
     return 0;
