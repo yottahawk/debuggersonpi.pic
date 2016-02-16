@@ -14,7 +14,8 @@
 
 #include "oc.h"
 #include "timers.h"
-#include "i2c.h"
+#include "I2C1.h"
+#include "I2C2.h"
 #include "wheelEncoders.h"
 
 //////////////////////////////////////DEFINES///////////////////////////////////
@@ -43,10 +44,6 @@ void R_motor_constSpeed(motor_direction_type direction, unsigned int speed);
 
 int  L_motor_SpeedGet();
 int  R_motor_SpeedGet();
-
-void SetFeedbackRes(int resistance);
-void SetMotorVoltage(int voltage);
-void IncrementWiper();
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif //debuggersonpi_pic_motors_h

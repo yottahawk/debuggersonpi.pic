@@ -20,6 +20,10 @@
 
 /////////////////////////////////////DEFINES//////////////////////////////////// 
 
+int heading1;
+int heading2;
+int heading3;
+
 ////////////////////////////////////FUNCTIONS///////////////////////////////////
 
 // main loop of execution - anything not interrupt driven goes here
@@ -37,20 +41,34 @@ int main(void)
     // Drive motor wheels for testing purposes.
     enableMotorPSU();               // Set enable line to enable psu.
     
-    //R_motor_constSpeed(FWD, 125);
-    L_motor_constSpeed(REV, 65);
+    // R_motor_constSpeed(FWD, 125);
+    // L_motor_constSpeed(REV, 65);
     
-    int i = 0;
-    for (i; i<= 1000; i++)
-    {
-       initCompass(); 
-    }
-//    
-//
-//    unsigned char A = readCompass(Config_Reg_A);
-//    unsigned char B = readCompass(Config_Reg_B);
-//    unsigned char M = readCompass(Mode_Reg);
+    // clear bus collision bit
+    I2C1STATbits.BCL = 0;
     
+    initCompass();
+    
+    unsigned char A = periph_readCompass(Config_Reg_A);
+    unsigned char B = periph_readCompass(Config_Reg_B);
+    unsigned char M = periph_readCompass(Mode_Reg);
+    
+    
+    calculateHeading();
+    heading1 = currentheading;
+    
+    calculateHeading();
+    heading2 = currentheading;
+
+    calculateHeading();
+    heading3 = currentheading;
+    
+    unsigned char A = periph_readCompass(Config_Reg_A);
+    unsigned char B = periph_readCompass(Config_Reg_B);
+    unsigned char M = periph_readCompass(Mode_Reg);
+    
+    
+    Nop();
 //    readCompassData(); // dummy read
 //    
 //    unsigned char status1 = readCompass(Status_Reg);

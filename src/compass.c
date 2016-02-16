@@ -9,7 +9,11 @@
 
 #include "compass.h"
 
+#include "math.h"
+
 /////////////////////////////////////DEFINES////////////////////////////////////
+
+#define PI 3.14
 
 //////////////////////////////TYPEDEFS,ENUMS,STRUCTS////////////////////////////
 
@@ -20,9 +24,11 @@ int currentheading;             // Value of current heading
 int prevheadings[100];          // Buffer containing previous headings
 
 // Internals
-int X_axis;
-int Y_axis;
-int Z_axis;
+signed int X_axis;
+signed int Y_axis;
+signed int Z_axis;
+
+int m_scale = 1;
 
 ///////////////////////////////FUNCTION DEFINITIONS/////////////////////////////
 
@@ -33,12 +39,11 @@ int Z_axis;
  */
 void initCompass()
 {
-    i2c_init(BAUD_RATE); 
-     
-    writeCompass(Config_Reg_A, Config_A_Data); 
-    writeCompass(Config_Reg_B, Config_B_Data); 
-    writeCompass(Mode_Reg, Mode_Data);  
-    // setGain(GaussB);
+    periph_OpenI2C();
+    
+    periph_writeCompass(Config_Reg_A, Config_A_Data); 
+    periph_writeCompass(Config_Reg_B, Config_B_Data); 
+    periph_writeCompass(Mode_Reg, Mode_Data_Continuous);  
 }
 
 void selfTestCompass(); // Run self test and verify pass
@@ -46,82 +51,91 @@ void selfTestCompass(); // Run self test and verify pass
 void scaleAxis(); // Scale the output of each axis.
 void setGain(set_gauss_scale value);     // Use an enum to set the gauss scale
 
-int createIntFromChars(unsigned char HB, unsigned char LB)
+int createIntFromChars(unsigned char MSB, unsigned char LSB)
 {
     // Create int from two chars
     
-    int val = 0; 
+    signed int val = 0; 
                                
-    val = HB; 
+    val = MSB; 
     val <<= 8;                          
-    val |= LB;          
+    val |= LSB;          
     return val;    
 }; 
-
-unsigned char readCompass(unsigned char reg_address)
-{
-    // Read the value of a certain register
-    unsigned char val; 
-    
-    i2c_start();
-    send_i2c_byte(HMC5883L_ADDR | SLAVE_WRITE_TO);
-    send_i2c_byte(reg_address);
-
-    i2c_repeatstart();
-    
-    send_i2c_byte(HMC5883L_ADDR | SLAVE_READ_FROM);
-    val = i2c_read_ack();
-    
-    i2c_resetbus();
-    
-    return val;
-} 
-
-void writeCompass(unsigned char reg_address, unsigned char value)
-{
-    // Writes to a register
-    i2c_init(BAUD_RATE);
-    
-    i2c_start();
-    
-    send_i2c_byte(HMC5883L_ADDR | SLAVE_WRITE_TO);
-    send_i2c_byte(reg_address);
-    send_i2c_byte(value);
-    
-    i2c_resetbus();
-}
 
 void readCompassData()
 {
     // Reads the relevant data to a buffer
+    UINT8 data[6] = {0};
     
-    unsigned char lsb_x = 0; 
-    unsigned char msb_x = 0; 
-    unsigned char lsb_y = 0; 
-    unsigned char msb_y = 0;
-    unsigned char lsb_z = 0; 
-    unsigned char msb_z = 0;
-
-    i2c_start(); 
+    UINT8 * data_ptr;
+    data_ptr = &data[0];
     
-    send_i2c_byte(HMC5883L_ADDR | SLAVE_WRITE_TO);        // Write    
-    send_i2c_byte(X_MSB_Reg);  
+    periph_StartI2C(); 
+    periph_WriteByte(HMC5883L_ADDR | SLAVE_WRITE_TO);        // Write    
+    periph_WriteByte(X_MSB_Reg);  
+    periph_StartI2C(); 
+    periph_WriteByte(HMC5883L_ADDR | SLAVE_READ_FROM);       // Read
+    periph_ReadBytesAck( data_ptr , 6 );          
+    periph_StopI2C();
     
-    i2c_repeatstart();
-    
-    send_i2c_byte(HMC5883L_ADDR | SLAVE_READ_FROM);   // Read
-    msb_x = i2c_read_ack(); 
-    lsb_x = i2c_read_ack(); 
-    msb_y = i2c_read_ack(); 
-    lsb_y = i2c_read_ack(); 
-    msb_z = i2c_read_ack(); 
-    lsb_z = i2c_read_ack(); 
-               
-    i2c_resetbus(); 
-    
-    X_axis = createIntFromChars(msb_x, lsb_x);
-    Z_axis = createIntFromChars(msb_y, lsb_y);
-    Y_axis = createIntFromChars(msb_z, lsb_z); 
+    X_axis = createIntFromChars(data[0], data[1]);
+    Z_axis = createIntFromChars(data[2], data[3]);
+    Y_axis = createIntFromChars(data[4], data[5]); 
 };     
 
-void calculateHeading();    // Takes the buffer data and calculates a heading
+void calculateHeading()
+{
+    // Takes the buffer data and calculates a heading
+    readCompassData();
+    
+    int X_scaled = X_axis * m_scale;
+    int Y_scaled = Y_axis * m_scale;
+    int Z_scaled = Z_axis * m_scale;
+    
+    currentheading = atan2(Y_scaled , X_scaled);
+    
+    if(currentheading < 0.0) 
+    { 
+      currentheading += (2.0 * PI); 
+    } 
+    
+    if(currentheading > (2.0 * PI))                
+    {                            
+      currentheading -= (2.0 * PI); 
+    }                    
+                    
+   currentheading *= (180.0 / PI);
+    
+   // currentheading = currentheading + (int)declination_angle;
+}
+
+unsigned char periph_readCompass(unsigned char reg_address)
+{
+    // Read the value of a certain register
+    UINT8 val; 
+    
+    periph_StartI2C();
+    periph_WriteByte(HMC5883L_ADDR | SLAVE_WRITE_TO);
+    periph_WriteByte(reg_address);
+
+    periph_StartI2C();
+    periph_WriteByte(HMC5883L_ADDR | SLAVE_READ_FROM);
+    periph_ReadByte(&val);
+    
+    periph_StopI2C();
+    
+    return val;
+} 
+
+void periph_writeCompass(unsigned char reg_address, unsigned char value)
+{
+    // Writes to a register  
+    periph_StartI2C();
+    
+    periph_WriteByte(HMC5883L_ADDR | SLAVE_WRITE_TO);
+    periph_WriteByte(reg_address);
+    periph_WriteByte(value);
+    
+    periph_StopI2C();
+}

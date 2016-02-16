@@ -26,7 +26,6 @@
       <itemPath>src/oc.h</itemPath>
       <itemPath>src/timers.h</itemPath>
       <itemPath>src/motors.h</itemPath>
-      <itemPath>src/i2c.h</itemPath>
       <itemPath>src/led.h</itemPath>
       <itemPath>src/grabber.h</itemPath>
       <itemPath>src/compass.h</itemPath>
@@ -37,6 +36,8 @@
       <itemPath>src/SensFRONT.h</itemPath>
       <itemPath>src/linefollow.h</itemPath>
       <itemPath>src/wheelEncoders.h</itemPath>
+      <itemPath>src/I2C1.h</itemPath>
+      <itemPath>src/I2C2.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -66,7 +67,6 @@
       <itemPath>src/indicators_switches.c</itemPath>
       <itemPath>src/spi.c</itemPath>
       <itemPath>src/motors.c</itemPath>
-      <itemPath>src/i2c.c</itemPath>
       <itemPath>src/led.c</itemPath>
       <itemPath>src/grabber.c</itemPath>
       <itemPath>src/compass.c</itemPath>
@@ -76,6 +76,9 @@
       <itemPath>src/Sens6.c</itemPath>
       <itemPath>src/SensFRONT.c</itemPath>
       <itemPath>src/wheelEncoders.c</itemPath>
+      <itemPath>src/I2C1.c</itemPath>
+      <itemPath>src/I2C2.c</itemPath>
+      <itemPath>src/I2C_Functions.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -140,7 +143,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="extra-include-directories"
-                  value="C:\Program Files (x86)\Microchip\xc16\v1.25\support\generic\h;C:\Program Files (x86)\Microchip\xc16\v1.25\support\PIC24F\h"/>
+                  value="C:\Program Files (x86)\Microchip\xc16\v1.25\support\generic\h;C:\Program Files (x86)\Microchip\xc16\v1.25\support\PIC24F\h;..\..\..\..\..\Program Files (x86)\Microchip\xc16\v1.25\support\peripheral_24F;..\..\..\..\..\Program Files (x86)\Microchip\xc16\v1.25\include"/>
         <property key="isolate-each-function" value="false"/>
         <property key="keep-inline" value="false"/>
         <property key="oXC16gcc-align-arr" value="false"/>
@@ -282,7 +285,6 @@
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="true"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="hwtoolclock.instructionspeed" value="4"/>
         <property key="hwtoolclock.units" value="mips"/>
@@ -390,6 +392,8 @@
         </C30-LD>
         <C30Global>
         </C30Global>
+      </item>
+      <item path="src/I2C_Functions.c" ex="true" overriding="false">
       </item>
       <item path="src/OpenLoop.c" ex="true" overriding="false">
         <C30>

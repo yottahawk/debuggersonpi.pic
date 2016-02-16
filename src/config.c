@@ -111,6 +111,7 @@ void initialise_pinmap(void)
     // TRISG
     // This port contains the SPI and I2C pins, which are automatically set as
     // serial port objects when the modules are enabled.
+    TRISG = 0xFFFF;          // Set all as inputs by default
     
     ////////////////////////////////////LATx////////////////////////////////////
     // Writes to LAT register to set output values at startup.

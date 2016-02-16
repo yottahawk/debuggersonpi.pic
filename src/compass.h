@@ -14,7 +14,8 @@
 
 #include "xc.h"
 
-#include "i2c.h"
+#include "I2C1.h"
+#include "I2C2.h"
 
 //////////////////////////////////////DEFINES///////////////////////////////////
 
@@ -42,7 +43,8 @@
 // Config register data bytes
 #define Config_A_Data 0x70  // Normal measurement mode, ODR = 15Hz, 8 averaged samples
 #define Config_B_Data 0x20  // +-1.3 Ga
-#define Mode_Data 0x01      // Single measurment mode
+#define Mode_Data_Single 0x01           // Single measurment mode
+#define Mode_Data_Continuous 0x00       // Continuous measurment mode
 
 // Angle between magnetic north and geographic north
 // Magnetic declination is 1.37 degrees WEST
@@ -79,12 +81,15 @@ void selfTestCompass(); // Run self test and verify pass
 void scaleAxis(); // Scale the output of each axis.
 void setGain(set_gauss_scale value);     // Use an enum to set the gauss scale
 
-int createIntFromChars(unsigned char HB, unsigned char LB); // Create int from two chars
+int createIntFromChars(unsigned char MSB, unsigned char LSB); // Create int from two chars
 unsigned char readCompass(unsigned char reg); // Read the value of a certain register
 void writeCompass(unsigned char reg_address, unsigned char value); // Writes to a register
 
 void readCompassData();     // Reads the relevant data to a buffer
 void calculateHeading();    // Takes the buffer data and calculates a heading
+
+unsigned char periph_readCompass(unsigned char reg_address);
+void periph_writeCompass(unsigned char reg_address, unsigned char value);
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif //debuggersonpi_pic_compass_h
