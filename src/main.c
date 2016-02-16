@@ -41,8 +41,8 @@ int main(void)
     // Drive motor wheels for testing purposes.
     enableMotorPSU();               // Set enable line to enable psu.
     
-    // R_motor_constSpeed(FWD, 125);
-    // L_motor_constSpeed(REV, 65);
+    R_motor_constSpeed(FWD, 125);
+    L_motor_constSpeed(FWD, 125);
     
     // clear bus collision bit
     I2C1STATbits.BCL = 0;
@@ -63,9 +63,9 @@ int main(void)
     calculateHeading();
     heading3 = currentheading;
     
-    unsigned char A = periph_readCompass(Config_Reg_A);
-    unsigned char B = periph_readCompass(Config_Reg_B);
-    unsigned char M = periph_readCompass(Mode_Reg);
+    A = periph_readCompass(Config_Reg_A);
+    B = periph_readCompass(Config_Reg_B);
+    M = periph_readCompass(Mode_Reg);
     
     
     Nop();
@@ -77,7 +77,6 @@ int main(void)
 //    unsigned char status2 = readCompass(Status_Reg);
 //    readCompassData();
 //    unsigned char status3 = readCompass(Status_Reg);
-    
     
     while(1)
     {  

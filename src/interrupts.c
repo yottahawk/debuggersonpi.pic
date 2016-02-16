@@ -89,7 +89,7 @@ void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
            break;
        case 1:
            
-           I2C2_resetbus();
+           I2C1_resetbus();
            
 //           Xupper = readCompass(X_MSB_Reg);
 //           Xlower = readCompass(X_LSB_Reg);

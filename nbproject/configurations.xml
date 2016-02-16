@@ -37,7 +37,6 @@
       <itemPath>src/linefollow.h</itemPath>
       <itemPath>src/wheelEncoders.h</itemPath>
       <itemPath>src/I2C1.h</itemPath>
-      <itemPath>src/I2C2.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -77,7 +76,6 @@
       <itemPath>src/SensFRONT.c</itemPath>
       <itemPath>src/wheelEncoders.c</itemPath>
       <itemPath>src/I2C1.c</itemPath>
-      <itemPath>src/I2C2.c</itemPath>
       <itemPath>src/I2C_Functions.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -394,6 +392,16 @@
         </C30Global>
       </item>
       <item path="src/I2C_Functions.c" ex="true" overriding="false">
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
       </item>
       <item path="src/OpenLoop.c" ex="true" overriding="false">
         <C30>
