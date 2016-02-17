@@ -26,6 +26,13 @@ int heading3;
 
 ////////////////////////////////////FUNCTIONS///////////////////////////////////
 
+void testFunctionEncoders()
+{
+    enc1_setupInterrupt();
+    enc2_setupInterrupt();
+}
+
+
 // main loop of execution - anything not interrupt driven goes here
 int main(void) 
 {
@@ -36,19 +43,17 @@ int main(void)
     CNEN1bits.CN6IE = 1;            // Enable PUSH_CW interrupt-on-change notification.
     
     led_init_timer();               // enables tmr5 interrupts for led flashing routines.
-    led_flash_blue_on(0xFFFF);
+    // led_flash_blue_on(0xFFFF);
     
     // Drive motor wheels for testing purposes.
     enableMotorPSU();               // Set enable line to enable psu.
     
-    R_motor_constSpeed(FWD, 125);
-    L_motor_constSpeed(FWD, 125);
+    testFunctionEncoders();
     
-    // clear bus collision bit
-    I2C1STATbits.BCL = 0;
+    periph_StopI2C1();
+    periph_CloseI2C1();
     
     initCompass();
-    
     unsigned char A = periph_readCompass(Config_Reg_A);
     unsigned char B = periph_readCompass(Config_Reg_B);
     unsigned char M = periph_readCompass(Mode_Reg);
@@ -67,17 +72,11 @@ int main(void)
     B = periph_readCompass(Config_Reg_B);
     M = periph_readCompass(Mode_Reg);
     
+    R_motor_constSpeed(FWD, 15);
+    L_motor_constSpeed(FWD, 15);
     
     Nop();
-//    readCompassData(); // dummy read
-//    
-//    unsigned char status1 = readCompass(Status_Reg);
-//    // while(!PORTDbits.RD5){};  // DRDY pin is set when data is ready
-//    writeCompass(Mode_Reg, Mode_Data); 
-//    unsigned char status2 = readCompass(Status_Reg);
-//    readCompassData();
-//    unsigned char status3 = readCompass(Status_Reg);
-    
+  
     while(1)
     {  
         // if(spi_info.command) SPI_Function();
@@ -86,4 +85,5 @@ int main(void)
     
     return 0;
 }
+
 

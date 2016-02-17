@@ -43,6 +43,16 @@ void __attribute__((__interrupt__, auto_psv)) _INT2Interrupt(void)
     IFS1bits.INT2IF = 0;        // Reset interrupt flag
     
     GLOBAL_enc2_count++;
+    
+    if (LATEbits.LATE5)
+    {
+        led_const_blue_on();
+    }
+    else
+    {
+         led_const_blue_off();
+    }
+   
 }
 
 /*
@@ -86,16 +96,14 @@ void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
    switch(CNbuffer[1])
    {
        case 0:
-           break;
+            break;
        case 1:
            
-           I2C1_resetbus();
+            I2C1_resetbus();
+
+            enc1_resetCounter();
+            enc2_resetCounter();
            
-//           Xupper = readCompass(X_MSB_Reg);
-//           Xlower = readCompass(X_LSB_Reg);
-//           Yupper = readCompass(Y_MSB_Reg);
-//           Ylower = readCompass(Y_LSB_Reg);
-                 
            break;
    }
            

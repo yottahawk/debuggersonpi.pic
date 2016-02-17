@@ -1,17 +1,15 @@
 /* 
- * File:   I2C1.c
+ * File:   I2C2.c
  * Author: Harry
  *
- * Created on February 15, 2016, 10:09 PM
+ * Created on February 17, 2016, 1:33 AM
  */
 
 /////////////////////////////////////INCLUDES///////////////////////////////////
 
-#include "I2C1.h"
+#include "I2C2.h"
 
 /////////////////////////////////////DEFINES////////////////////////////////////
-
- // 
 
 #define COMPASS_START_ENABLE I2C1CONbits.SEN
 #define COMPASS_IDLE I2C1CONbits.PEN
@@ -21,6 +19,10 @@
 #define COMPASS_ACK_STATUS I2C1STATbits.ACKSTAT
 #define COMPASS_WR_COL I2C1STATbits.IWCOL
 #define COMPASS_I2C_EN I2C1CONbits.I2CEN
+
+//////////////////////////////TYPEDEFS,ENUMS,STRUCTS////////////////////////////
+
+//////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 
 /* I2C baud rates for a system clock of 8 Mhz*/
 static const unsigned int I2C_BAUD_100K = 0x000F; /* I2C baud rate 100KHz Setting */
@@ -32,123 +34,9 @@ static const INT8 I2C_WRITE_COLLISION   = -1;
 /* ACKSTAT register bit = 1 for NACK detected last */
 static const UINT8 NoAck                = 1;
 
-//////////////////////////////TYPEDEFS,ENUMS,STRUCTS////////////////////////////
-
-//////////////////////////////////GLOBAL VARIABLES//////////////////////////////
-
 ///////////////////////////////FUNCTION DEFINITIONS/////////////////////////////
 
-void I2C1_resetbus()
-{
-    I2C1CONbits.RCEN        = 0;                // Disable receive as master
-    IFS1bits.MI2C1IF        = 0;                // Clear interrupt
-    I2C1STATbits.IWCOL      = 0;                // Reset write collision flag
-    I2C1STATbits.BCL        = 0;                // Reset bus collision flag
-    
-    I2C1CONbits.PEN = 1;                        // initiate stop condition as master
-    
-    // wait for hardware clear of stop bit
-    while (I2C1CONbits.PEN){}
-    
-    I2C1CONbits.RCEN        = 0;                // Disable receive as master
-    IFS1bits.MI2C1IF        = 0;                // Clear interrupt
-    I2C1STATbits.IWCOL      = 0;                // Reset write collision flag
-    I2C1STATbits.BCL        = 0;                // Reset bus collision flag
-}
 
-void I2C1_init(int Baud_Rate)
-{
-    int clearbuffertemp;
-    
-    // Set baud rate using I2C1BRG
-    // With Fosc = 4Mhz...
-    // I2C1BRG = 39 -> 100kHz clock
-    // I2C1BRG = 79 -> 50 kHz clock
-    
-    I2C1CONbits.I2CEN       = 0;                // Disable I2C mode
-    
-    I2C1BRG = Baud_Rate;                        // Set new baud rate
-    I2C1CONbits.DISSLW      = 1;                // Disable slew rate control
-    IFS1bits.MI2C1IF        = 0;                // Clear interrupt
-    I2C1CONbits.I2CEN       = 1;                // Enable I2C mode
-    
-    clearbuffertemp         = I2C1RCV;          // read receive buffer to clear buffer
-    I2C1_resetbus();                             // set bus to idle
-}
-
-void I2C1_start()
-{
-    I2C1CONbits.ACKDT       = 0;                // Reset any previous ack
-    I2C1CONbits.SEN         = 1;                // Initiate start condition
-    
-    // Wait for the hardware to automatically clear the start bit
-    while (I2C1CONbits.SEN){}                   
-}
-
-void I2C1_repeatstart()
-{
-   I2C1CONbits.RSEN = 1;                        //Initiate repeatedstart condition
-    
-   // Wait for hardware to automatically clear the reset bit
-   while (I2C1CONbits.RSEN){}
-}
-
-unsigned char I2C1_send_byte(unsigned char data)
-{
-   while (I2C1STATbits.TBF){}                   // Wait for transmission to complete
-  
-   IFS1bits.MI2C1IF = 0;                        // Clear Interrupt
-   I2C1TRN = data;                              // load the outgoing data byte
-
-   // wait for transmission to complete
-   while (I2C1STATbits.TRSTAT){};
-
-   // Check for ACK from slave, abort if not found
-   if (I2C1STATbits.ACKSTAT == 1) // Slave sends NACK
-   {
-      led_const_grn_on();
-      return(1);
-   }
-   
-   return(0);               // transmission completed successfully
-}
-
-unsigned char I2C1_read_ack()
-{
-   unsigned char temp = 0; 
-   
-   // Check lower 5 bits of I2C1CON register are all 0
-   if (!(I2C1CON & 0x001F)){};
-   
-   //set I2C module to receive
-   I2C1CONbits.RCEN = 1;
-   
-   while (I2C1CONbits.RCEN){};
-   while (!I2C1STATbits.RBF){};
-   temp = I2C1RCV; //get data from I2C1RCV register
-   
-   I2C1CONbits.ACKEN = 1;       // Ack
-   
-   //return data
-   return temp;
-}
-
-unsigned char I2C1_read_no_ack()
-{
-   unsigned char temp = 0; 
-    
-   //set I2C module to receive
-   I2C1CONbits.RCEN = 1;
-   
-   while (!I2C1STATbits.RBF){};
-        
-   temp = I2C1RCV; //get data from I2C1RCV register
-   
-   //return data
-   return temp;
-}
-
-////////////////////////////////////////////////////////////////////////////////
 
 /*----------------------------------------------------------------------------
 ** Function: periph_OpenI2C()
@@ -159,12 +47,12 @@ unsigned char I2C1_read_no_ack()
 **
 ** Returns:  None
 */
-void periph_OpenI2C1( void )
+void periph_OpenI2C2( void )
 {
    /* Setup the I2C config register and enable the port */
-   OpenI2C1( I2C_ON | I2C_SLW_DIS | I2C_ACK , I2C_BAUD_100K );
+   OpenI2C2( I2C_ON | I2C_SLW_DIS | I2C_ACK , I2C_BAUD_100K );
    /* wait for the port to go idle */
-   IdleI2C1();
+   IdleI2C2();
 }
 
 /*----------------------------------------------------------------------------
@@ -176,11 +64,11 @@ void periph_OpenI2C1( void )
 **
 ** Returns:  None
 */
-void periph_CloseI2C1( void )
+void periph_CloseI2C2( void )
 {
    /* wait for the port to go idle */
-   IdleI2C1();
-   CloseI2C1();
+   IdleI2C2();
+   CloseI2C2();
 }
 
 /*----------------------------------------------------------------------------
@@ -192,9 +80,9 @@ void periph_CloseI2C1( void )
 **
 ** Returns:  None
 */
-void periph_StartI2C1( void )
+void periph_StartI2C2( void )
 {
-   StartI2C1();
+   StartI2C2();
    while( COMPASS_START_ENABLE != CLEAR )
    {
       /*do nothing*/
@@ -211,7 +99,7 @@ void periph_StartI2C1( void )
 **
 ** Returns:  None
 */
-void periph_StopI2C1( void )
+void periph_StopI2C2( void )
 {
    StopI2C1();
    while( COMPASS_IDLE != CLEAR )
@@ -219,7 +107,7 @@ void periph_StopI2C1( void )
       /*do nothing*/
    }
    /* wait for the port to go idle */
-   IdleI2C1();
+   IdleI2C2();
 }
 
 /*----------------------------------------------------------------------------
@@ -233,7 +121,7 @@ void periph_StopI2C1( void )
 **
 ** Returns:  NOne
 */
-void periph_WriteByteI2C1( const UINT8 CoProWriteData )
+void periph_WriteByteI2C2( const UINT8 CoProWriteData )
 {
    UINT8 CollisionRetry             = RETRY_COUNT;
    INT8  I2CWriteStatus             = 0;
@@ -249,7 +137,7 @@ void periph_WriteByteI2C1( const UINT8 CoProWriteData )
       }
 
       /* Write the data to the Co-Processor*/
-      I2CWriteStatus = MasterWriteI2C1( CoProWriteData );
+      I2CWriteStatus = MasterWriteI2C2( CoProWriteData );
       while( COMPASS_TX_STATUS != CLEAR )
       {
          /*do nothing*/
@@ -277,13 +165,13 @@ void periph_WriteByteI2C1( const UINT8 CoProWriteData )
 ** Returns: None
 **
 */
-void periph_WriteBytesI2C1( const UINT8 * data,  UINT16 numBytes)
+void periph_WriteBytesI2C2( const UINT8 * data,  UINT16 numBytes)
 {
    UINT16 i;
 
    for (i = 0; i < numBytes; i++)
    {
-      periph_WriteByteI2C1( data[i] );
+      periph_WriteByteI2C2( data[i] );
    }
 }
 
@@ -296,9 +184,9 @@ void periph_WriteBytesI2C1( const UINT8 * data,  UINT16 numBytes)
 **
 ** Returns:  None
 */
-void periph_RestartI2C1( void )
+void periph_RestartI2C2( void )
 {
-   RestartI2C1();
+   RestartI2C2();
    while( COMPASS_RESTART_ENABLE != CLEAR )
    {
       /*Do nothing*/
@@ -314,9 +202,9 @@ void periph_RestartI2C1( void )
 **
 ** Returns:  returns a byte to the pointer ByteLocation
 */
-void periph_ReadByteI2C1( UINT8 *ByteLocation )
+void periph_ReadByteI2C2( UINT8 *ByteLocation )
 {
-   *ByteLocation = MasterReadI2C1();
+   *ByteLocation = MasterReadI2C2();
    while( COMPASS_TX_STATUS != CLEAR )
    {
       /*Do Nothing*/
@@ -332,24 +220,24 @@ void periph_ReadByteI2C1( UINT8 *ByteLocation )
 **
 ** Returns:  BytesLocation read bytes
 */
-void periph_ReadBytesAckI2C1( UINT8 *BytesLocation, UINT8 ByteCount )
+void periph_ReadBytesAckI2C2( UINT8 *BytesLocation, UINT8 ByteCount )
 {
    UINT8 i;
 
    for( i=0; i<ByteCount; i++ )
    {
       /* read next byte */
-      periph_ReadByteI2C1( &BytesLocation[i] );
+      periph_ReadByteI2C2( &BytesLocation[i] );
 
       if( i == (ByteCount - 1) )
       {
          
-         NotAckI2C1();
+         NotAckI2C2();
       }
       else
       {
          /* Send ack data bit */
-         AckI2C1();
+         AckI2C2();
       }
 
       /* Wait for ack to complete */
@@ -370,24 +258,24 @@ void periph_ReadBytesAckI2C1( UINT8 *BytesLocation, UINT8 ByteCount )
 **
 ** Returns:  BytesLocation read bytes
 */
-void periph_ReadBytesI2C1( UINT8 *BytesLocation, UINT8 ByteCount, BOOL Ack )
+void periph_ReadBytesI2C2( UINT8 *BytesLocation, UINT8 ByteCount, BOOL Ack )
 {
    UINT8 i;
 
    for( i=0; i<ByteCount; i++ )
    {
       /* read next byte */
-      periph_ReadByteI2C1( &BytesLocation[i] );
+      periph_ReadByteI2C2( &BytesLocation[i] );
 
       if( (i == (ByteCount - 1)) && (Ack == FALSE) )
       {
 
-         NotAckI2C1();
+         NotAckI2C2();
       }
       else
       {
          /* Send ack data bit */
-         AckI2C1();
+         AckI2C2();
       }
 
       /* Wait for ack to complete */
@@ -407,7 +295,7 @@ void periph_ReadBytesI2C1( UINT8 *BytesLocation, UINT8 ByteCount, BOOL Ack )
 **
 ** Returns: TRUE: ACK, FALSE: NOACK
 */
-BOOL periph_CheckAckI2C1( void )
+BOOL periph_CheckAckI2C2( void )
 {
    BOOL ReturnState = FALSE;
 
@@ -418,5 +306,3 @@ BOOL periph_CheckAckI2C1( void )
 
    return ReturnState;
 }
-
-////////////////////////////////////////////////////////////////////////////////

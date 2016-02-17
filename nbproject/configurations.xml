@@ -37,6 +37,7 @@
       <itemPath>src/linefollow.h</itemPath>
       <itemPath>src/wheelEncoders.h</itemPath>
       <itemPath>src/I2C1.h</itemPath>
+      <itemPath>src/I2C2.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -77,6 +78,7 @@
       <itemPath>src/wheelEncoders.c</itemPath>
       <itemPath>src/I2C1.c</itemPath>
       <itemPath>src/I2C_Functions.c</itemPath>
+      <itemPath>src/I2C2.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -283,6 +285,7 @@
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="hwtoolclock.instructionspeed" value="4"/>
         <property key="hwtoolclock.units" value="mips"/>
