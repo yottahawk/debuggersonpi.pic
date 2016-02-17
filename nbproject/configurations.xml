@@ -84,7 +84,6 @@
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
-      <itemPath>E:/SSD Users/Documents/GitHub/debuggersonpi.pic/MyConfig.mc3</itemPath>
       <itemPath>device_config.mcc</itemPath>
     </logicalFolder>
   </logicalFolder>
@@ -167,6 +166,7 @@
         <property key="scalar-model" value="default"/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
+        <appendMe value="-std=c99"/>
       </C30>
       <C30-AR>
         <property key="additional-options-chop-files" value="false"/>
@@ -285,7 +285,6 @@
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="true"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="hwtoolclock.instructionspeed" value="4"/>
         <property key="hwtoolclock.units" value="mips"/>
@@ -394,7 +393,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/OpenLoop.c" ex="true" overriding="false">
+      <item path="src/OpenLoop.c" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -406,7 +405,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/OpenLoop.h" ex="true" overriding="false">
+      <item path="src/OpenLoop.h" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -442,7 +441,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/Sens1Peripheral.c" ex="true" overriding="false">
+      <item path="src/Sens1Peripheral.c" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -454,7 +453,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/Sens1Peripheral.h" ex="true" overriding="false">
+      <item path="src/Sens1Peripheral.h" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -466,7 +465,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/Sens2Peripheral.c" ex="true" overriding="false">
+      <item path="src/Sens2Peripheral.c" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -478,7 +477,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/Sens2Peripheral.h" ex="true" overriding="false">
+      <item path="src/Sens2Peripheral.h" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -490,7 +489,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/SensCubePeripheral.c" ex="true" overriding="false">
+      <item path="src/SensCubePeripheral.c" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -502,7 +501,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/SensCubePeripheral.h" ex="true" overriding="false">
+      <item path="src/SensCubePeripheral.h" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -514,7 +513,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/StateMachine.c" ex="true" overriding="false">
+      <item path="src/StateMachine.c" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -526,7 +525,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/StateMachine.h" ex="true" overriding="false">
+      <item path="src/StateMachine.h" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -622,7 +621,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/spi.c" ex="true" overriding="false">
+      <item path="src/spi.c" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -634,7 +633,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/spi.h" ex="true" overriding="false">
+      <item path="src/spi.h" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>

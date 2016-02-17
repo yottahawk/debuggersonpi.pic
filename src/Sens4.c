@@ -10,25 +10,26 @@
 #include <xc.h>
 #include "Sens4.h"
 
-char Buffer[BUFFER_LENGTH];
-int Pointer;
+unsigned int SENS4Buffer[BUFFER_LENGTH];
+unsigned int SENS4Pointer;
 
 //Function to read a value directly from the peripheral
-char ReadSENS4() {
+unsigned int ReadSENS4() {
+    return 0;
 }
 
 //Functions to read and write to the peripheral's buffer
-int WriteSENS4Buffer(char Data) {
+void WriteSENS4Buffer(unsigned int Data) {
     /*
      * Increments pointer (loops round if exceeds buffer size) 
      * Inserts new value at position
      */
     //Increment Pointer 
-    if(Pointer==0) Pointer = BUFFER_LENGTH-1; //Loop pointer if exceeds buffer length
-    else Pointer--; 
+    if(SENS4Pointer==0) SENS4Pointer = BUFFER_LENGTH-1; //Loop pointer if exceeds buffer length
+    else SENS4Pointer--; 
     
     //Insert data at new position
-    Buffer[Pointer] = Data;
+    SENS4Buffer[SENS4Pointer] = Data;
     
     //Integral Code?
 }
@@ -40,41 +41,42 @@ void ReadSENS4Buffer(unsigned int* Dest, int Count){
      * a pointer to the first value
      */
     //Reoorganise Buffer if count exceeds values remaining in memory
-    if(Count>(BUFFER_LENGTH-Pointer)) {
+    if(Count>(BUFFER_LENGTH-SENS4Pointer)) {
         //Temporary Buffer
-        char TempBuffer[BUFFER_LENGTH];
+        unsigned int TempBuffer[BUFFER_LENGTH];
 
         //Fill temporarybuffer with values from Buffer
-        for(int i=Pointer;i<BUFFER_LENGTH;i++){
-            TempBuffer[i-Pointer] = Buffer[i];
+        for(int i=SENS4Pointer;i<BUFFER_LENGTH;i++){
+            TempBuffer[i-SENS4Pointer] = SENS4Buffer[i];
         }
-        for(int i=0;i<Pointer;i++){
-            TempBuffer[Pointer+i] = Buffer[i];
+        for(int i=0;i<SENS4Pointer;i++){
+            TempBuffer[SENS4Pointer+i] = SENS4Buffer[i];
         }
         
         //Copy temporary buffer to buffer
-        for(int i=0;i<BUFFER_LENGTH;i++) Buffer[i] = TempBuffer[i];
+        for(int i=0;i<BUFFER_LENGTH;i++) SENS4Buffer[i] = TempBuffer[i];
         
         //Reset pointer to start of buffer
-        Pointer = 0;
+        SENS4Pointer = 0;
     };
     
-    return &Buffer[Pointer];
+    Dest = &SENS4Buffer[SENS4Pointer];
 }
 
 int StartupSENS4() {
+    return 0;
 }
 
 //Functions to Initiate / Clear
 int InitiateSENS4() {
     //Ensure Buffer is full of zeros
-    ClearBuffer();
+    ClearSENS4Buffer();
     
     //Place pointer at end of buffer
-    Pointer = BUFFER_LENGTH-1;
+    SENS4Pointer = BUFFER_LENGTH-1;
     
     //Initiate data direction bits
-    StartupSENS2();
+    StartupSENS4();
     
     return 0;
 }
@@ -82,7 +84,7 @@ int ClearSENS4Buffer() {
     /*
      * Writes zeros into every cell of the buffer
      */
-    for(int i=0; i<BUFFER_LENGTH; i++) Buffer[i] = 0;
+    for(int i=0; i<BUFFER_LENGTH; i++) SENS4Buffer[i] = 0;
     
     return 0;
 }

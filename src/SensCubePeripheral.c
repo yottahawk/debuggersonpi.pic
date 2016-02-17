@@ -11,11 +11,11 @@
 #include <xc.h>
 #include "SensCubePeripheral.h"
 
-char Buffer[BUFFER_LENGTH];
-int Pointer;
+unsigned int SENSCUBEBuffer[BUFFER_LENGTH];
+unsigned int SENSCUBEPointer;
 
 //Function to read a value directly from the peripheral
-char ReadSENSCUBE() {
+unsigned int ReadSENSCUBE() {
     //Read B register and compare to bit mask
     int val = PORTB & BIT_MASK;
     
@@ -26,17 +26,17 @@ char ReadSENSCUBE() {
 }
 
 //Functions to read and write to the peripheral's buffer
-int WriteSENSCUBEBuffer(char Data) {
+void WriteSENSCUBEBuffer(unsigned int Data) {
     /*
      * Increments pointer (loops round if exceeds buffer size) 
      * Inserts new value at position
      */
-    //Increment Pointer 
-    if(Pointer==0) Pointer = BUFFER_LENGTH-1; //Loop pointer if exceeds buffer length
-    else Pointer--; 
+    //Increment SENSCUBEPointer 
+    if(SENSCUBEPointer==0) SENSCUBEPointer = BUFFER_LENGTH-1; //Loop pointer if exceeds buffer length
+    else SENSCUBEPointer--; 
     
     //Insert data at new position
-    Buffer[Pointer] = Data;
+    SENSCUBEBuffer[SENSCUBEPointer] = Data;
     
     //Integral Code?
 }
@@ -48,29 +48,29 @@ void ReadSENSCUBEBuffer(unsigned int* Dest, int Count){
      * a pointer to the first value
      */
     //Reoorganise Buffer if count exceeds values remaining in memory
-    if(Count>(BUFFER_LENGTH-Pointer)) {
+    if(Count>(BUFFER_LENGTH-SENSCUBEPointer)) {
         //Temporary Buffer
-        char TempBuffer[BUFFER_LENGTH];
+        unsigned int TempBuffer[BUFFER_LENGTH];
 
         //Fill temporarybuffer with values from Buffer
-        for(int i=Pointer;i<BUFFER_LENGTH;i++){
-            TempBuffer[i-Pointer] = Buffer[i];
+        for(int i=SENSCUBEPointer;i<BUFFER_LENGTH;i++){
+            TempBuffer[i-SENSCUBEPointer] = SENSCUBEBuffer[i];
         }
-        for(int i=0;i<Pointer;i++){
-            TempBuffer[Pointer+i] = Buffer[i];
+        for(int i=0;i<SENSCUBEPointer;i++){
+            TempBuffer[SENSCUBEPointer+i] = SENSCUBEBuffer[i];
         }
         
         //Copy temporary buffer to buffer
-        for(int i=0;i<BUFFER_LENGTH;i++) Buffer[i] = TempBuffer[i];
+        for(int i=0;i<BUFFER_LENGTH;i++) SENSCUBEBuffer[i] = TempBuffer[i];
         
         //Reset pointer to start of buffer
-        Pointer = 0;
+        SENSCUBEPointer = 0;
     };
     
-    return &Buffer[Pointer];
+    Dest = &SENSCUBEBuffer[SENSCUBEPointer];
 }
 
-int StartupSENSCUBE() {
+void StartupSENSCUBE() {
     // Ensure Data direction register is set to 1 (For 1nput)
     TRISB = TRISB | BIT_MASK;
 }
@@ -78,10 +78,10 @@ int StartupSENSCUBE() {
 //Functions to Initiate / Clear
 int InitiateSENSCUBE() {
     //Ensure Buffer is full of zeros
-    ClearBuffer();
+    ClearSENSCUBEBuffer();
     
     //Place pointer at end of buffer
-    Pointer = BUFFER_LENGTH-1;
+    SENSCUBEPointer = BUFFER_LENGTH-1;
     
     //Initiate data direction bits
     StartupSENSCUBE();
@@ -92,7 +92,7 @@ int ClearSENSCUBEBuffer() {
     /*
      * Writes zeros into every cell of the buffer
      */
-    for(int i=0; i<BUFFER_LENGTH; i++) Buffer[i] = 0;
+    for(int i=0; i<BUFFER_LENGTH; i++) SENSCUBEBuffer[i] = 0;
     
     return 0;
 }

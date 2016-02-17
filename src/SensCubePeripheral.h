@@ -13,10 +13,10 @@ extern "C" {
 #endif
 
     //Function to read a value directly from the peripheral
-    char ReadSENSCUBE();
+    unsigned int ReadSENSCUBE();
     
     //Functions to read and write to the peripheral's buffer
-    int WriteSENSCUBEBuffer(char Data);
+    void WriteSENSCUBEBuffer(unsigned int Data);
     void ReadSENSCUBEBuffer(unsigned int* Dest, int Count);
     
     //Functions to Initiate / Clear

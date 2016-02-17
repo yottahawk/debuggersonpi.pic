@@ -18,5 +18,5 @@
 ///////////////////////////////FUNCTION DEFINITIONS/////////////////////////////
 
 unsigned int ReadCOMPASS() {
-    
+    return 0;
 }

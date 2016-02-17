@@ -13,10 +13,10 @@ extern "C" {
 #endif
 
     //Function to read a value directly from the peripheral
-    char ReadSENS2();
+    unsigned int ReadSENS2();
     
     //Functions to read and write to the peripheral's buffer
-    int WriteSENS2Buffer(char Data);
+    void WriteSENS2Buffer(unsigned int Data);
     void ReadSENS2Buffer(unsigned int* Dest, int Count);
     
     //Functions to Initiate / Clear

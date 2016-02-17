@@ -18,4 +18,6 @@
 
 void OpenGRABBER() {};
 void CloseGRABBER() {};
-unsigned int ReadGRABBER() {};
+unsigned int ReadGRABBER() {
+    return 0;
+};

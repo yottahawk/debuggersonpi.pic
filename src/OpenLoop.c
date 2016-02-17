@@ -18,7 +18,7 @@
 ///////////////////////////////FUNCTION DEFINITIONS/////////////////////////////
 
 void ol_forward() {
-    //Read current speed (from motor)
+/*    //Read current speed (from motor)
     int v_m1 = ReadMOTOR1Peripheral();
     int v_m2 = ReadMOTOR2Peripheral();
     
@@ -34,11 +34,11 @@ void ol_forward() {
     
     //Write v_next to both motors
     WriteMOTOR1Peripheral(v_next);
-    WriteMOTOR2Peripheral(v_next);
+    WriteMOTOR2Peripheral(v_next);*/
 }
 
 void ol_reverse() {
-    //Read current speed (from motor)
+  /*  //Read current speed (from motor)
     int v_m1 = ReadMOTOR1Peripheral();
     int v_m2 = ReadMOTOR2Peripheral();
     
@@ -54,6 +54,11 @@ void ol_reverse() {
     
     //Write v_next to both motors
     WriteMOTOR1Peripheral(v_next);
-    WriteMOTOR2Peripheral(v_next);
+    WriteMOTOR2Peripheral(v_next);*/
 }
+
+void ol_stopped() {
+    
+}
+
 

@@ -13,11 +13,11 @@
 #include <xc.h>
 #include "Sens1Peripheral.h"
 
-char Buffer[BUFFER_LENGTH];
-int Pointer;
+unsigned int SENS1Buffer[BUFFER_LENGTH];
+unsigned int SENS1Pointer;
 
 //Function to read a value directly from the peripheral
-char ReadSENS1() {
+unsigned int ReadSENS1() {
     //Read B register and compare to bit mask
     int val = PIC_PORT & BIT_MASK;
     
@@ -28,17 +28,17 @@ char ReadSENS1() {
 }
 
 //Functions to read and write to the peripheral's buffer
-int WriteSENS1Buffer(char Data) {
+void WriteSENS1Buffer(unsigned int Data) {
     /*
      * Increments pointer (loops round if exceeds buffer size) 
      * Inserts new value at position
      */
-    //Increment Pointer 
-    if(Pointer==0) Pointer = BUFFER_LENGTH-1; //Loop pointer if exceeds buffer length
-    else Pointer--; 
+    //Increment SENS1Pointer 
+    if(SENS1Pointer==0) SENS1Pointer = BUFFER_LENGTH-1; //Loop pointer if exceeds buffer length
+    else SENS1Pointer--; 
     
     //Insert data at new position
-    Buffer[Pointer] = Data;
+    SENS1Buffer[SENS1Pointer] = Data;
     
     //Integral Code?
 }
@@ -50,29 +50,29 @@ void ReadSENS1Buffer(unsigned int* Dest, int Count){
      * a pointer to the first value
      */
     //Reoorganise Buffer if count exceeds values remaining in memory
-    if(Count>(BUFFER_LENGTH-Pointer)) {
+    if(Count>(BUFFER_LENGTH-SENS1Pointer)) {
         //Temporary Buffer
-        char TempBuffer[BUFFER_LENGTH];
+        unsigned int TempBuffer[BUFFER_LENGTH];
 
         //Fill temporarybuffer with values from Buffer
-        for(int i=Pointer;i<BUFFER_LENGTH;i++){
-            TempBuffer[i-Pointer] = Buffer[i];
+        for(int i=SENS1Pointer;i<BUFFER_LENGTH;i++){
+            TempBuffer[i-SENS1Pointer] = SENS1Buffer[i];
         }
-        for(int i=0;i<Pointer;i++){
-            TempBuffer[Pointer+i] = Buffer[i];
+        for(int i=0;i<SENS1Pointer;i++){
+            TempBuffer[SENS1Pointer+i] = SENS1Buffer[i];
         }
         
         //Copy temporary buffer to buffer
-        for(int i=0;i<BUFFER_LENGTH;i++) Buffer[i] = TempBuffer[i];
+        for(int i=0;i<BUFFER_LENGTH;i++) SENS1Buffer[i] = TempBuffer[i];
         
         //Reset pointer to start of buffer
-        Pointer = 0;
+        SENS1Pointer = 0;
     };
     
-    Dest = &Buffer[Pointer];
+    Dest = &SENS1Buffer[SENS1Pointer];
 }
 
-int StartupSENS1() {
+void StartupSENS1() {
     // Ensure Data direction register is set to 1 (For 1nput)
     PIC_TRIS = PIC_TRIS | BIT_MASK;
 }
@@ -80,10 +80,10 @@ int StartupSENS1() {
 //Functions to Initiate / Clear
 int InitiateSENS1() {
     //Ensure Buffer is full of zeros
-    ClearBuffer();
+    ClearSENS1Buffer();
     
     //Place pointer at end of buffer
-    Pointer = BUFFER_LENGTH-1;
+    SENS1Pointer = BUFFER_LENGTH-1;
     
     //Initiate data direction bits
     StartupSENS1();
@@ -94,7 +94,7 @@ int ClearSENS1Buffer() {
     /*
      * Writes zeros into every cell of the buffer
      */
-    for(int i=0; i<BUFFER_LENGTH; i++) Buffer[i] = 0;
+    for(int i=0; i<BUFFER_LENGTH; i++) SENS1Buffer[i] = 0;
     
     return 0;
 }

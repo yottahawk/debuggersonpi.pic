@@ -6,7 +6,7 @@
  */
 
 ////////////////////////////////////INCLUDES////////////////////////////////////
-#include <xc.h>
+#include "xc.h"
 
 #include "config.h"
 #include "oc.h"
@@ -38,9 +38,12 @@ int main(void)
     R_motor_constSpeed(FWD, 25);
     L_motor_constSpeed(REV, 25);
     
+    spi_info_t* info;
+    info = get_spi_info();
+    
     while(1)
     {  
-        if(spi_info.command) SPI_Function();
+        if(info->command) SPI_Function();
     }
     
     return 0;

@@ -90,11 +90,11 @@ void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
  
 /*
  * 
- */
+ 
 void __attribute__((__interrupt__, auto_psv)) _SPI2Interrupt(void)
 {
     
-} 
+}*/ 
 
 /*
  * ADC Conversion Complete Interrupt

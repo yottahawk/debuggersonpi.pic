@@ -111,8 +111,12 @@ void R_motor_constSpeed(motor_direction_type direction, unsigned int speed)
 }
 
 //Note: Int has negativity,and can therefore express direction
-int  L_motor_SpeedGet() {}
-int  R_motor_SpeedGet() {}
+int  L_motor_SpeedGet() {
+    return 0;
+}
+int  R_motor_SpeedGet() {
+    return 0;
+}
 
 void SetFeedbackRes(int resistance)
 {

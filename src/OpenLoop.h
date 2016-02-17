@@ -27,6 +27,7 @@ void ol_fwd_left();
 void ol_fwd_right();
 void ol_rev_left();
 void ol_rev_right();
+void ol_stopped();
 
 #endif //debuggersonpi_pic_openloop_h
 

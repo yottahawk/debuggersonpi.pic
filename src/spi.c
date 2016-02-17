@@ -1,21 +1,13 @@
 #include "spi.h"
-#include <xc.h>
-#include "StateMachine.h"
-#include "led.h"
-#include "grabber.h"
-#include "Sens1Peripheral.h"
-#include "Sens2Peripheral.h"
-#include "Sens3.h"
-#include "Sens4.h"
-#include "Sens5.h"
-#include "Sens6.h"
-#include "SensCubePeripheral.h"
-#include "SensFRONT.h"
-#include "compass.h"
-#include "wheelEncoders.h"
-#include "motors.h"
 
 #define TIMEOUT 10000
+
+spi_info_t spi_info;
+const unsigned int DONE = 0x00FE;
+
+spi_info_t* get_spi_info() {
+    return &spi_info;
+}
 
 //Function to write to spi link
 void Write_SPI(unsigned int* buffer, unsigned int length) {
@@ -26,10 +18,7 @@ void Write_SPI(unsigned int* buffer, unsigned int length) {
     }
 }
 
-void SPI_PSNS(uint8_t Sensor, unsigned int Length, unsigned int Clear) {
-    //Error code (to prevent reading longer than buffer)
-    uint8_t error = 0;
-    
+void SPI_PSNS(unsigned char Sensor, unsigned int Length, unsigned int Clear) {
     //Buffer to send data from
     unsigned int* Buffer; 
     
@@ -68,7 +57,7 @@ void SPI_COMP() {
     Write_SPI(&DONE, 1);
 }
 
-void SPI_ECDR(uint8_t Mode, unsigned int Reset) {
+void SPI_ECDR(unsigned char Mode, unsigned int Reset) {
     //Get data
     int integral = 0;
     if(Mode==1) {
@@ -85,7 +74,7 @@ void SPI_ECDR(uint8_t Mode, unsigned int Reset) {
     Write_SPI(&DONE, 1);
 }
 
-void SPI_MOTOR(uint8_t Mode, unsigned int Speed, unsigned int direction) {
+void SPI_MOTOR(unsigned char Mode, unsigned int Speed, unsigned int direction) {
     if(Mode<=1) {               //If mode is writing
         //send via spi
         if(Mode==0) {
@@ -106,14 +95,14 @@ void SPI_MOTOR(uint8_t Mode, unsigned int Speed, unsigned int direction) {
     Write_SPI(&DONE,1);
 }
 
-void SPI_GRABBER(uint8_t Mode) {
+void SPI_GRABBER(unsigned char Mode) {
     //placeholder variable for readgrabber
-    uint8_t val=0;
+    unsigned char val=0;
     
     //Call appropriate grabber function
     if(Mode==0)     OpenGRABBER();          //Call appropriate function
     else if(Mode==1)CloseGRABBER();
-    else      val = ReadGrabber();
+    else      val = ReadGRABBER();
     
     //Write val to SPI if readgrabber has been called
     if(val != 0) Write_SPI(&val,1);
@@ -184,7 +173,7 @@ void __attribute__((__interrupt__, auto_psv)) _SPI2Interrupt(void) {
     for(int i=0;i<3;i++) spi_info.info[i] = (unsigned int) SPI2BUF;
   
     //Ensure the receive buffer is empty;
-    while(!SPI2STATbits.SRXMPT) unsigned int empty = SPI2BUF;
+    while(!SPI2STATbits.SRXMPT) {unsigned int empty = SPI2BUF;}
     
     //Clear interrupt flag
     IFS2bits.SPI2IF = 0;
@@ -194,15 +183,17 @@ void __attribute__((__interrupt__, auto_psv)) _SPI2Interrupt(void) {
 void SPI_Function() {
     //Check if command is a state change or a function call
     if (spi_info.command >= 0x0080) {
-        Next_State = (state_t) spi_info.command;    //if a state, change next state to it   
+        set_next_state((state_t) spi_info.command);    //if a state, change next state to it   
         
         //Set stop conditions
-        if(spi_info.info[0]==0)     state_conditions.stop = TIME;
-        else if(spi_info.info[0]==1)state_conditions.stop = DISTANCE;
-        else                        state_conditions.stop = NONE;
+        state_conditions_t conditions;
+        if(spi_info.info[0]==0)     conditions.stop = TIME;
+        else if(spi_info.info[0]==1)conditions.stop = DISTANCE;
+        else                        conditions.stop = NONE;
         
         //set stop condition value
-        state_conditions.value = spi_info.info[1];
+        conditions.value = spi_info.info[1];
+        set_conditions(conditions);
         
         Write_SPI(&DONE, 1);                        //Send "DONE" to PI   
     } else {
@@ -225,10 +216,10 @@ void SPI_Function() {
                 SPI_MOTOR(1, spi_info.info[0], spi_info.info[1]);
                 break;}
             case READ_MOTOR_LEFT: {
-                SPI_MOTOR(2);
+                SPI_MOTOR(2, spi_info.info[0], spi_info.info[1]);
                 break;}
             case READ_MOTOR_RIGHT: {
-                SPI_MOTOR(3);
+                SPI_MOTOR(3, spi_info.info[0], spi_info.info[1]);
                 break;}
             case READ_ECDR1: {
                 SPI_ECDR(1, spi_info.info[0]);
@@ -272,7 +263,7 @@ void SPI_Function() {
             case WRITE_LED: {
                 SPI_LED(spi_info.info[0], spi_info.info[1]);
                 break;}
-            default:    //do nothing in default case
+            //default:    //do nothing in default case
         }        
     }
        

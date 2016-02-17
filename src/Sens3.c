@@ -10,15 +10,16 @@
 #include <xc.h>
 #include "Sens3.h"
 
-char Buffer[BUFFER_LENGTH];
-int Pointer;
+unsigned int Buffer[BUFFER_LENGTH];
+unsigned int Pointer;
 
 //Function to read a value directly from the peripheral
-char ReadSENS3() {
+unsigned int ReadSENS3() {
+    return 0;
 }
 
 //Functions to read and write to the peripheral's buffer
-int WriteSENS3Buffer(char Data) {
+void WriteSENS3Buffer(unsigned int Data) {
     /*
      * Increments pointer (loops round if exceeds buffer size) 
      * Inserts new value at position
@@ -42,7 +43,7 @@ void ReadSENS3Buffer(unsigned int* Dest, int Count){
     //Reoorganise Buffer if count exceeds values remaining in memory
     if(Count>(BUFFER_LENGTH-Pointer)) {
         //Temporary Buffer
-        char TempBuffer[BUFFER_LENGTH];
+        unsigned int TempBuffer[BUFFER_LENGTH];
 
         //Fill temporarybuffer with values from Buffer
         for(int i=Pointer;i<BUFFER_LENGTH;i++){
@@ -59,16 +60,17 @@ void ReadSENS3Buffer(unsigned int* Dest, int Count){
         Pointer = 0;
     };
     
-    return &Buffer[Pointer];
+    Dest = &Buffer[Pointer];
 }
 
 int StartupSENS3() {
+    return 0;
 }
 
 //Functions to Initiate / Clear
 int InitiateSENS3() {
     //Ensure Buffer is full of zeros
-    ClearBuffer();
+    ClearSENS3Buffer();
     
     //Place pointer at end of buffer
     Pointer = BUFFER_LENGTH-1;
