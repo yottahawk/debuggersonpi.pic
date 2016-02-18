@@ -50,16 +50,14 @@ int main(void)
     
     testFunctionEncoders();
     
-    periph_StopI2C1();
+    while(1)
+    {  
+        if(spi_info.command) SPI_Function();
+    }
+    
+   /* periph_StopI2C1();
     periph_CloseI2C1();
     
-    spi_info_t* info;
-    info = get_spi_info();
-    
-    /*while(1)
-    {  
-        if(info->command) SPI_Function();
-    }*/
     initCompass();
     unsigned char A = periph_readCompass(Config_Reg_A);
     unsigned char B = periph_readCompass(Config_Reg_B);
@@ -82,7 +80,7 @@ int main(void)
     R_motor_constSpeed(FWD, 15);
     L_motor_constSpeed(FWD, 15);
     
-    Nop();
+    Nop();*/
     
     return 0;
 }

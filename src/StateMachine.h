@@ -89,11 +89,14 @@ typedef enum {
     READ_PSNSCBE = 0x14,
             
     //Operate LED
-    WRITE_LED = 0x15
+    WRITE_LED = 0x15,
+            
+    //Read DIP Switches
+    READ_DIP = 0x16
 } command_t;
 
 typedef enum {
-    TIME, DISTANCE, NONE
+    TIME, DISTANCE, JUNCTION, NONE
 } condition_t;
 
 typedef struct {

@@ -40,6 +40,8 @@
       <itemPath>src/Sens5.h</itemPath>
       <itemPath>src/Sens6.h</itemPath>
       <itemPath>src/SensFRONT.h</itemPath>
+      <itemPath>src/I2C1.h</itemPath>
+      <itemPath>src/I2C2.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -77,6 +79,8 @@
       <itemPath>src/Sens5.c</itemPath>
       <itemPath>src/Sens6.c</itemPath>
       <itemPath>src/SensFRONT.c</itemPath>
+      <itemPath>src/I2C1.c</itemPath>
+      <itemPath>src/I2C2.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -84,11 +88,6 @@
       <itemPath>Makefile</itemPath>
       <itemPath>device_config.mcc</itemPath>
     </logicalFolder>
-    <itemPath>src/I2C1.c</itemPath>
-    <itemPath>src/I2C1.h</itemPath>
-    <itemPath>src/I2C2.c</itemPath>
-    <itemPath>src/I2C2.h</itemPath>
-    <itemPath>src/I2C_Functions.c</itemPath>
   </logicalFolder>
   <sourceRootList>
     <Elem>src</Elem>
@@ -395,6 +394,14 @@
         </C30-LD>
         <C30Global>
         </C30Global>
+      </item>
+      <item path="src/I2C1.c" ex="true" overriding="false">
+      </item>
+      <item path="src/I2C1.h" ex="true" overriding="false">
+      </item>
+      <item path="src/I2C2.c" ex="true" overriding="false">
+      </item>
+      <item path="src/I2C2.h" ex="true" overriding="false">
       </item>
       <item path="src/OpenLoop.c" ex="false" overriding="false">
         <C30>

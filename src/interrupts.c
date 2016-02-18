@@ -113,13 +113,20 @@ void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
     
 }
  
-/*
- * 
- 
-void __attribute__((__interrupt__, auto_psv)) _SPI2Interrupt(void)
-{
+//SPI Interrupt code
+void __attribute__((__interrupt__, auto_psv)) _SPI2Interrupt(void) {   
+    //When interrupt triggers, data has been received in Buffer.
+    //First data in buffer is always command word!
+    spi_info.command = (unsigned int) SPI2BUF;
+    //Remaining data goes in "info" buffer
+    for(int i=0;i<3;i++) spi_info.info[i] = (unsigned int) SPI2BUF;
+  
+    //Ensure the receive buffer is empty;
+    while(!SPI2STATbits.SRXMPT) {unsigned int empty = SPI2BUF;}
     
-}*/ 
+    //Clear interrupt flag
+    IFS2bits.SPI2IF = 0;
+}
 
 /*
  * ADC Conversion Complete Interrupt

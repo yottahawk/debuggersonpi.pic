@@ -14,7 +14,7 @@
 
 #include "xc.h"
 #define USE_AND_OR
-#include <i2c.h>            // 24f peripheral library
+#include "i2c.h"            // 24f peripheral library
 
 #include "led.h"
 

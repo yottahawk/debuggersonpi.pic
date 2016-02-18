@@ -5,10 +5,6 @@
 spi_info_t spi_info;
 const unsigned int DONE = 0x00FE;
 
-spi_info_t* get_spi_info() {
-    return &spi_info;
-}
-
 //Function to write to spi link
 void Write_SPI(unsigned int* buffer, unsigned int length) {
     //For each byte in the buffer...
@@ -45,6 +41,16 @@ void SPI_PSNS(unsigned char Sensor, unsigned int Length, unsigned int Clear) {
     
     //Return data to PI
     Write_SPI(Buffer, Length);
+    Write_SPI(&DONE, 1);
+}
+
+void SPI_DIP() {
+    //Read DIP switches
+    int DIP;
+    readDIP(&DIP);
+    
+    //Send via SPI
+    Write_SPI(&DIP, 1);
     Write_SPI(&DONE, 1);
 }
 
@@ -164,21 +170,6 @@ void Initialise_SPI() {
     SPI2STATbits.SPIEN = 1;   //Enable SPI operation
 }
 
-//SPI Interrupt code
-void __attribute__((__interrupt__, auto_psv)) _SPI2Interrupt(void) {   
-    //When interrupt triggers, data has been received in Buffer.
-    //First data in buffer is always command word!
-    spi_info.command = (unsigned int) SPI2BUF;
-    //Remaining data goes in "info" buffer
-    for(int i=0;i<3;i++) spi_info.info[i] = (unsigned int) SPI2BUF;
-  
-    //Ensure the receive buffer is empty;
-    while(!SPI2STATbits.SRXMPT) {unsigned int empty = SPI2BUF;}
-    
-    //Clear interrupt flag
-    IFS2bits.SPI2IF = 0;
-}
-
 //Discrete SPI function handler
 void SPI_Function() {
     //Check if command is a state change or a function call
@@ -262,6 +253,9 @@ void SPI_Function() {
                 break;}
             case WRITE_LED: {
                 SPI_LED(spi_info.info[0], spi_info.info[1]);
+                break;}
+            case READ_DIP: {
+                SPI_DIP();
                 break;}
             //default:    //do nothing in default case
         }        

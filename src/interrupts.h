@@ -43,6 +43,7 @@
 #include "led.h"
 #include "indicators_switches.h"
 #include "wheelEncoders.h"
+#include "spi.h"
 
 /////////////////////////////////////DEFINES////////////////////////////////////
 
