@@ -32,11 +32,13 @@
       <itemPath>src/oc.h</itemPath>
       <itemPath>src/timers.h</itemPath>
       <itemPath>src/motors.h</itemPath>
+      <itemPath>src/i2c.h</itemPath>
       <itemPath>src/led.h</itemPath>
       <itemPath>src/grabber.h</itemPath>
       <itemPath>src/compass.h</itemPath>
       <itemPath>src/Sens3.h</itemPath>
       <itemPath>src/Sens4.h</itemPath>
+      <itemPath>src/compass.h</itemPath>
       <itemPath>src/Sens5.h</itemPath>
       <itemPath>src/Sens6.h</itemPath>
       <itemPath>src/SensFRONT.h</itemPath>
@@ -69,11 +71,13 @@
       <itemPath>src/indicators_switches.c</itemPath>
       <itemPath>src/spi.c</itemPath>
       <itemPath>src/motors.c</itemPath>
+      <itemPath>src/i2c.c</itemPath>
       <itemPath>src/led.c</itemPath>
       <itemPath>src/grabber.c</itemPath>
       <itemPath>src/compass.c</itemPath>
       <itemPath>src/Sens3.c</itemPath>
       <itemPath>src/Sens4.c</itemPath>
+      <itemPath>src/compass.c</itemPath>
       <itemPath>src/Sens5.c</itemPath>
       <itemPath>src/Sens6.c</itemPath>
       <itemPath>src/SensFRONT.c</itemPath>
@@ -82,13 +86,9 @@
                    displayName="Important Files"
                    projectFiles="false">
       <itemPath>Makefile</itemPath>
+      <itemPath>E:/SSD Users/Documents/GitHub/debuggersonpi.pic/MyConfig.mc3</itemPath>
       <itemPath>device_config.mcc</itemPath>
     </logicalFolder>
-    <itemPath>src/I2C1.c</itemPath>
-    <itemPath>src/I2C1.h</itemPath>
-    <itemPath>src/I2C2.c</itemPath>
-    <itemPath>src/I2C2.h</itemPath>
-    <itemPath>src/I2C_Functions.c</itemPath>
   </logicalFolder>
   <sourceRootList>
     <Elem>src</Elem>
@@ -169,7 +169,6 @@
         <property key="scalar-model" value="default"/>
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
-        <appendMe value="-std=c99"/>
       </C30>
       <C30-AR>
         <property key="additional-options-chop-files" value="false"/>
@@ -288,6 +287,7 @@
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="hwtoolclock.instructionspeed" value="4"/>
         <property key="hwtoolclock.units" value="mips"/>
@@ -396,7 +396,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/OpenLoop.c" ex="false" overriding="false">
+      <item path="src/OpenLoop.c" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -408,7 +408,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/OpenLoop.h" ex="false" overriding="false">
+      <item path="src/OpenLoop.h" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -444,7 +444,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/Sens1Peripheral.c" ex="false" overriding="false">
+      <item path="src/Sens1Peripheral.c" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -456,7 +456,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/Sens1Peripheral.h" ex="false" overriding="false">
+      <item path="src/Sens1Peripheral.h" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -468,7 +468,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/Sens2Peripheral.c" ex="false" overriding="false">
+      <item path="src/Sens2Peripheral.c" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -480,7 +480,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/Sens2Peripheral.h" ex="false" overriding="false">
+      <item path="src/Sens2Peripheral.h" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -492,7 +492,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/SensCubePeripheral.c" ex="false" overriding="false">
+      <item path="src/SensCubePeripheral.c" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -504,7 +504,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/SensCubePeripheral.h" ex="false" overriding="false">
+      <item path="src/SensCubePeripheral.h" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -516,7 +516,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/StateMachine.c" ex="false" overriding="false">
+      <item path="src/StateMachine.c" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -528,7 +528,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/StateMachine.h" ex="false" overriding="false">
+      <item path="src/StateMachine.h" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -564,6 +564,16 @@
         <C30Global>
         </C30Global>
       </item>
+        <C30>
+        </C30>
+        <C30-AR>
+        </C30-AR>
+        <C30-AS>
+        </C30-AS>
+        <C30-LD>
+        </C30-LD>
+        <C30Global>
+        </C30Global>
       <item path="src/indicators_switches.c" ex="false" overriding="false">
         <C30>
         </C30>
@@ -624,7 +634,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/spi.c" ex="false" overriding="false">
+      <item path="src/spi.c" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -636,7 +646,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/spi.h" ex="false" overriding="false">
+      <item path="src/spi.h" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>

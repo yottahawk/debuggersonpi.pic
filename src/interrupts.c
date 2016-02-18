@@ -8,6 +8,7 @@
 /////////////////////////////////////INCLUDES///////////////////////////////////
 
 #include "interrupts.h"
+#include "compass.h"
 
 /////////////////////////////////////DEFINES////////////////////////////////////
 
@@ -41,6 +42,16 @@ void __attribute__((__interrupt__, auto_psv)) _INT2Interrupt(void)
     IFS1bits.INT2IF = 0;        // Reset interrupt flag
     
     GLOBAL_enc2_count++;
+    
+    if (LATEbits.LATE5)
+    {
+        led_const_blue_on();
+    }
+    else
+    {
+         led_const_blue_off();
+    }
+   
 }
 
 /*
@@ -69,23 +80,37 @@ void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
      */
    IFS1bits.CNIF = 0;       // Reset interrupt flag 
     
-//   CNbuffer[1] = PORTBbits.RB4;     // PUSH_SW
-//   CNbuffer[2] = PORTBbits.RB12;    // SENS_CUBE
-//   CNbuffer[3] = PORTBbits.RB13;    // SENSE_L
-//   CNbuffer[4] = PORTBbits.RB3;     // SNESE_R
-//  
-//   switch(CNbuffer[1])
-//   {
-//       case 0:
-//           break;
-//       case 1:
-//           // LATBbits.LATB14 = ~LATBbits.LATB14;
-//           IncrementWiper();
-//           break;
-//   }
+   CNbuffer[1] = PORTBbits.RB4;     // PUSH_SW
+   CNbuffer[2] = PORTBbits.RB12;    // SENS_CUBE
+   CNbuffer[3] = PORTBbits.RB13;    // SENSE_L
+   CNbuffer[4] = PORTBbits.RB3;     // SNESE_R
+  
+   unsigned char A;
+   
+   unsigned char Xupper;
+   unsigned char Xlower;
+   unsigned char Yupper;
+   unsigned char Ylower;
+   
+   switch(CNbuffer[1])
+   {
+       case 0:
+            break;
+       case 1:
+#ifdef I2C1_enable    
+            I2C1_resetbus();
+#endif
+#ifdef I2C2_enable
+            I2C2_resetbus();
+#endif
+            enc1_resetCounter();
+            enc2_resetCounter();
+           
+           break;
+   }
            
 //   readDIP( &DIPstatus );
-  
+    
 }
  
 /*
