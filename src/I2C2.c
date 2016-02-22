@@ -36,12 +36,10 @@ static const UINT8 NoAck                = 1;
 
 ///////////////////////////////FUNCTION DEFINITIONS/////////////////////////////
 
-
-
 /*----------------------------------------------------------------------------
-** Function: periph_OpenI2C()
+** Function: periph_OpenI2C2()
 **
-** This function configures and opens I2C1
+** This function configures and opens I2C2
 **
 ** Inputs:  None
 **
@@ -56,9 +54,9 @@ void periph_OpenI2C2( void )
 }
 
 /*----------------------------------------------------------------------------
-** Function: periph_CloseI2C()
+** Function: periph_CloseI2C2()
 **
-** This function closes the I2C1 peripheral
+** This function closes the I2C2 peripheral
 **
 ** Inputs:  None
 **
@@ -72,9 +70,9 @@ void periph_CloseI2C2( void )
 }
 
 /*----------------------------------------------------------------------------
-** Function: periph_StartI2C()
+** Function: periph_StartI2C2()
 **
-** This function starts the Co-Processor I2C communications
+** This function starts the Co-Processor I2C2 communications
 **
 ** Inputs:  None
 **
@@ -90,7 +88,7 @@ void periph_StartI2C2( void )
 }
 
 /*----------------------------------------------------------------------------
-** Function: periph_StopI2C()
+** Function: periph_StopI2C2()
 **
 ** This function stops the Co-Processor I2C communications and
 ** changes the I2C peripheral state to idle

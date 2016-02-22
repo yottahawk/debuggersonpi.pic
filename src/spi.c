@@ -3,6 +3,7 @@
 #define TIMEOUT 10000
 
 spi_info_t spi_info;
+
 const unsigned int DONE = 0xFFFE;
 const unsigned int Data = 0xFFFD;
 
@@ -79,7 +80,10 @@ void SPI_DIP() {
     readDIP(&DIP);
     
     //Send via SPI
+<<<<<<< HEAD
     Write_SPI(&Data, 1);
+=======
+>>>>>>> b3dcdb05d28e1fa3327c50063ffdbf25c12492a4
     Write_SPI(&DIP, 1);
     Write_SPI(&DONE, 1);
 }
@@ -208,7 +212,7 @@ void Initialise_SPI() {
     SPI2STATbits.SPIROV = 0;  //Clear SPIROV bit
     SPI2CON2bits.SPIBEN = 1;  //Enable buffer
     SPI2STATbits.SPIEN = 1;   //Enable SPI operation
-    
+
     //Ensure the receive buffer is empty;
     while(!SPI2STATbits.SRXMPT) {unsigned int empty = SPI2BUF;}
 }

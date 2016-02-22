@@ -12,12 +12,16 @@
 
 #include "xc.h"
 
+#include "StateMachine.h"
 #include "oc.h"
 #include "timers.h"
 //#include "I2C1.h"
 #include "wheelEncoders.h"
 
 //////////////////////////////////////DEFINES///////////////////////////////////
+
+#define deg90counts_L 27;       // no of counts for 90 degrees or robot rotation
+#define deg90counts_R 27;       // no of counts for 90 degrees or robot rotation
 
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 
@@ -32,17 +36,24 @@ typedef enum
 
 ///////////////////////////////FUNCTION DECLARATIONS////////////////////////////
 
+unsigned int acceleration_control(unsigned int requested_speed, control_variables * local_state_vars_ptr);
+void reset_motortracking();
 void enableMotorPSU();
 void disableMotorPSU();
-
-void L_motor_counts_constSpeed(int delta_count, motor_direction_type direction, unsigned int speed);
-void R_motor_counts_constSpeed(int delta_count, motor_direction_type direction, unsigned int speed);
 
 void L_motor_constSpeed(motor_direction_type direction, unsigned int speed);
 void R_motor_constSpeed(motor_direction_type direction, unsigned int speed);
 
-int  L_motor_SpeedGet();
-int  R_motor_SpeedGet();
+void L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr, motor_direction_type direction, unsigned int speed);
+void R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr, motor_direction_type direction, unsigned int speed);
+
+void motors_dual_constspeed(motor_direction_type direction, unsigned int speed);
+
+// access methods to motor_tracking_struct
+int L_motor_SpeedGet(); 
+int R_motor_SpeedGet(); 
+motor_direction_type L_motor_DirectionGet();
+motor_direction_type R_motor_DirectionGet();
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif //debuggersonpi_pic_motors_h

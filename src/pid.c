@@ -36,6 +36,7 @@
 
 /////////////////////////////////////DEFINES////////////////////////////////////
 
+// VALUES NEED TUNING!!!!!
 #define ProportionalGain 10;          // Proportional Gain
 #define IntegralGain 10;          // Integral Gain
 
@@ -45,22 +46,6 @@
 #define bound_min 50;      // Bound on min value of output
 
 //////////////////////////////TYPEDEFS,ENUMS,STRUCTS////////////////////////////
-
-typedef struct 
-{
-    int sp;       // Setpoint is input, goal or desired state.
-    
-    int max;            // Set max bound on output
-    int min;            // Set min bound on output
-    
-    int e;          // Error on current time step.
-    int p_e[2];                  // Saved error of previous 2 time steps
-    int i_sum;         // Sum of all previous errors
-    
-    int kp;             // Proportional Gain
-    int ki;             // Integral Gain
-    
-} pid_ctrl;
 
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 
@@ -93,9 +78,8 @@ void pid_init(pid_ctrl * ptr,       // Ptr to the pid controller struct
     ptr->ki = IntegralGain;
 }
 
-int pid_update(int sp,               // setpoint
-               int pv,               // process variable - estimate of plant output as measured by sensors
-               pid_ctrl * ptr)       // ptr to controller struct in use
+void pid_update(int pv,               // process variable - estimate of plant output as measured by sensors
+                pid_ctrl * ptr)       // ptr to controller struct in use
 {
     /*
      *  This method creates a new control variable based on the variables passed to it.
@@ -107,7 +91,7 @@ int pid_update(int sp,               // setpoint
     int temp_i_sum;  // Accumulated error - this may not update if the controller has hit the high or low bounds.
     
     ptr->p_e[2] = ptr->p_e[1];    // Move previous error down array
-    ptr->e = sp - pv;             // Calculate current error.
+    ptr->e = ptr->sp - pv;             // Calculate current error.
     ptr->p_e[1] = ptr->e;                 // Copy current error to top of array.
     
     temp_i_sum = ptr->i_sum + ptr->e ;    // update accumulated error
@@ -124,6 +108,100 @@ int pid_update(int sp,               // setpoint
     else if (cv < ptr->min)
     { cv = ptr->min; }    // If less than min then set equal to min
     
-    return cv;
+    ptr->cv = cv;   // Set new cv inside controller struct.
 }
 
+/* -----------------------------------------------------------------------------
+ * Function: pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
+ * 
+ * Update motor speeds based on newly generated control variable
+ * 
+ * INPUTS: ptr to local_state_vars
+ */
+void pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
+{
+    if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
+    {
+        L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
+                                  motor_direction_type FWD, 
+                                  unsigned int (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+        
+        R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
+                                  motor_direction_type FWD, 
+                                  unsigned int (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+    }
+    else
+    {
+        L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
+                                  motor_direction_type FWD, 
+                                  unsigned int (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+        
+        R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
+                                  motor_direction_type FWD, 
+                                  unsigned int (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+    }
+}
+
+/* -----------------------------------------------------------------------------
+ * Function: pid_updatemotors_rev(control_variables * local_state_vars_ptr)
+ * 
+ * Update motor speeds based on newly generated control variable. This function
+ * is suitable for reversing while tracking a heading.
+ * 
+ * INPUTS: ptr to local_state_vars
+ */
+void pid_updatemotors_rev(control_variables * local_state_vars_ptr)
+{
+    if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
+    {
+        L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
+                                  motor_direction_type REV, 
+                                  unsigned int (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+        
+        R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
+                                  motor_direction_type REV, 
+                                  unsigned int (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+    }
+    else
+    {
+        L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
+                                  motor_direction_type REV, 
+                                  unsigned int (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+        
+        R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
+                                  motor_direction_type REV, 
+                                  unsigned int (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+    }
+}
+
+/* -----------------------------------------------------------------------------
+ * Function: pid_updatemotors_turn(control_variables * local_state_vars_ptr)
+ * 
+ * Update motor speeds based on newly generated control variable, to turn 
+ * towards a new given heading.
+ * 
+ * INPUTS: ptr to local_state_vars
+ */
+void pid_updatemotors_turn(control_variables * local_state_vars_ptr)
+{
+    if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
+    {
+        L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
+                                  motor_direction_type FWD, 
+                                  unsigned int (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+        
+        R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
+                                  motor_direction_type REV, 
+                                  unsigned int (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+    }
+    else        // =0 or >0, turn left
+    {
+        L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
+                                  motor_direction_type REV, 
+                                  unsigned int (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+        
+        R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
+                                  motor_direction_type FWD, 
+                                  unsigned int (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+    }
+}

@@ -25,6 +25,23 @@
 
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 
+typedef struct 
+{
+    int sp;             // Setpoint is input, goal or desired state.
+    int cv;             // Control variable output of PID
+    
+    int max;            // Set max bound on output
+    int min;            // Set min bound on output
+    
+    int e;              // Error on current time step.
+    int p_e[2];         // Saved error of previous 2 time steps
+    int i_sum;          // Sum of all previous errors
+    
+    int kp;             // Proportional Gain
+    int ki;             // Integral Gain
+    
+} pid_ctrl;
+
 ////////////////////////////////FUNCTION DECLARATIONS///////////////////////////
 
 #endif //debuggersonpi_pic_pid_h
