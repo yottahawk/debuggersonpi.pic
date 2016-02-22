@@ -22,9 +22,9 @@
 
 // Only define one or the other!
 // #define I2C1_enable
-//#define I2C2_enable
+// #define I2C2_enable
 
-#define BAUD_RATE 15                        // 79 = i2c clock of 50kHz
+#define BAUD_RATE 79                   // 79 = i2c clock of 50kHz
 
 #define HMC5883L_ADDR            0x3C 
 
@@ -46,10 +46,10 @@
 #define ID_Reg_C                 0x0C
 
 // Config register data bytes
-#define Config_A_Data 0x70  // Normal measurement mode, ODR = 15Hz, 8 averaged samples
-#define Config_B_Data 0x20  // +-1.3 Ga
-#define Mode_Data_Single 0x01           // Single measurment mode
-#define Mode_Data_Continuous 0x00       // Continuous measurment mode
+#define Config_A_Data            0x70  // Normal measurement mode, ODR = 15Hz, 8 averaged samples
+#define Config_B_Data            0x20  // +-1.3 Ga
+#define Mode_Data_Single         0x01  // Single measurment mode
+#define Mode_Data_Continuous     0x00  // Continuous measurment mode
 
 // Angle between magnetic north and geographic north
 // Magnetic declination is 1.37 degrees WEST
@@ -75,12 +75,8 @@ extern int currentheading;          // Value of current heading
 extern int prevheadings[100];       // Buffer containing previous headings
 
 ///////////////////////////////FUNCTION DECLARATIONS////////////////////////////
-/* 
- * Initializes the compass over an i2c comms channel. 
- * The comms channel is opened within the init method.
- * The HMC5883L is set up as desired for the given application.
- */
-void initCompass(); 
+
+void initCompass(); // Init I2c comms, 
 void selfTestCompass(); // Run self test and verify pass
 
 void scaleAxis(); // Scale the output of each axis.

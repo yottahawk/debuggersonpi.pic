@@ -26,14 +26,6 @@
 
 ///////////////////////////////FUNCTION DECLARATIONS////////////////////////////
 
-void I2C1_init(int Baud_Rate);
-void I2C1_resetbus();
-void I2C1_start();
-void I2C1_repeatstart();
-unsigned char I2C1_send_byte(unsigned char data);
-unsigned char I2C1_read_ack();
-unsigned char I2C1_read_no_ack();
-
 // PRIMO I2C code using PIC24F peripheral library
 void periph_OpenI2C1( void );
 void periph_CloseI2C1( void );

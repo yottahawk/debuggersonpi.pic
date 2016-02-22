@@ -13,6 +13,10 @@
 #include "xc.h"
 #include "OpenLoop.h"
 
+#include "spi.h"
+#include "states.h"
+#include "pid.h"
+
 /////////////////////////////////////DEFINES////////////////////////////////////
 
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
@@ -104,9 +108,90 @@ typedef struct {
     unsigned int value;
 } state_conditions_t; 
 
+typedef enum {
+    STATE_CONTINUE,
+    STATE_BREAK
+} boolean_breakstate;
+
+/* ----------------------------------------------------------------------------
+ * Struct for storage of all variables that need to be tracked throughout 
+ * state lifetime.
+ */
+typedef struct 
+{
+    //----------------------------------DATA------------------------------------
+    unsigned int update_counter;        // increment counter on every update
+    boolean_breakstate general_break_condition; 
+    
+    pid_ctrl Controller1;               
+     
+    // unsigned int psns_prev_samples[400];
+    unsigned int psns_samples[4];
+    
+    unsigned int wheelencL_count;
+    unsigned int wheelencR_count;
+    
+    unsigned int wheelencL_limit;
+    unsigned int wheelencR_limit;
+    
+    unsigned int motor_L_desiredspeed;
+    unsigned int motor_R_desiredspeed;
+    unsigned int motor_dualspeed;
+    
+    motor_direction_type motor_L_direction;
+    motor_direction_type motor_R_direction;
+    motor_direction_type motor_dualdirection;
+    
+    int psnscurrentheading;
+    int psns_desiredheading;
+    
+    float compass_currentheading;   // update on measurement
+    float compass_desiredheading;   // determined at start of state
+    
+    int psns_compass_currentheading;
+    int psns_compass_desiredheading;
+    
+    //-------------------------------POINTERS-----------------------------------
+    
+    unsigned int * update_counter_ptr;
+    boolean_breakstate * general_break_condition_ptr;
+    
+    pid_ctrl * pid_ctrl_ptr;
+    
+    unsigned int * psns_prev_samples_ptr;
+    unsigned int * psns_samples_ptr;
+    
+    unsigned int * wheelencL_count_ptr;
+    unsigned int * wheelencR_count_ptr;
+    
+    unsigned int * wheelencL_limit_ptr;
+    unsigned int * wheelencR_limit_ptr;
+    
+    unsigned int * motor_L_desiredspeed_ptr;
+    unsigned int * motor_R_desiredspeed_ptr;
+    unsigned int * motor_dualspeed_ptr;
+    
+    motor_direction_type * motor_L_direction_ptr;
+    motor_direction_type * motor_R_direction_ptr;
+    motor_direction_type * motor_dualdirection_ptr;
+    
+    float * compass_currentheading_ptr;   // update on measurement
+    float * compass_desiredheading_ptr;
+    
+    
+} control_variables;
+
+/* -----------------------------------------------------------------------------
+ * Struct to locally store any break conditions for the current state.
+ */ 
+typedef struct
+{
+    
+    
+} break_conditions;
+
 ////////////////////////////////FUNCTION DECLARATIONS///////////////////////////
 
-void StateMachine();
 state_t get_curr_state();
 state_t get_next_state();
 state_t get_prev_state();
@@ -116,6 +201,8 @@ void set_curr_state(state_t state);
 void set_next_state(state_t state);
 void set_prev_state(state_t state);
 void set_conditions(state_conditions_t conditions);
+
+void state_handler();
 
 #endif //debuggersonpi_pic_statemachine_h
 

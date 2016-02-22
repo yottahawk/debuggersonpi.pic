@@ -25,7 +25,7 @@
 // setup the adc to take scan and take sequential readings of all 4 sensors.
 void adc_linetrackinginit();
 // execute scan and write values to tempBuffer[3]
-void linetracking_sample(unsigned int tempBuffer[3]);
+void adc_linetracking_sample(unsigned int tempBuffer[3]);
 
 // Battery Voltage Read
 
