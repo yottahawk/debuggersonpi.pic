@@ -10,6 +10,7 @@
 #include "compass.h"
 
 #include "math.h"
+#include "hs_math.h"
 
 /////////////////////////////////////DEFINES////////////////////////////////////
 
@@ -220,6 +221,8 @@ void readCompassData()
  */
 void calculateHeading()
 { 
+    /*Now use atan_int
+    
     float X_scaled = X_axis * m_scale;
     float Y_scaled = Y_axis * m_scale;
     float Z_scaled = Z_axis * m_scale;
@@ -238,7 +241,12 @@ void calculateHeading()
       currentheading -= (2.0 * PI); 
     }                    
                     
-    temp_heading *= (180.0 / PI);
+    temp_heading *= (180.0 / PI);*/
+    
+    int degrees = atan_int(X_axis, Y_axis);
+    
+    //???
+    currentheading = degrees;
     
     // now convert to meaningful integer that pid controller can interpret
     
