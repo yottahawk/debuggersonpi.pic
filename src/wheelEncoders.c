@@ -107,6 +107,22 @@ void enc2_resetCounter()
     GLOBAL_enc2_count = 0;
 }
 
+int enc1_Store()
+{
+    /*
+     * Returns the last value of the counter as an int. 
+     */
+    return GLOBAL_enc1_count; // Store current value before it is overwritten
+}
+
+int enc2_Store()
+{
+    /*
+     * Returns the last value of the counter as an int. 
+     */
+    return GLOBAL_enc2_count; // Store current value before it is overwritten
+}
+
 int enc1_resetAndStore()
 {
     /*

@@ -14,15 +14,15 @@
 
 #include "xc.h"
 
-#include "I2C1.h"
-#include "I2C2.h"
+//#include "I2C1.h"
+//#include "I2C2.h"
 
 
 //////////////////////////////////////DEFINES///////////////////////////////////
 
 // Only define one or the other!
 // #define I2C1_enable
-#define I2C2_enable
+//#define I2C2_enable
 
 #define BAUD_RATE 15                        // 79 = i2c clock of 50kHz
 

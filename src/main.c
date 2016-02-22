@@ -43,23 +43,22 @@ int main(void)
     CNEN1bits.CN6IE = 1;            // Enable PUSH_CW interrupt-on-change notification.
     
     led_init_timer();               // enables tmr5 interrupts for led flashing routines.
-    // led_flash_blue_on(0xFFFF);
+    led_flash_blue_on(0xFFFF);
     
     // Drive motor wheels for testing purposes.
-    enableMotorPSU();               // Set enable line to enable psu.
+    //enableMotorPSU();               // Set enable line to enable psu.
     
-    testFunctionEncoders();
+    //testFunctionEncoders();
+    Initialise_SPI();
     
-    periph_StopI2C1();
+    while(1)
+    {  
+        if(spi_info.command) SPI_Function();
+    }
+    
+   /* periph_StopI2C1();
     periph_CloseI2C1();
     
-    spi_info_t* info;
-    info = get_spi_info();
-    
-    /*while(1)
-    {  
-        if(info->command) SPI_Function();
-    }*/
     initCompass();
     unsigned char A = periph_readCompass(Config_Reg_A);
     unsigned char B = periph_readCompass(Config_Reg_B);
@@ -82,7 +81,7 @@ int main(void)
     R_motor_constSpeed(FWD, 15);
     L_motor_constSpeed(FWD, 15);
     
-    Nop();
+    Nop();*/
     
     return 0;
 }

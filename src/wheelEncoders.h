@@ -43,6 +43,8 @@ void enc1_resetCounter();
 void enc2_resetCounter();
 
 // Reset counter, and also return the last value held.
+int enc1_Store();
+int enc2_Store();
 int enc1_resetAndStore();
 int enc2_resetAndStore();
 

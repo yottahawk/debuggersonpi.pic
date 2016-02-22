@@ -19,5 +19,5 @@
 void OpenGRABBER() {};
 void CloseGRABBER() {};
 unsigned int ReadGRABBER() {
-    return 0;
+    return 0xA55A;
 };
