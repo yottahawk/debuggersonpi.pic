@@ -219,7 +219,7 @@ void readCompassData()
  * 
  * OUTPUT: int heading written to global current_heading.
  */
-void calculateHeading()
+int calculateHeading()
 { 
     /*Now use atan_int
     
@@ -249,6 +249,8 @@ void calculateHeading()
     currentheading = degrees;
     
     // now convert to meaningful integer that pid controller can interpret
+    
+    return (int) temp_heading;
     
    // currentheading = currentheading + (int)declination_angle;
 }

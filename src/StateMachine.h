@@ -16,6 +16,8 @@
 #include "spi.h"
 #include "states.h"
 #include "pid.h"
+#include "wheelEncoders.h"
+#include "compass.h"
 
 /////////////////////////////////////DEFINES////////////////////////////////////
 
@@ -58,20 +60,12 @@ typedef enum {
     PSNS_REVERSE    = 0x96, //Closed Loop With PhotoSensors Reverse
     PSNS_REV_LEFT   = 0x97, //Closed Loop With PhotoSensors Reverse Left Turn (90)
     PSNS_REV_RIGHT  = 0x98, //Closed Loop With PhotoSensors Reverse Right Turn (90)     
-} state_t;
 
-//enumerated type for various commands
-typedef enum {
+
     //Grabber commands
     OPEN_GRABBER = 0x01,
     CLOSE_GRABBER = 0x02,
     READ_GRABBER = 0x03,
-            
-    //Motor Commands
-    WRITE_MOTOR_LEFT = 0x04,
-    READ_MOTOR_LEFT = 0x05,
-    WRITE_MOTOR_RIGHT = 0x06,
-    READ_MOTOR_RIGHT = 0x07,
             
     //Encoder Commands
     READ_ECDR1      = 0x08,
@@ -87,8 +81,8 @@ typedef enum {
     READ_PSNS2 = 0x0E,
     READ_PSNS3 = 0x0F,
     READ_PSNS4 = 0x10,
-    READ_PSNS5 = 0x11,
-    READ_PSNS6 = 0x12,
+    READ_PSNS_L = 0x11,
+    READ_PSNS_R = 0x12,
     READ_PSNSFNT = 0x13,
     READ_PSNSCBE = 0x14,
             
@@ -96,22 +90,56 @@ typedef enum {
     WRITE_LED = 0x15,
             
     //Read DIP Switches
-    READ_DIP = 0x16
-} command_t;
+    READ_DIP = 0x16,
+            
+    //Motor Commands
+    WRITE_MOTOR_LEFT_FWD = 0x20,
+    WRITE_MOTOR_LEFT_REV = 0x21, 
+            
+    WRITE_MOTOR_RIGHT_FWD = 0x23,
+    WRITE_MOTOR_RIGHT_REV = 0x24,       
+               
+} state_t;
 
-typedef enum {
-    TIME, DISTANCE, JUNCTION, NONE
+typedef enum 
+{
+    NONE,
+    TIME, 
+    DISTANCE,
+    JUNCTION 
 } condition_t;
 
 typedef struct {
-    condition_t stop;
+    condition_t data_type;
     unsigned int value;
 } state_conditions_t; 
 
+/* -----------------------------------------------------------------------------
+ * ENUM to clearly illustrate when a break condition is set.
+ */
 typedef enum {
     STATE_CONTINUE,
     STATE_BREAK
 } boolean_breakstate;
+
+/* -----------------------------------------------------------------------------
+ * Value to hold any data used in the current state, passed from the SPI command.
+ */
+typedef struct
+{
+    state_t state;                       // current state (0 is default)
+    state_conditions_t state_data;       // current state 
+
+} spi_state_data;
+
+/* -----------------------------------------------------------------------------
+ * Struct to hold data to be written out over spi
+ */
+typedef struct
+{
+    unsigned int datatype_unsignedint;             // data type to hold spi data out
+    signed int datatype_signedint;
+} spi_data_out;
 
 /* ----------------------------------------------------------------------------
  * Struct for storage of all variables that need to be tracked throughout 
@@ -123,10 +151,11 @@ typedef struct
     unsigned int update_counter;        // increment counter on every update
     boolean_breakstate general_break_condition; 
     
-    pid_ctrl Controller1;               
+    pid_ctrl Controller1;
+    pid_ctrl * pid_ctrl_ptr;
      
-    // unsigned int psns_prev_samples[400];
-    unsigned int psns_samples[4];
+    unsigned int psns_prev_digital_samples[400][3];
+    unsigned int psns_adc_samples[4];
     
     unsigned int wheelencL_count;
     unsigned int wheelencR_count;
@@ -142,43 +171,13 @@ typedef struct
     motor_direction_type motor_R_direction;
     motor_direction_type motor_dualdirection;
     
-    int psnscurrentheading;
-    int psns_desiredheading;
-    
+    int usecompass;
     float compass_currentheading;   // update on measurement
     float compass_desiredheading;   // determined at start of state
     
-    int psns_compass_currentheading;
-    int psns_compass_desiredheading;
-    
-    //-------------------------------POINTERS-----------------------------------
-    
-    unsigned int * update_counter_ptr;
-    boolean_breakstate * general_break_condition_ptr;
-    
-    pid_ctrl * pid_ctrl_ptr;
-    
-    unsigned int * psns_prev_samples_ptr;
-    unsigned int * psns_samples_ptr;
-    
-    unsigned int * wheelencL_count_ptr;
-    unsigned int * wheelencR_count_ptr;
-    
-    unsigned int * wheelencL_limit_ptr;
-    unsigned int * wheelencR_limit_ptr;
-    
-    unsigned int * motor_L_desiredspeed_ptr;
-    unsigned int * motor_R_desiredspeed_ptr;
-    unsigned int * motor_dualspeed_ptr;
-    
-    motor_direction_type * motor_L_direction_ptr;
-    motor_direction_type * motor_R_direction_ptr;
-    motor_direction_type * motor_dualdirection_ptr;
-    
-    float * compass_currentheading_ptr;   // update on measurement
-    float * compass_desiredheading_ptr;
-    
-    
+    int usepsns;
+    int psns_currentheading;
+    int psns_desiredheading;
 } control_variables;
 
 /* -----------------------------------------------------------------------------

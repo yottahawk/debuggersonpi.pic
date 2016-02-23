@@ -17,11 +17,11 @@
 
 ///////////////////////////////FUNCTION DEFINITIONS/////////////////////////////
 
-void readDIP(int *tempRegister)
+void readDIP(unsigned int *tempRegister)
 {
     /*
      * Reads the 4 DIP switches, and returns a pointer to an int where the lowest 4 bits
-     * represent the state of the switches. 
+     * represent the state of the switches. The upper 4 bits are all 0.
      */
     
     unsigned int sw1 = PORTE & 0b0000000000000010; // DIP_SW1

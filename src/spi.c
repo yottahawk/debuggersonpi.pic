@@ -80,10 +80,7 @@ void SPI_DIP() {
     readDIP(&DIP);
     
     //Send via SPI
-<<<<<<< HEAD
     Write_SPI(&Data, 1);
-=======
->>>>>>> b3dcdb05d28e1fa3327c50063ffdbf25c12492a4
     Write_SPI(&DIP, 1);
     Write_SPI(&DONE, 1);
 }
