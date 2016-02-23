@@ -11,12 +11,13 @@
 //////////////////////////////////////INCLUDES//////////////////////////////////
 
 #include "xc.h"
+// #include "datatypes.h"
 
-#include "StateMachine.h"
+#include "I2C1.h"
+#include "I2C2.h"
+#include "wheelEncoders.h"
 #include "oc.h"
 #include "timers.h"
-//#include "I2C1.h"
-#include "wheelEncoders.h"
 
 //////////////////////////////////////DEFINES///////////////////////////////////
 
@@ -36,7 +37,8 @@ typedef enum
 
 ///////////////////////////////FUNCTION DECLARATIONS////////////////////////////
 
-unsigned int acceleration_control(unsigned int requested_speed, control_variables * local_state_vars_ptr);
+
+
 void reset_motortracking();
 void enableMotorPSU();
 void disableMotorPSU();
@@ -44,8 +46,9 @@ void disableMotorPSU();
 void L_motor_constSpeed(motor_direction_type direction, unsigned int speed);
 void R_motor_constSpeed(motor_direction_type direction, unsigned int speed);
 
-void L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr, motor_direction_type direction, unsigned int speed);
-void R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr, motor_direction_type direction, unsigned int speed);
+unsigned int acceleration_control(unsigned int update_counter, unsigned int requested_speed);
+void L_motor_acceltoconstSpeed(unsigned int update_counter, motor_direction_type direction, unsigned int speed);
+void R_motor_acceltoconstSpeed(unsigned int update_counter, motor_direction_type direction, unsigned int speed);
 
 void motors_dual_constspeed(motor_direction_type direction, unsigned int speed);
 

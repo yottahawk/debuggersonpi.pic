@@ -46,27 +46,28 @@ void Write_SPI(unsigned int* buffer, unsigned int length) {
 void SPI_PSNS(unsigned char Sensor, unsigned int Length, unsigned int Clear) {
     //Buffer to send data from
     unsigned int* Buffer; 
-    
-    //Get data
-    if(Sensor==0)      ReadSENS1Buffer(Buffer, Length);
-    else if(Sensor==1) ReadSENS2Buffer(Buffer, Length);
-    else if(Sensor==2) ReadSENS3Buffer(Buffer, Length);
-    else if(Sensor==3) ReadSENS4Buffer(Buffer, Length);
-    else if(Sensor==4) ReadSENS5Buffer(Buffer, Length);
-    else if(Sensor==5) ReadSENS6Buffer(Buffer, Length);
-    else if(Sensor==6) ReadSENSFRONTBuffer(Buffer, Length);
-    else               ReadSENSCUBEBuffer(Buffer, Length);
-
-    if(Clear) {
-        if(Sensor==0)      ClearSENS1Buffer();
-        else if(Sensor==1) ClearSENS2Buffer();
-        else if(Sensor==2) ClearSENS3Buffer();
-        else if(Sensor==3) ClearSENS4Buffer();
-        else if(Sensor==4) ClearSENS5Buffer();
-        else if(Sensor==5) ClearSENS6Buffer();
-        else if(Sensor==6) ClearSENSFRONTBuffer();
-        else               ClearSENSCUBEBuffer();        
-    }
+ 
+    // UNCOMMENT WHEN FUNCTIONS ARE CREATED!!!!! ///////////////////////////////////
+//    //Get data
+//    if(Sensor==0)      ReadSENS1Buffer(Buffer, Length);
+//    else if(Sensor==1) ReadSENS2Buffer(Buffer, Length);
+//    else if(Sensor==2) ReadSENS3Buffer(Buffer, Length);
+//    else if(Sensor==3) ReadSENS4Buffer(Buffer, Length);
+//    else if(Sensor==4) ReadSENS5Buffer(Buffer, Length);
+//    else if(Sensor==5) ReadSENS6Buffer(Buffer, Length);
+//    else if(Sensor==6) ReadSENSFRONTBuffer(Buffer, Length);
+//    else               ReadSENSCUBEBuffer(Buffer, Length);
+//
+//    if(Clear) {
+//        if(Sensor==0)      ClearSENS1Buffer();
+//        else if(Sensor==1) ClearSENS2Buffer();
+//        else if(Sensor==2) ClearSENS3Buffer();
+//        else if(Sensor==3) ClearSENS4Buffer();
+//        else if(Sensor==4) ClearSENS5Buffer();
+//        else if(Sensor==5) ClearSENS6Buffer();
+//        else if(Sensor==6) ClearSENSFRONTBuffer();
+//        else               ClearSENSCUBEBuffer();        
+//    }
     
     //Return data to PI
     Write_SPI(&Data, 1);
@@ -80,21 +81,19 @@ void SPI_DIP() {
     readDIP(&DIP);
     
     //Send via SPI
-<<<<<<< HEAD
+
     Write_SPI(&Data, 1);
-=======
->>>>>>> b3dcdb05d28e1fa3327c50063ffdbf25c12492a4
     Write_SPI(&DIP, 1);
     Write_SPI(&DONE, 1);
 }
 
 void SPI_COMP() {
     //Get data
-    unsigned int direction = ReadCOMPASS();
+    // unsigned int direction = ReadCOMPASS(); // UNCOMMMENT WHEN FUNCTION CREATED!!
 
     //Return data to PI
     Write_SPI(&Data, 1);
-    Write_SPI(&direction, 1);
+//    Write_SPI(&direction, 1);
     Write_SPI(&DONE, 1);
 }
 
@@ -237,7 +236,7 @@ void SPI_Function() {
     } else {
         //This function is called if the PI wants to call certain functions
         //behaviour depends on the function the PI is calling
-        switch ((command_t) spi_info.command) {
+        switch ((state_t) spi_info.command) {
             case OPEN_GRABBER: {
                 SPI_GRABBER(0);
                 break;}
@@ -247,17 +246,17 @@ void SPI_Function() {
             case READ_GRABBER: {
                 SPI_GRABBER(2);
                 break;}
-            case WRITE_MOTOR_LEFT: {
-                SPI_MOTOR(0, spi_info.info[0], spi_info.info[1]);
+            case WRITE_MOTOR_LEFT_FWD: {
+                SPI_MOTOR(0, spi_info.info[0], 1);
                 break;}
-            case WRITE_MOTOR_RIGHT: {
-                SPI_MOTOR(1, spi_info.info[0], spi_info.info[1]);
+            case WRITE_MOTOR_RIGHT_FWD: {
+                SPI_MOTOR(1, spi_info.info[0], 1);
                 break;}
-            case READ_MOTOR_LEFT: {
-                SPI_MOTOR(2, spi_info.info[0], spi_info.info[1]);
+            case WRITE_MOTOR_LEFT_REV: {
+                SPI_MOTOR(0, spi_info.info[0], 0);
                 break;}
-            case READ_MOTOR_RIGHT: {
-                SPI_MOTOR(3, spi_info.info[0], spi_info.info[1]);
+            case WRITE_MOTOR_RIGHT_REV: {
+                SPI_MOTOR(1, spi_info.info[0], 0);
                 break;}
             case READ_ECDR1: {
                 SPI_ECDR(1, spi_info.info[0]);
@@ -304,6 +303,34 @@ void SPI_Function() {
             case READ_DIP: {
                 SPI_DIP();
                 break;}
+            
+            case OL_FORWARD:{break;}
+            case OL_LEFT:{break;}
+            case OL_RIGHT:{break;}
+            case OL_REVERSE:{break;}
+            case OL_REV_LEFT:{break;}
+            case OL_REV_RIGHT:{break;}
+            case COMP_FORWARD:{break;}
+            case COMP_LEFT:{break;}
+            case COMP_RIGHT:{break;}
+            case COMP_REVERSE:{break;}
+            case COMP_REV_LEFT:{break;}
+            case COMP_REV_RIGHT:{break;}
+            case ECDR_FORWARD:{break;}
+            case ECDR_LEFT:{break;}
+            case ECDR_RIGHT:{break;}
+            case ECDR_REVERSE:{break;}
+            case ECDR_REV_LEFT:{break;}
+            case ECDR_REV_RIGHT:{break;}
+            case PSNS_FORWARD:{break;}
+            case PSNS_LEFT:{break;}
+            case PSNS_RIGHT:{break;}
+            case PSNS_REVERSE:{break;}
+            case PSNS_REV_LEFT:{break;}
+            case PSNS_REV_RIGHT:{break;}
+            
+            
+            case STOPPED:{break;}
             //default:    //do nothing in default case
         }        
     }

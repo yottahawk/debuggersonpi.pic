@@ -38,6 +38,7 @@
 /////////////////////////////////////INCLUDES///////////////////////////////////
 
 #include "xc.h"
+#include "datatypes.h"
 
 #include "motors.h"
 #include "led.h"

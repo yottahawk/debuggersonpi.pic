@@ -31,7 +31,8 @@ void OC2init()
     OC2CONbits.OCM = 0b110;     // PWM mode, fault pin disabled.
     
     TMR2init();                 // Initialise timer 2
-    PR2 = 0x0080;               // This value sets the PWM period as 31.250 kHz
+    // PR2 = 0x0080;               // This value sets the PWM period as 31.250 kHz
+    PR2 = 0x0320;               // This value sets the PWM period as 20.000 kHz (using PLL -> CLK = 16Mhz)
     
     OC2R = 0x00;                // Init compare register 1 with 0. 
     OC2RS = 0x00;               // Init secondary compare register with 0. 
@@ -84,7 +85,8 @@ void OC3init()
     OC3CONbits.OCM = 0b110;     // PWM mode, fault pin disabled.
     
     TMR2init();                 // Initialise timer 2
-    PR2 = 0x0080;               // Sets PWM period as 31.250 kHz
+    // PR2 = 0x0080;               // This value sets the PWM period as 31.250 kHz
+    PR2 = 0x0320;               // This value sets the PWM period as 20.000 kHz (using PLL -> CLK = 16Mhz)
     
     OC3R = 0;                // Init compare register 1 with 0. 
     OC3RS = 0;               // Init secondary compare register with 0. 
@@ -138,7 +140,8 @@ void OC4init()
     OC4CONbits.OCM = 0b110;     // PWM mode, fault pin disabled.
     
     TMR3init();                 // Initialise timer 3
-    PR3 = 0x0080;               // Sets PWM period as 31.250 kHz
+    // PR2 = 0x0080;               // This value sets the PWM period as 31.250 kHz
+    PR3 = 0x0320;               // This value sets the PWM period as 20.000 kHz (using PLL -> CLK = 16Mhz)
     
     OC4R = 0x00;                // Init compare register 1 with 0. 
     OC4RS = 0x00;               // Init secondary compare register with 0. 
@@ -193,7 +196,8 @@ void OC5init()
     OC5CONbits.OCM = 0b110;     // PWM mode, fault pin disabled.
     
     TMR3init();                 // Initialise timer 2
-    PR3 = 0x0080;               // Sets PWM period as 31.250 kHz
+    // PR2 = 0x0080;               // This value sets the PWM period as 31.250 kHz
+    PR3 = 0x0320;               // This value sets the PWM period as 20.000 kHz (using PLL -> CLK = 16Mhz)
     
     OC5R = 0x00;                // Init compare register 1 with 0. 
     OC5RS = 0x00;               // Init secondary compare register with 0. 

@@ -27,12 +27,17 @@
 //functions for testing here - above main so no need for forward declaration
 void testFunctionEncoders()
 {
-    enc1_setupInterrupt();
-    enc2_setupInterrupt();
-    
     IEC1bits.CNIE = 1;              // Enable CN interrupts
     CNEN1bits.CN6IE = 1;            // Enable PUSH_CW interrupt-on-change notification.
     
+    enc1_setupInterrupt();
+    enc2_setupInterrupt();
+    
+    enableMotorPSU();
+    
+    // L_motor_constSpeed(FWD, 500);
+    
+    while(1){};
 }
 
 
@@ -42,26 +47,31 @@ int main(void)
     /* Setup all pins as inputs/outputs and drive outputs to default values */
     initialise_pinmap(); 
     
+    led_const_blue_on();
+    // TESTFUNCTIONS GO HERE
+    testFunctionEncoders();
+    
     // setup interrupt priorities
     
-    // Create default state tracking struct 
-    spi_state_data spi_newstate = {
-        .state = STOPPED,
-        .state_data.data_type = NONE,
-        .state_data.value = 0
-    };
-    spi_state_data * spi_newstate_ptr = &spi_newstate;
-    
-    while(1){
-    // interrupt or poll SPI here to collect next state information
-    
-        if (spi_newstate.state != STOPPED)
-        {
-            state_handler(spi_newstate_ptr);
-        }
-    // return here when state completes.
-    
-    }      
+//    // Create default state tracking struct 
+//    spi_state_data spi_newstate = {
+//        .state = STOPPED,
+//        .state_data.data_type = NONE,
+//        .state_data.value = 0
+//    };
+//    spi_state_data * spi_newstate_ptr = &spi_newstate;
+//    
+//    while(1){
+//    // interrupt or poll SPI here to collect next state information
+//    
+//        if (spi_newstate.state != STOPPED)
+//        {
+//            if(spi.readglobal)
+//            state_handler(spi_newstate_ptr);
+//        }
+//    // return here when state completes.
+//    
+//    }      
     
     return 0;
 }

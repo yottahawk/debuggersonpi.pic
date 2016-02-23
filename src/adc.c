@@ -56,7 +56,9 @@ void adc_linetrackinginit()
     // AD Control Register 3
     AD1CON3bits.ADRC = 0;          // Use system clock
     AD1CON3bits.SAMC = 0b1100;     // Sample time = 12Tad
-    AD1CON3bits.ADCS = 0b00000000; // Tad = Tcy
+    // AD1CON3bits.ADCS = 0b00000000; // Tad = Tcy (using 8Mhz clk)
+    AD1CON3bits.ADCS = 0b00000001; // Tad = 2Tcy (using 32Mhz pll)
+    
 }
 
 /* -----------------------------------------------------------------------------
@@ -65,9 +67,9 @@ void adc_linetrackinginit()
  * buffer register. 
  * The temporary buffer register passed as an argument should be of size 4.
  */
-void adc_linetracking_sample(unsigned int *tempBuffer[4])
+void adc_linetracking_sample(unsigned int * tempBuffer)
 {
-    int * ADC4Ptr = &ADC1BUF0;       // Initialise a pointer to the first adc buffer word;
+    volatile unsigned int * ADC4Ptr = &ADC1BUF0;       // Initialise a pointer to the first adc buffer word;
     
     AD1CON1bits.ADON = 1;           // turn ADC on
     
@@ -76,7 +78,9 @@ void adc_linetracking_sample(unsigned int *tempBuffer[4])
     while (!IFS0bits.AD1IF){};
     for (int count = 0; count < 4; count++)
     {
-       tempBuffer(count) = *ADC4Ptr++;
+       * tempBuffer =  * ADC4Ptr;
+       ADC4Ptr++;
+       tempBuffer++;
     }
     AD1CON1bits.ADON = 0;           // turn ADC off
 }
@@ -115,7 +119,8 @@ void adc_vbattinit()
     // AD Control Register 3
     AD1CON3bits.ADRC = 0;          // Use system clock
     AD1CON3bits.SAMC = 0b1100;     // Sample time = 12Tad
-    AD1CON3bits.ADCS = 0b00000000; // Tad = Tcy
+    // AD1CON3bits.ADCS = 0b00000000; // Tad = Tcy (using 8Mhz clk)
+    AD1CON3bits.ADCS = 0b00000001; // Tad = 2Tcy (using 32Mhz pll)
 }
 
 /* -----------------------------------------------------------------------------

@@ -9,9 +9,11 @@
 #define	SPI_H
 
 #include "xc.h"
+
 #include "StateMachine.h"
-#include "led.h"
-#include "grabber.h"
+#include "datatypes.h"
+
+
 #include "Sens1Peripheral.h"
 #include "Sens2Peripheral.h"
 #include "Sens3.h"
@@ -20,10 +22,13 @@
 #include "Sens6.h"
 #include "SensCubePeripheral.h"
 #include "SensFRONT.h"
+
 #include "compass.h"
 #include "wheelEncoders.h"
 #include "motors.h"
 #include "indicators_switches.h"
+#include "led.h"
+#include "grabber.h"
 
 #ifdef	__cplusplus
 extern "C" {

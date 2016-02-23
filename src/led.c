@@ -79,7 +79,7 @@ void led_flash_blue_on(unsigned int period)
     global_blue_flash = 1;
     
     TMR5init(period);
-    T5CONbits.TCKPS = 0b10;
+    // T5CONbits.TCKPS = 0b10;
     StartTMR5();
 }
 
@@ -88,7 +88,7 @@ void led_flash_red_on(unsigned int period)
     global_red_flash = 1;
     
     TMR5init(period);
-    T5CONbits.TCKPS = 0b10;
+    // T5CONbits.TCKPS = 0b10;
     StartTMR5();
 }
 
@@ -97,6 +97,6 @@ void led_flash_grn_on(unsigned int period)
     global_grn_flash = 1;
     
     TMR5init(period);
-    T5CONbits.TCKPS = 0b10;
+    // T5CONbits.TCKPS = 0b10;
     StartTMR5();
 }

@@ -97,10 +97,10 @@ void state_handler(spi_state_data * newstate_ptr) {
         .general_break_condition        = STATE_CONTINUE,
         
         .Controller1 = {0, 0, 0, 0, 0, {0}, 0, 0, 0},   // set pid controller paramaters here
-        .pid_ctrl_ptr = &(.Controller1),
+        .pid_ctrl_ptr = &(local_state_vars.Controller1),
         
-        .psns_prev_digital_samples              = {0},
-        .psns_adc_samples                   = {0},
+        // .psns_prev_digital_samples,   
+        // .psns_adc_samples,                  
         
         .wheelencL_count                = 0,
         .wheelencR_count                = 0,
@@ -128,6 +128,7 @@ void state_handler(spi_state_data * newstate_ptr) {
     
     // Create local struct for storage of any break conditions.
     break_conditions local_state_break_conditions;
+    break_conditions * local_state_break_conditions_ptr = &local_state_break_conditions;
     
     // Call state_setup function to initialise any modules necessary.
     
@@ -139,30 +140,29 @@ void state_handler(spi_state_data * newstate_ptr) {
         POLL_TIMER_INT_FL = 0; // reset flag
         
         // atomically copy all sensor values to local data struct
-        atomic_sensorcopy(control_variables * local_state_vars_ptr);
+        atomic_sensorcopy(local_state_vars_ptr);
         
         // branch to state-specific control algorithms
-        switch_statecontrol(control_variables * local_state_vars_ptr,
-                            spi_state_data * local_currentstate_data_ptr,
-                            spi_data_out * local_spi_data_out_ptr);
+        switch_statecontrol(local_state_vars_ptr,
+                            local_currentstate_data_ptr,
+                            local_spi_data_out_ptr);
         
         // Check general break condition
-        if (local_state_vars.general_break_condition = STATE_BREAK) {return;};
+        if (local_state_vars.general_break_condition == STATE_BREAK) {return;};
         // Check for break conditions (intersection, collision, cube, distance, angle etc.)
-        switch_statebreak(control_variables * local_state_vars_ptr,
-                          spi_state_data * local_currentstate_data_ptr);
+        switch_statebreak(local_state_vars_ptr,
+                          local_currentstate_data_ptr);
     
         // Check for new_state available
     
+        // update loop counter
+        local_state_vars_ptr->update_counter++;
     } // while(1)
     // breakcondition has been triggered
     
     // set all outputs to off
     
     // write output data to spi if appropriate
-    
-    // update loop counter
-    local_state_vars_ptr->update_counter++;
 }
 
 /* -----------------------------------------------------------------------------
@@ -177,7 +177,7 @@ void state_handler(spi_state_data * newstate_ptr) {
 void atomic_sensorcopy(control_variables * local_state_vars_ptr)
 {
     // disable interrupts
-    copyencdr_tolocal(control_variables * local_state_vars_ptr);
+    copyencdr_tolocal(local_state_vars_ptr);
 
     if (local_state_vars_ptr->usepsns){  // only read in data if the state requires it
     copypsns_tolocal(local_state_vars_ptr);
@@ -222,7 +222,7 @@ void copypsns_tolocal(control_variables * local_state_vars_ptr)
     // sample adc and read data in
     adc_linetrackinginit();
     unsigned int tempBuffer[4];
-    unsigned int * tempBuffer_ptr;
+    unsigned int * tempBuffer_ptr = tempBuffer;
     adc_linetracking_sample(tempBuffer_ptr);
     
     unsigned int i = 0;
@@ -233,9 +233,9 @@ void copypsns_tolocal(control_variables * local_state_vars_ptr)
     
     // read L,R,front sensor data into array under current update_counter
     unsigned int uc = local_state_vars_ptr->update_counter;
-    local_state_vars_ptr->psns_prev_digital_samples[uc][1] = ;/* left sensor read */
-    local_state_vars_ptr->psns_prev_digital_samples[uc][2] = ;/* right sensor read */
-    local_state_vars_ptr->psns_prev_digital_samples[uc][3] = ;/* front sensor read */
+    // local_state_vars_ptr->psns_prev_digital_samples[uc][1] = ;/* left sensor read */
+    // local_state_vars_ptr->psns_prev_digital_samples[uc][2] = ;/* right sensor read */
+    // local_state_vars_ptr->psns_prev_digital_samples[uc][3] = ;/* front sensor read */
 }
 
 
@@ -256,4 +256,113 @@ void copycompass_tolocal(control_variables * local_state_vars_ptr)
 {
     // now read in/copy new sensor data
     local_state_vars_ptr->compass_currentheading = calculateHeading();
+}
+
+/* -----------------------------------------------------------------------------
+ * Function: switch_statebreak(control_variables * local_state_vars_ptr,
+ *                             spi_state_data * local_currentstate_data_ptr);
+ * 
+ * Function switches into the appropriate break condition for the current state.
+ * If a break condition is reached then the general break condition is set.
+ */
+void switch_statebreak(control_variables * local_state_vars_ptr,
+                          spi_state_data * local_currentstate_data_ptr)
+{
+    
+}
+
+/* -----------------------------------------------------------------------------
+ * Function: pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
+ * 
+ * Update motor speeds based on newly generated control variable
+ * 
+ * INPUTS: ptr to local_state_vars
+ */
+void pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
+{
+    if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
+    {
+        signed int temp_speed_L = local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv;
+        L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                  FWD, 
+                                  temp_speed_L);
+        
+        R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                  FWD, 
+                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+    }
+    else
+    {
+        L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                  FWD, 
+                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+        
+        R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                  FWD, 
+                                  (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+    }
+}
+
+/* -----------------------------------------------------------------------------
+ * Function: pid_updatemotors_rev(control_variables * local_state_vars_ptr)
+ * 
+ * Update motor speeds based on newly generated control variable. This function
+ * is suitable for reversing while tracking a heading.
+ * 
+ * INPUTS: ptr to local_state_vars
+ */
+void pid_updatemotors_rev(control_variables * local_state_vars_ptr)
+{
+    if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
+    {
+        L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                  REV, 
+                                  (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+        
+        R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                  REV, 
+                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+    }
+    else
+    {
+        L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                  REV, 
+                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+        
+        R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                  REV, 
+                                  (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+    }
+}
+
+/* -----------------------------------------------------------------------------
+ * Function: pid_updatemotors_turn(control_variables * local_state_vars_ptr)
+ * 
+ * Update motor speeds based on newly generated control variable, to turn 
+ * towards a new given heading.
+ * 
+ * INPUTS: ptr to local_state_vars
+ */
+void pid_updatemotors_turn(control_variables * local_state_vars_ptr)
+{
+    if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
+    {
+        L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                  FWD, 
+                                  (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+        
+        R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                  REV, 
+                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+    }
+    else        // =0 or >0, turn left
+    {
+        L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                  REV, 
+                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+        
+        R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                  FWD, 
+                                  (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+    }
 }

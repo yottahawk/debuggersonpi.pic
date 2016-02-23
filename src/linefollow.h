@@ -24,10 +24,9 @@
 
 ////////////////////////////////FUNCTION DECLARATIONS///////////////////////////
 
-void linefollow_updatecv(pid_ctrl controller1);
 void linefollow_calcpairdiffs(unsigned int * adc_sample_data_ptr , signed int * temp_diffs_ptr);
-void linefollow_estimateangle_ldr();
-void linefollow_estimateangle_compass();
-void linefollow_estimateangle_total();
+signed int linefollow_estimateangle_ldr();
+signed int linefollow_estimateangle_compass();
+signed int linefollow_estimateangle_total();
 
 #endif //debuggersonpi_pic_linefollow_h

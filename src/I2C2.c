@@ -25,7 +25,10 @@
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 
 /* I2C baud rates for a system clock of 8 Mhz*/
-static const unsigned int I2C_BAUD_100K = 0x000F; /* I2C baud rate 100KHz Setting */
+// static const unsigned int I2C_BAUD_100K = 0x000F; /* I2C baud rate 100KHz Setting */
+
+/* I2C baud rates for a system clock of 32 Mhz*/
+static const unsigned int I2C_BAUD_100K = 157; /* 0x9D - I2C baud rate 100KHz Setting */
 
 /* number of times to retry if a write collision is detected */
 static const UINT8 RETRY_COUNT          = 3;

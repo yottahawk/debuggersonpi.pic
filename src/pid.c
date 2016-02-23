@@ -49,9 +49,6 @@
 
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 
-pid_ctrl Controller1;               
-pid_ctrl * pid_ctrl_ptr = &Controller1; // Instantiate a pointer to the struct Controller1
-
 ///////////////////////////////FUNCTION DEFINITIONS/////////////////////////////
 
 void pid_init(pid_ctrl * ptr,       // Ptr to the pid controller struct
@@ -111,97 +108,4 @@ void pid_update(signed int pv,               // process variable - estimate of p
     ptr->cv = cv;   // Set new cv inside controller struct.
 }
 
-/* -----------------------------------------------------------------------------
- * Function: pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
- * 
- * Update motor speeds based on newly generated control variable
- * 
- * INPUTS: ptr to local_state_vars
- */
-void pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
-{
-    if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
-    {
-        L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
-                                  motor_direction_type FWD, 
-                                  unsigned int (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
-        
-        R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
-                                  motor_direction_type FWD, 
-                                  unsigned int (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
-    }
-    else
-    {
-        L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
-                                  motor_direction_type FWD, 
-                                  unsigned int (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
-        
-        R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
-                                  motor_direction_type FWD, 
-                                  unsigned int (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
-    }
-}
 
-/* -----------------------------------------------------------------------------
- * Function: pid_updatemotors_rev(control_variables * local_state_vars_ptr)
- * 
- * Update motor speeds based on newly generated control variable. This function
- * is suitable for reversing while tracking a heading.
- * 
- * INPUTS: ptr to local_state_vars
- */
-void pid_updatemotors_rev(control_variables * local_state_vars_ptr)
-{
-    if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
-    {
-        L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
-                                  motor_direction_type REV, 
-                                  unsigned int (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
-        
-        R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
-                                  motor_direction_type REV, 
-                                  unsigned int (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
-    }
-    else
-    {
-        L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
-                                  motor_direction_type REV, 
-                                  unsigned int (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
-        
-        R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
-                                  motor_direction_type REV, 
-                                  unsigned int (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
-    }
-}
-
-/* -----------------------------------------------------------------------------
- * Function: pid_updatemotors_turn(control_variables * local_state_vars_ptr)
- * 
- * Update motor speeds based on newly generated control variable, to turn 
- * towards a new given heading.
- * 
- * INPUTS: ptr to local_state_vars
- */
-void pid_updatemotors_turn(control_variables * local_state_vars_ptr)
-{
-    if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
-    {
-        L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
-                                  motor_direction_type FWD, 
-                                  unsigned int (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
-        
-        R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
-                                  motor_direction_type REV, 
-                                  unsigned int (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
-    }
-    else        // =0 or >0, turn left
-    {
-        L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
-                                  motor_direction_type REV, 
-                                  unsigned int (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
-        
-        R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr,
-                                  motor_direction_type FWD, 
-                                  unsigned int (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
-    }
-}

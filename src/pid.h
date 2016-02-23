@@ -44,4 +44,11 @@ typedef struct
 
 ////////////////////////////////FUNCTION DECLARATIONS///////////////////////////
 
+void pid_init(pid_ctrl * ptr,       
+              int max,            
+              int min);
+
+void pid_update(signed int pv,               
+                pid_ctrl * ptr);     
+
 #endif //debuggersonpi_pic_pid_h

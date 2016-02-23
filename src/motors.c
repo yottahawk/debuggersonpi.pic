@@ -44,24 +44,6 @@ motors_tracking empty_struct = {0};               // used for reset
 ///////////////////////////////FUNCTION DEFINITIONS/////////////////////////////
 
 /* -----------------------------------------------------------------------------
- * Function: acceleration_control(unsigned int requested_speed)
- * 
- * Implement a rudimentary acceleration controller using the update_counter variable.
- * The motor speed is allowed to increase as the number of update loops increases.
- */
-unsigned int acceleration_control(unsigned int requested_speed, control_variables * local_state_vars_ptr)
-{
-    if (requested_speed <= local_state_vars_ptr->update_counter)
-    {
-        return requested_speed;
-    }
-    else 
-    {
-        return local_state_vars.update_counter;     // speed can never be greater than number of update cycles.
-    }
-}
-
-/* -----------------------------------------------------------------------------
  * Function: reset_motortracking()
  * 
  * Resets the motor_tracking data structure. This should occur whenever a 
@@ -143,6 +125,24 @@ void R_motor_constSpeed(motor_direction_type direction, unsigned int speed)
 }
 
 /* -----------------------------------------------------------------------------
+ * Function: acceleration_control(unsigned int requested_speed)
+ * 
+ * Implement a rudimentary acceleration controller using the update_counter variable.
+ * The motor speed is allowed to increase as the number of update loops increases.
+ */
+unsigned int acceleration_control(unsigned int update_counter, unsigned int requested_speed)
+{
+    if (requested_speed <= update_counter)
+    {
+        return requested_speed;
+    }
+    else 
+    {
+        return update_counter;     // speed can never be greater than number of update cycles.
+    }
+}
+
+/* -----------------------------------------------------------------------------
  * Function: L_motor_acceltoconstSpeed(motor_direction_type direction, unsigned int speed)
  * 
  * Motor accelerates to the given speed. The acceleration is controlled by the 
@@ -152,19 +152,19 @@ void R_motor_constSpeed(motor_direction_type direction, unsigned int speed)
  * 
  * OUTPUTS: none
  */
-void L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr, motor_direction_type direction, unsigned int speed)
+void L_motor_acceltoconstSpeed(unsigned int update_counter, motor_direction_type direction, unsigned int const_speed)
 {
-    unsigned int new_speed = acceleration_control(speed,local_state_vars_ptr);
+    unsigned int speed = acceleration_control(const_speed,update_counter);
     
     if (direction == FWD)         // Forward
     {
         OC5init();
-        OC5dutyset(new_speed);
+        OC5dutyset(speed);
     }
     else if (direction == REV)    // Backwards
     {
         OC4init();
-        OC4dutyset(new_speed);
+        OC4dutyset(speed);
     }
     
     motor_tracking_struct.motorL_speed = speed;     // track current speed
@@ -181,19 +181,19 @@ void L_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr, motor_d
  * 
  * OUTPUTS: none
  */
-void R_motor_acceltoconstSpeed(control_variables * local_state_vars_ptr, motor_direction_type direction, unsigned int speed)
+void R_motor_acceltoconstSpeed(unsigned int update_counter, motor_direction_type direction, unsigned int const_speed)
 {
-    unsigned int new_speed = acceleration_control(speed,local_state_vars_ptr);
+    unsigned int speed = acceleration_control(const_speed,update_counter);
     
     if (direction == FWD)         // Forward
     {
         OC2init();
-        OC2dutyset(new_speed);
+        OC2dutyset(speed);
     }
     else if (direction == REV)    // Backwards
     {
         OC3init();
-        OC3dutyset(new_speed);
+        OC3dutyset(speed);
     }   
     
     motor_tracking_struct.motorR_speed = speed;     // track current speed
@@ -243,7 +243,7 @@ void motors_dual_constspeed(motor_direction_type direction, unsigned int speed)
     
     temp_L_speed = (unsigned int) temp_L_speed * comp_factor; // apply compensation
     
-    L_motor_constSpeed(motor_direction_type direction, unsigned int temp_L_speed);
-    R_motor_constSpeed(motor_direction_type direction, unsigned int temp_R_speed);
+    L_motor_constSpeed(direction, temp_L_speed);
+    R_motor_constSpeed(direction, temp_R_speed);
 }
 

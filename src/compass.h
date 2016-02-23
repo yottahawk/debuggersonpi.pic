@@ -14,8 +14,8 @@
 
 #include "xc.h"
 
-//#include "I2C1.h"
-//#include "I2C2.h"
+#include "I2C1.h"
+#include "I2C2.h"
 
 
 //////////////////////////////////////DEFINES///////////////////////////////////
@@ -87,7 +87,7 @@ unsigned char readCompass(unsigned char reg); // Read the value of a certain reg
 void writeCompass(unsigned char reg_address, unsigned char value); // Writes to a register
 
 void readCompassData();     // Reads the relevant data to a buffer
-void calculateHeading();    // Takes the buffer data and calculates a heading
+int calculateHeading();    // Takes the buffer data and calculates a heading
 
 unsigned char periph_readCompass(unsigned char reg_address);
 void periph_writeCompass(unsigned char reg_address, unsigned char value);

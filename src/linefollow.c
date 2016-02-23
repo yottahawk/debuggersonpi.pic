@@ -16,47 +16,6 @@
 ////////////////////////////////////FUNCTIONS///////////////////////////////////
 
 /* -----------------------------------------------------------------------------
-** function: linefollow_updatecv();
-** 
-** Top-level function for linefollow module.
-** Reads adc values, calculates differences, estimates angular deviation from 
-** difference pairs.
-** 
-** INPUTS : local_control_vars_ptr 
-** 
-** OUTPUTS : updated pid_struct, 
-** 
- */
-void linefollow_updatecv(pid_ctrl controller1)
-{
-    // ADC ---------------------------------------------------------------------
-    unsigned int adc_samples[4] = 0;
-    unsigned int * adc_samples_ptr = &adc_samples;
-   
-    adc_linetrackinginit();                          // init adc module 
-    adc_linetracking_sample(adc_samples_ptr);        // read 4 tracking sensors
-    
-    signed int diffs[2] = 0;
-    signed int * diffs_ptr = &diffs;
-    
-    linefollow_calcpairdiffs(adc_samples_ptr , diffs_ptr);
-    linefollow_estimateangle_ldr(diffs_ptr);
-    // Compass -----------------------------------------------------------------
-    initCompass();
-    readCompassData();
-    calculateHeading();
-    
-    linefollow_estimateangle_compass();
-    // PID ---------------------------------------------------------------------
-    
-    linefollow_estimateangle_total();       // incorporate both ldr and compass
-    
-    int cv_new;
-    cv_new = pid_update();                  // run PID update
-    controller1.cv = cv_new;                // update PID struct with new cv
-}
-
-/* -----------------------------------------------------------------------------
  * Function: linefollow_calcpairdiffs(unsigned int adc_samples[4], diffs[2])
  * 
  * Calculates the difference values for the two pairs of line tracking LDR's.
@@ -68,10 +27,10 @@ void linefollow_updatecv(pid_ctrl controller1)
  * OUTPUTS: None
  * 
  */
-linefollow_calcpairdiffs(unsigned int * adc_sample_data_ptr , signed int * temp_diffs_ptr)
+void linefollow_calcpairdiffs(unsigned int * adc_sample_data_ptr , signed int * temp_diffs_ptr)
 {
-    signed int temp_diffs1;
-    signed int temp_diffs2;
+    signed int temp_diffs1 = 0;
+    signed int temp_diffs2 = 0;
     
     temp_diffs1 = (* adc_sample_data_ptr) - (* (adc_sample_data_ptr + 1));
     temp_diffs1 = (* (adc_sample_data_ptr + 2)) - (* (adc_sample_data_ptr + 3));
@@ -89,7 +48,7 @@ linefollow_calcpairdiffs(unsigned int * adc_sample_data_ptr , signed int * temp_
  */
 signed int linefollow_estimateangle_ldr()
 {
-    
+    return 0;
 }
 
 /* -----------------------------------------------------------------------------
@@ -103,9 +62,9 @@ signed int linefollow_estimateangle_ldr()
  * OUTPUTS:
  * 
  */
-linefollow_estimateangle_compass()
+signed int linefollow_estimateangle_compass()
 {
-    
+    return 0;
 }
 
 /* -----------------------------------------------------------------------------
@@ -119,7 +78,7 @@ linefollow_estimateangle_compass()
  * OUTPUTS:
  * 
  */
-linefollow_estimateangle_total()
+signed int linefollow_estimateangle_total()
 {
-    
+    return 0;
 }

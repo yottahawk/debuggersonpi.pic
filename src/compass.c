@@ -250,7 +250,7 @@ int calculateHeading()
     
     // now convert to meaningful integer that pid controller can interpret
     
-    return (int) temp_heading;
+    return currentheading;
     
    // currentheading = currentheading + (int)declination_angle;
 }

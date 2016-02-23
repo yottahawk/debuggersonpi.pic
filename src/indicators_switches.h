@@ -30,7 +30,7 @@
  * momentary button is pressed. This is used to start the processing in the 
  * desired state. 
  */
-void readDIP(int *tempRegister);
+void readDIP(unsigned int *tempRegister);
 
 /*
  * The tri-colour led  will be switchable on/off independently using the below
