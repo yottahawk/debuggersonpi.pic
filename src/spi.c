@@ -225,15 +225,11 @@ void SPI_Function() {
         
         //Set stop conditions
         state_conditions_t conditions;
-        if(spi_info.info[0]==0)     conditions.stop = TIME;
-        else if(spi_info.info[0]==1)conditions.stop = DISTANCE;
-        else                        conditions.stop = NONE;
-        
+        conditions.stop = (conditions_t) (spi_info.info[0]);
+
         //set stop condition value
         conditions.value = spi_info.info[1];
-        set_conditions(conditions);
-        
-        Write_SPI(&DONE, 1);                        //Send "DONE" to PI   
+        set_conditions(conditions);   
     } else {
         //This function is called if the PI wants to call certain functions
         //behaviour depends on the function the PI is calling
