@@ -78,7 +78,7 @@ void pid_init(pid_ctrl * ptr,       // Ptr to the pid controller struct
     ptr->ki = IntegralGain;
 }
 
-void pid_update(int pv,               // process variable - estimate of plant output as measured by sensors
+void pid_update(signed int pv,               // process variable - estimate of plant output as measured by sensors
                 pid_ctrl * ptr)       // ptr to controller struct in use
 {
     /*

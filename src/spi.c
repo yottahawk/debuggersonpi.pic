@@ -225,9 +225,9 @@ void SPI_Function() {
         
         //Set stop conditions
         state_conditions_t conditions;
-        if(spi_info.info[0]==0)     conditions.stop = TIME;
-        else if(spi_info.info[0]==1)conditions.stop = DISTANCE;
-        else                        conditions.stop = NONE;
+        if(spi_info.info[0]==0)     conditions.data_type = TIME;
+        else if(spi_info.info[0]==1)conditions.data_type = DISTANCE;
+        else                        conditions.data_type = NONE;
         
         //set stop condition value
         conditions.value = spi_info.info[1];

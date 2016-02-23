@@ -55,7 +55,7 @@ void set_conditions(state_conditions_t conditions) {
  * Top level function for state machine - a new state starts execution here.
  * REMEMBER ALL THE DATA STORED LOCALLY IS SPECIFIC TO THE CURRENT STATE OF OPERATION
  * 
- * Local copy of SPI_newstate arguments are created.
+ * Local copy of SPI_newstate_ptr arguments are created.
  * Local struct for tracking variables is also created.
  * 
  * Poll_TMR is used to control the update rate of the controller.
@@ -73,17 +73,58 @@ void set_conditions(state_conditions_t conditions) {
  * OUTPUTS: None
  * 
  */
-void state_handler() {
+void state_handler(spi_state_data * newstate_ptr) {
     // Create local copy of new_state arguments.
     // eg. copy arguments from global variables.
+    spi_state_data local_currentstate_data = {
+        .state                  = newstate_ptr->state,
+        .state_data.data_type   = newstate_ptr->state_data.data_type,
+        .state_data.value       = newstate_ptr->state_data.value
+    };
+    spi_state_data * local_currentstate_data_ptr = &local_currentstate_data;
+    
+    // Create local struct for any spi data to be written out.
+    spi_data_out local_spi_data_out = {
+        .datatype_signedint         = 0,
+        .datatype_unsignedint       = 0
+    };
+    spi_data_out * local_spi_data_out_ptr = &local_spi_data_out;
     
     // Create local struct for storage of any tracking data.
-    control_variables local_state_vars;
+    control_variables local_state_vars = {
+        // initialise data
+        .update_counter                 = 0,
+        .general_break_condition        = STATE_CONTINUE,
+        
+        .Controller1 = {0, 0, 0, 0, 0, {0}, 0, 0, 0},   // set pid controller paramaters here
+        .pid_ctrl_ptr = &(.Controller1),
+        
+        .psns_prev_digital_samples              = {0},
+        .psns_adc_samples                   = {0},
+        
+        .wheelencL_count                = 0,
+        .wheelencR_count                = 0,
+        
+        .wheelencL_limit                = 0,
+        .wheelencR_limit                = 0,
+        
+        .motor_L_desiredspeed           = 0,
+        .motor_R_desiredspeed           = 0,
+        .motor_dualspeed                = 0,
+        
+        .motor_L_direction              = FWD,
+        .motor_R_direction              = FWD,
+        .motor_dualdirection            = FWD,
+        
+        .usecompass                     = 0,        // disable by default
+        .compass_currentheading         = 0,
+        .compass_desiredheading         = 0,
+        
+        .usepsns                        = 0,        // disable by default
+        .psns_currentheading            = 0,
+        .psns_desiredheading            = 0,
+    };
     control_variables * local_state_vars_ptr = &local_state_vars;
-    
-    // Initialise members of struct (may create a function for this)
-    local_state_vars.pid_ctrl_ptr = &(local_state_vars.Controller1); // Ptr to struct Controller1
-    local_state_vars.psns_samples_ptr = &(local_state_vars.psns_samples);   // Ptr to array psns_samples
     
     // Create local struct for storage of any break conditions.
     break_conditions local_state_break_conditions;
@@ -96,16 +137,123 @@ void state_handler() {
         // wait for poll_TMR ISR to set flag
         while(!POLL_TIMER_INT_FL);
         POLL_TIMER_INT_FL = 0; // reset flag
-
-        // branch to state-specific control algorithms
-        switch_statecontrol(control_variables * local_state_vars_ptr);
         
+        // atomically copy all sensor values to local data struct
+        atomic_sensorcopy(control_variables * local_state_vars_ptr);
+        
+        // branch to state-specific control algorithms
+        switch_statecontrol(control_variables * local_state_vars_ptr,
+                            spi_state_data * local_currentstate_data_ptr,
+                            spi_data_out * local_spi_data_out_ptr);
+        
+        // Check general break condition
+        if (local_state_vars.general_break_condition = STATE_BREAK) {return;};
         // Check for break conditions (intersection, collision, cube, distance, angle etc.)
-        if (local_state_vars.general_break_condition = STATE_BREAK){return()};
-        switch_statebreak(control_variables * local_state_vars_ptr);
+        switch_statebreak(control_variables * local_state_vars_ptr,
+                          spi_state_data * local_currentstate_data_ptr);
     
         // Check for new_state available
     
     } // while(1)
-}
+    // breakcondition has been triggered
     
+    // set all outputs to off
+    
+    // write output data to spi if appropriate
+    
+    // update loop counter
+    local_state_vars_ptr->update_counter++;
+}
+
+/* -----------------------------------------------------------------------------
+ * Function: atomic_sensorcopy(control_variables * local_state_vars_ptr)
+ * 
+ * Copies sensor data to local storage.
+ * 
+ * INPUTS: local_state_vars_ptr
+ *  
+ * OUTPUTS: none
+ */
+void atomic_sensorcopy(control_variables * local_state_vars_ptr)
+{
+    // disable interrupts
+    copyencdr_tolocal(control_variables * local_state_vars_ptr);
+
+    if (local_state_vars_ptr->usepsns){  // only read in data if the state requires it
+    copypsns_tolocal(local_state_vars_ptr);
+    }
+    if (local_state_vars_ptr->usecompass){
+    copycompass_tolocal(local_state_vars_ptr);
+    }
+    // enable interrupts
+}
+
+/* -----------------------------------------------------------------------------
+ * Function: copyencdr_tolocal(control_variables * local_state_vars_ptr)
+ * 
+ * This function copys the current sensor data to the local storage struct.
+ * This function must execute atomically so data cannot change while being copied.
+ * 
+ * Encoders are read in for every possible state
+ * 
+ * INPUTS: local_state_vars_ptr, access to all global sensors/ sensor data
+ * 
+ * OUTPUTS: none
+ */
+void copyencdr_tolocal(control_variables * local_state_vars_ptr)
+{
+    // now read in/copy new sensor data
+    local_state_vars_ptr->wheelencL_count = GLOBAL_enc1_count;
+    local_state_vars_ptr->wheelencR_count = GLOBAL_enc2_count;
+}
+
+/* -----------------------------------------------------------------------------
+ * Function: copysensor_tolocal(control_variables * local_state_vars_ptr)
+ * 
+ * This function copys the current sensor data to the local storage struct.
+ * This function must execute atomically so data cannot change while being copied.
+ * 
+ * INPUTS: local_state_vars_ptr, access to all global sensors/ sensor data
+ * 
+ * OUTPUTS: none
+ */
+void copypsns_tolocal(control_variables * local_state_vars_ptr)
+{
+    // sample adc and read data in
+    adc_linetrackinginit();
+    unsigned int tempBuffer[4];
+    unsigned int * tempBuffer_ptr;
+    adc_linetracking_sample(tempBuffer_ptr);
+    
+    unsigned int i = 0;
+    for (i=0;i<4;i++)
+    {
+        local_state_vars_ptr->psns_adc_samples[i] = tempBuffer[i];
+    }
+    
+    // read L,R,front sensor data into array under current update_counter
+    unsigned int uc = local_state_vars_ptr->update_counter;
+    local_state_vars_ptr->psns_prev_digital_samples[uc][1] = ;/* left sensor read */
+    local_state_vars_ptr->psns_prev_digital_samples[uc][2] = ;/* right sensor read */
+    local_state_vars_ptr->psns_prev_digital_samples[uc][3] = ;/* front sensor read */
+}
+
+
+/* -----------------------------------------------------------------------------
+ * Function: copycompass_tolocal(control_variables * local_state_vars_ptr)
+ * 
+ * This function copys the current sensor data to the local storage struct.
+ * This function must execute atomically so data cannot change while being copied.
+ * 
+ * Compass is seperated out so that it will only read in data if new data is available.
+ * If a certain state does not use the compass, it will never be read in.
+ * 
+ * INPUTS: local_state_vars_ptr, access to all global sensors/ sensor data
+ * 
+ * OUTPUTS: none
+ */
+void copycompass_tolocal(control_variables * local_state_vars_ptr)
+{
+    // now read in/copy new sensor data
+    local_state_vars_ptr->compass_currentheading = calculateHeading();
+}

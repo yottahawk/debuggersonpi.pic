@@ -246,3 +246,4 @@ void motors_dual_constspeed(motor_direction_type direction, unsigned int speed)
     L_motor_constSpeed(motor_direction_type direction, unsigned int temp_L_speed);
     R_motor_constSpeed(motor_direction_type direction, unsigned int temp_R_speed);
 }
+

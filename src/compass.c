@@ -218,7 +218,7 @@ void readCompassData()
  * 
  * OUTPUT: int heading written to global current_heading.
  */
-void calculateHeading()
+int calculateHeading()
 { 
     float X_scaled = X_axis * m_scale;
     float Y_scaled = Y_axis * m_scale;
@@ -241,6 +241,8 @@ void calculateHeading()
     temp_heading *= (180.0 / PI);
     
     // now convert to meaningful integer that pid controller can interpret
+    
+    return (int) temp_heading;
     
    // currentheading = currentheading + (int)declination_angle;
 }

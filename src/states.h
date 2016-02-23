@@ -20,6 +20,8 @@
 #include "linefollow.h"
 #include "led.h"
 #include "grabber.h"
+#include "pid.h"
+#include "indicators_switches.h"
 
 //////////////////////////////////////DEFINES///////////////////////////////////
 
