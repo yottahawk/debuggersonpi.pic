@@ -126,7 +126,7 @@ void TMR5init(unsigned int period)
     
     // Following lines set timer period.
     // T_TMR4 = 8*10^6 / ( pre-scaler * period_register )
-    T5CONbits.TCKPS = 0b00;     // 1:1 pre-scaler
+    T5CONbits.TCKPS = 0b01;     // 1:1 pre-scaler
     PR5 = period;               // Period register
     
     // Enable/Disable poll timer using StartTMR5() or StopTMR5();)
@@ -135,6 +135,7 @@ void TMR5init(unsigned int period)
 void StartTMR5()
 {
     T5CONbits.TON = 1;
+    IEC1bits.T5IE = 1;
 }
 
 void StopTMR5()

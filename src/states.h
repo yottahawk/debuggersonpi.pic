@@ -36,9 +36,6 @@ void switch_statecontrol(control_variables * local_state_vars_ptr,
                          spi_state_data * local_state_data_ptr,
                          spi_data_out * local_spi_data_out_ptr);
 
-void switch_statesetup(control_variables * local_state_vars_ptr,
-                       spi_state_data * local_currentstate_data_ptr);
-
 // Default State - All SPI comms occurs within this state.
 void state_stopped();
 
@@ -75,51 +72,6 @@ void state_psns_forward(control_variables * local_state_vars_ptr);
 void state_psns_forward_junctiondetect(control_variables * local_state_vars_ptr);
 
 // STATE SETUPS //
-
-void setup_state_ol_forward(spi_state_data * local_currentstate_data_ptr,
-                            control_variables * local_state_vars_ptr);
-
-void setup_state_ecdr_left(spi_state_data * local_currentstate_data_ptr,
-                           control_variables * local_state_vars_ptr);
-
-void setup_state_ecdr_right(spi_state_data * local_currentstate_data_ptr,
-                            control_variables * local_state_vars_ptr);
-
-void setup_state_ol_reverse(spi_state_data * local_currentstate_data_ptr,
-                            control_variables * local_state_vars_ptr);
-
-void setup_state_ecdr_rev_left(spi_state_data * local_currentstate_data_ptr,
-                               control_variables * local_state_vars_ptr);
-
-void setup_state_ecdr_rev_right(spi_state_data * local_currentstate_data_ptr,
-                                control_variables * local_state_vars_ptr);
-
-void setup_state_comp_forward(spi_state_data * local_currentstate_data_ptr,
-                              control_variables * local_state_vars_ptr);
-
-void setup_state_comp_turn(spi_state_data * local_currentstate_data_ptr,
-                           control_variables * local_state_vars_ptr);
-
-void setup_state_comp_reverse(spi_state_data * local_currentstate_data_ptr,
-                              control_variables * local_state_vars_ptr);
-
-void setup_state_comp_rev_left(spi_state_data * local_currentstate_data_ptr,
-                               control_variables * local_state_vars_ptr);
-
-void setup_state_comp_rev_right(spi_state_data * local_currentstate_data_ptr,
-                                control_variables * local_state_vars_ptr);
-
-void setup_state_ecdr_forward(spi_state_data * local_currentstate_data_ptr,
-                              control_variables * local_state_vars_ptr);
-
-void setup_state_ecdr_reverse(spi_state_data * local_currentstate_data_ptr,
-                              control_variables * local_state_vars_ptr);
-
-void setup_state_psns_forward(spi_state_data * local_currentstate_data_ptr,
-                              control_variables * local_state_vars_ptr);
-
-void setup_state_psns_forward_junctiondetect(spi_state_data * local_currentstate_data_ptr,
-                                             control_variables * local_state_vars_ptr);
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif //debuggersonpi_pic_states_h

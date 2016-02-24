@@ -20,10 +20,12 @@
 #include "spi.h"
 #include "compass.h"
 
+#include "hs_math.h"
+
 /////////////////////////////////////DEFINES//////////////////////////////////// 
 
-// #define testmode
-#define operatingmode
+#define testmode
+// #define operatingmode
 
 ////////////////////////////////////FUNCTIONS///////////////////////////////////
 
@@ -41,6 +43,23 @@ void testFunctionEncoders()
     L_motor_constSpeed(FWD, 200);
     
     while(1){};
+}
+
+void testfunctionCompass()
+{
+    initCompass(); // write to configA, configB, mode
+
+    while(1){
+    
+    periph_writeCompass(Mode_Reg, Mode_Data_Single); 
+    while(!PORTDbits.RD5){};    // wait for DRDY to go high.
+    readCompassData();
+    
+    int new_heading = heading_atan_int();
+    
+    Nop();
+
+    }
 }
 
 void testLoadState(spi_state_data * spi_newstate_ptr)
@@ -61,7 +80,7 @@ int main(void)
 #ifdef testmode
     // TESTFUNCTIONS GO HERE
     led_const_blue_on();
-    testFunctionEncoders();
+    testfunctionCompass();
 #endif //testmode
     
 #ifdef operatingmode

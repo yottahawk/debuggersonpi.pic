@@ -120,6 +120,37 @@ typedef enum {
 } boolean_breakstate;
 
 /* -----------------------------------------------------------------------------
+ * Enum to hold the intersection types, and used to indicate which intersection 
+ * has been detected.
+ */
+typedef enum 
+{
+	ERoom_Empty,
+	ERoom_Cross,
+	ERoom_NorthSouth,
+	ERoom_EastWest,
+	ERoom_EastSouthWest,
+	ERoom_NorthSouthWest,
+	ERoom_NorthEastWest,
+	ERoom_NorthEastSouth,
+	ERoom_NorthWest,
+	ERoom_NorthEast,
+	ERoom_EastSouth,
+	ERoom_SouthWest,
+	ERoom_North,
+	ERoom_East,
+	ERoom_South,
+	ERoom_West,
+	ERoom_Unknown
+} ERoom;
+
+
+typedef enum{
+    USESENSORS_FALSE,
+    USESENSORS_TRUE
+} use_sensors;
+
+/* -----------------------------------------------------------------------------
  * Value to hold any data used in the current state, passed from the SPI command.
  */
 typedef struct
@@ -168,11 +199,11 @@ typedef struct
     motor_direction_type motor_R_direction;
     motor_direction_type motor_dualdirection;
     
-    int usecompass;
-    float compass_currentheading;   // update on measurement
-    float compass_desiredheading;   // determined at start of state
+    use_sensors usecompass;
+    int compass_currentheading;   // update on measurement
+    int compass_desiredheading;   // determined at start of state
     
-    int usepsns;
+    use_sensors usepsns;
     int psns_currentheading;
     int psns_desiredheading;
 } control_variables;
@@ -186,30 +217,7 @@ typedef struct
     
 } break_conditions;
 
-/* -----------------------------------------------------------------------------
- * Enum to hold the intersection types, and used to indicate which intersection 
- * has been detected.
- */
-typedef enum 
-{
-	ERoom_Empty,
-	ERoom_Cross,
-	ERoom_NorthSouth,
-	ERoom_EastWest,
-	ERoom_EastSouthWest,
-	ERoom_NorthSouthWest,
-	ERoom_NorthEastWest,
-	ERoom_NorthEastSouth,
-	ERoom_NorthWest,
-	ERoom_NorthEast,
-	ERoom_EastSouth,
-	ERoom_SouthWest,
-	ERoom_North,
-	ERoom_East,
-	ERoom_South,
-	ERoom_West,
-	ERoom_Unknown
-} ERoom;
+
 
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 

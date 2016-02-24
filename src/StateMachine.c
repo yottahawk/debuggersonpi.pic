@@ -11,7 +11,7 @@
 
 /////////////////////////////////////DEFINES////////////////////////////////////
 
-#define pollTMR_period 65536; //0xFFFF - 245Hz
+#define pollTMR_period 0xFFFF; //0xFFFF - 245Hz
 
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 
@@ -118,11 +118,11 @@ void state_handler(spi_state_data * newstate_ptr) {
         .motor_R_direction              = NONE_MOTOR_DIRECTION_TYPE,
         .motor_dualdirection            = NONE_MOTOR_DIRECTION_TYPE,
         
-        .usecompass                     = 0,        // disable by default
+        .usecompass                     = USESENSORS_FALSE,        // disable by default
         .compass_currentheading         = 0,
         .compass_desiredheading         = 0,
         
-        .usepsns                        = 0,        // disable by default
+        .usepsns                        = USESENSORS_FALSE,        // disable by default
         .psns_currentheading            = 0,
         .psns_desiredheading            = 0,
     };
@@ -134,10 +134,11 @@ void state_handler(spi_state_data * newstate_ptr) {
     
     // Call state_setup function to initialise state_vars and state_break_condition structs.
     switch_statesetup(local_state_vars_ptr,
-                      local_currentstate_data_ptr);
+                      local_currentstate_data_ptr,
+                      local_state_break_conditions_ptr);
 
     // Start poll_TMR
-    unsigned int temp_pr = 0xFFFF;
+    unsigned int temp_pr = pollTMR_period;
     POllTMRinit(temp_pr);
     StartPollTMR();
     
@@ -155,14 +156,15 @@ void state_handler(spi_state_data * newstate_ptr) {
                             local_currentstate_data_ptr,
                             local_spi_data_out_ptr);
         
-        // Check general break condition
-        if (local_state_vars.general_break_condition == STATE_BREAK) {return;};
         // Check for break conditions (intersection, collision, cube, distance, angle etc.)
         switch_statebreak(local_state_vars_ptr,
                           local_currentstate_data_ptr);
     
         // Check for new_state available
-    
+   
+        // Check general break condition (only place the loop can end)
+        if (local_state_vars.general_break_condition == STATE_BREAK) {return;};
+        
         // update loop counter
         local_state_vars_ptr->update_counter++;
     } // while(1)
@@ -170,7 +172,7 @@ void state_handler(spi_state_data * newstate_ptr) {
     
     // set all outputs to off
     
-    // write output data to spi if appropriate
+    // write any local data to global struct for writing out over spi
 }
 
 /* -----------------------------------------------------------------------------
@@ -189,10 +191,10 @@ void atomic_sensorcopy(control_variables * local_state_vars_ptr)
     
     copyencdr_tolocal(local_state_vars_ptr);
 
-    if (local_state_vars_ptr->usepsns){  // only read in data if the state requires it
+    if (local_state_vars_ptr->usepsns == USESENSORS_TRUE){  // only read in data if the state requires it
     copypsns_tolocal(local_state_vars_ptr);
     }
-    if (local_state_vars_ptr->usecompass){
+    if (local_state_vars_ptr->usecompass == USESENSORS_TRUE){
     copycompass_tolocal(local_state_vars_ptr);
     }
     

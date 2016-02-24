@@ -35,6 +35,7 @@
       <itemPath>src/wheelEncoders.h</itemPath>
       <itemPath>src/hs_math.h</itemPath>
       <itemPath>src/datatypes.h</itemPath>
+      <itemPath>src/states_setup.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -73,6 +74,7 @@
       <itemPath>src/wheelEncoders.c</itemPath>
       <itemPath>src/states.c</itemPath>
       <itemPath>src/hs_math.c</itemPath>
+      <itemPath>src/states_setup.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -278,6 +280,7 @@
         <property key="UART 1" value="true"/>
         <property key="UART 2" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="hwtoolclock.instructionspeed" value="4"/>
         <property key="hwtoolclock.units" value="mips"/>

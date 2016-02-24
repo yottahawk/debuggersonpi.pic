@@ -13,8 +13,10 @@
 #include "xc.h"
 #include "datatypes.h"
 
-#include "spi.h"
 #include "states.h"
+#include "states_setup.h"
+
+#include "spi.h"
 #include "pid.h"
 #include "wheelEncoders.h"
 #include "compass.h"
