@@ -13,8 +13,8 @@
 #include "xc.h"
 // #include "datatypes.h"
 
-#include "I2C1.h"
-#include "I2C2.h"
+//#include "I2C1.h"
+//#include "I2C2.h"
 #include "wheelEncoders.h"
 #include "oc.h"
 #include "timers.h"
@@ -31,8 +31,7 @@
 // This enum is used as an argument to a function, but is never instantiated. 
 typedef enum 
 { 
-    NONE_MOTOR_DIRECTION_TYPE,
-    FWD,
+    FWD = 0,
     REV
 } motor_direction_type;
 

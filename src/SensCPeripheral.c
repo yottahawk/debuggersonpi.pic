@@ -1,25 +1,23 @@
 /* 
- * File:   SENS2Peripheral.c
+ * File:   SENSCPeripheral.c
  * Author: Luke
  *
  * Created on 28 January 2016, 23:57
  */
 
 #define BUFFER_LENGTH 256
-#define BIT_MASK 0x08
-#define PIC_PORT PORTB
-#define PIC_TRIS TRISB
+#define BIT_MASK 0x1000;
 
 #include <xc.h>
-#include "Sens2Peripheral.h"
+#include "SensCPeripheral.h"
 
-unsigned int SENS2Buffer[BUFFER_LENGTH];
-unsigned int SENS2Pointer;
+unsigned int SENSCBuffer[BUFFER_LENGTH];
+unsigned int SENSCPointer;
 
 //Function to read a value directly from the peripheral
-unsigned int ReadSENS2() {
+unsigned int ReadSENSC() {
     //Read B register and compare to bit mask
-    int val = PIC_PORT & BIT_MASK;
+    int val = PORTB & BIT_MASK;
     
     //if result of bit mask is non-zero, then peripheral is high
     //Otherwise peripheral is low
@@ -28,21 +26,21 @@ unsigned int ReadSENS2() {
 }
 
 //Functions to read and write to the peripheral's buffer
-void WriteSENS2Buffer(unsigned int Data) {
+void WriteSENSCBuffer(unsigned int Data) {
     /*
      * Increments pointer (loops round if exceeds buffer size) 
      * Inserts new value at position
      */
-    //Increment SENS2Pointer 
-    if(SENS2Pointer==0) SENS2Pointer = BUFFER_LENGTH-1; //Loop pointer if exceeds buffer length
-    else SENS2Pointer--; 
+    //Increment SENSCPointer 
+    if(SENSCPointer==0) SENSCPointer = BUFFER_LENGTH-1; //Loop pointer if exceeds buffer length
+    else SENSCPointer--; 
     
     //Insert data at new position
-    SENS2Buffer[SENS2Pointer] = Data;
+    SENSCBuffer[SENSCPointer] = Data;
     
     //Integral Code?
 }
-void ReadSENS2Buffer(unsigned int* Dest, int Count){
+void ReadSENSCBuffer(unsigned int* Dest, int Count){
     /*
      * Returns a pointer to a buffer of the required size
      * 
@@ -50,51 +48,51 @@ void ReadSENS2Buffer(unsigned int* Dest, int Count){
      * a pointer to the first value
      */
     //Reoorganise Buffer if count exceeds values remaining in memory
-    if(Count>(BUFFER_LENGTH-SENS2Pointer)) {
+    if(Count>(BUFFER_LENGTH-SENSCPointer)) {
         //Temporary Buffer
         unsigned int TempBuffer[BUFFER_LENGTH];
 
         //Fill temporarybuffer with values from Buffer
-        for(int i=SENS2Pointer;i<BUFFER_LENGTH;i++){
-            TempBuffer[i-SENS2Pointer] = SENS2Buffer[i];
+        for(int i=SENSCPointer;i<BUFFER_LENGTH;i++){
+            TempBuffer[i-SENSCPointer] = SENSCBuffer[i];
         }
-        for(int i=0;i<SENS2Pointer;i++){
-            TempBuffer[SENS2Pointer+i] = SENS2Buffer[i];
+        for(int i=0;i<SENSCPointer;i++){
+            TempBuffer[SENSCPointer+i] = SENSCBuffer[i];
         }
         
         //Copy temporary buffer to buffer
-        for(int i=0;i<BUFFER_LENGTH;i++) SENS2Buffer[i] = TempBuffer[i];
+        for(int i=0;i<BUFFER_LENGTH;i++) SENSCBuffer[i] = TempBuffer[i];
         
         //Reset pointer to start of buffer
-        SENS2Pointer = 0;
+        SENSCPointer = 0;
     };
     
-    Dest = &SENS2Buffer[SENS2Pointer];
+    Dest = &SENSCBuffer[SENSCPointer];
 }
 
-void StartupSENS2() {
+void StartupSENSC() {
     // Ensure Data direction register is set to 1 (For 1nput)
-    PIC_TRIS = PIC_TRIS | BIT_MASK;
+    TRISB = TRISB | BIT_MASK;
 }
 
 //Functions to Initiate / Clear
-int InitiateSENS2() {
+int InitiateSENSC() {
     //Ensure Buffer is full of zeros
-    ClearSENS2Buffer();
+    ClearSENSCBuffer();
     
     //Place pointer at end of buffer
-    SENS2Pointer = BUFFER_LENGTH-1;
+    SENSCPointer = BUFFER_LENGTH-1;
     
     //Initiate data direction bits
-    StartupSENS2();
+    StartupSENSC();
     
     return 0;
 }
-int ClearSENS2Buffer() {
+int ClearSENSCBuffer() {
     /*
      * Writes zeros into every cell of the buffer
      */
-    for(int i=0; i<BUFFER_LENGTH; i++) SENS2Buffer[i] = 0;
+    for(int i=0; i<BUFFER_LENGTH; i++) SENSCBuffer[i] = 0;
     
     return 0;
 }

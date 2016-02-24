@@ -1,31 +1,31 @@
 /* 
- * File:   SENS2Peripheral.h
+ * File:   SENSCPeripheral.h
  * Author: Luke
  *
  * Created on 28 January 2016, 23:57
  */
 
-#ifndef SENS2PERIPHERAL_H
-#define	SENS2PERIPHERAL_H
+#ifndef SENSCPERIPHERAL_H
+#define	SENSCPERIPHERAL_H
 
 #ifdef	__cplusplus
 extern "C" {
 #endif
 
     //Function to read a value directly from the peripheral
-    unsigned int ReadSENS2();
+    unsigned int ReadSENSC();
     
     //Functions to read and write to the peripheral's buffer
-    void WriteSENS2Buffer(unsigned int Data);
-    void ReadSENS2Buffer(unsigned int* Dest, int Count);
+    void WriteSENSCBuffer(unsigned int Data);
+    void ReadSENSCBuffer(unsigned int* Dest, int Count);
     
     //Functions to Initiate / Clear
-    int InitiateSENS2();
-    int ClearSENS2Buffer();
+    int InitiateSENSC();
+    int ClearSENSCBuffer();
 
 #ifdef	__cplusplus
 }
 #endif
 
-#endif	/* SENS2PERIPHERAL_H */
+#endif	/* SENSCPERIPHERAL_H */
 
