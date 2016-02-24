@@ -17,7 +17,7 @@
 
 ///////////////////////////////FUNCTION DEFINITIONS/////////////////////////////
 
-void POllTMRinit()
+void POllTMRinit(unsigned int period)
 {
    /*
     * Timer 1 is the poll timer, used to create a regular interval between 
@@ -31,14 +31,15 @@ void POllTMRinit()
     T1CONbits.TCS = 0;          // use internal clock.
     
     T1CONbits.TCKPS = 0b00;     // 1:1 pre-scaler
-    PR1 = 0xFFFF;   // Sets a timer frequency of 125Hz. (Poll_period = 8ms)
+    PR1 = period;   // Sets a timer frequency of 125Hz. (Poll_period = 8ms)
     
     // Enable/Disable poll timer using StartPollTMR() or StopPollTMR();)
 }
 
 void StartPollTMR()
 {
-    T1CONbits.TON = 1;
+    IEC0bits.T1IE = 1;      // enable TMR1 interrupts
+    T1CONbits.TON = 1;      // start TMR1 module
 }
 
 void StopPollTMR()

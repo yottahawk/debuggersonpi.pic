@@ -26,7 +26,7 @@
 ////////////////////////////////FUNCTION DECLARATIONS///////////////////////////
 
 // Initialises TMR1 as the poll timers with an 8ms period.
-void POllTMRinit();
+void POllTMRinit(unsigned int period);
 void StartPollTMR();
 void StopPollTMR();
 

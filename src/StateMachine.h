@@ -18,6 +18,8 @@
 #include "pid.h"
 #include "wheelEncoders.h"
 #include "compass.h"
+#include "timers.h"
+#include "interrupts.h"
 
 /////////////////////////////////////DEFINES////////////////////////////////////
 

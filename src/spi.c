@@ -226,7 +226,7 @@ void SPI_Function() {
         state_conditions_t conditions;
         if(spi_info.info[0]==0)     conditions.data_type = TIME;
         else if(spi_info.info[0]==1)conditions.data_type = DISTANCE;
-        else                        conditions.data_type = NONE;
+        else                        conditions.data_type = NONE_CONDITION_T;
         
         //set stop condition value
         conditions.value = spi_info.info[1];
@@ -328,7 +328,8 @@ void SPI_Function() {
             case PSNS_REVERSE:{break;}
             case PSNS_REV_LEFT:{break;}
             case PSNS_REV_RIGHT:{break;}
-            
+            case PSNS_FORWARD_JUNCTION_DETECT:{break;}
+    
             
             case STOPPED:{break;}
             //default:    //do nothing in default case

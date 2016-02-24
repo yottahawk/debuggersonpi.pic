@@ -31,7 +31,8 @@
 // This enum is used as an argument to a function, but is never instantiated. 
 typedef enum 
 { 
-    FWD = 0,
+    NONE_MOTOR_DIRECTION_TYPE,
+    FWD,
     REV
 } motor_direction_type;
 

@@ -55,7 +55,8 @@ typedef enum {
     PSNS_RIGHT      = 0x95, //Closed Loop With PhotoSensors Forwards Right turn (90)
     PSNS_REVERSE    = 0x96, //Closed Loop With PhotoSensors Reverse
     PSNS_REV_LEFT   = 0x97, //Closed Loop With PhotoSensors Reverse Left Turn (90)
-    PSNS_REV_RIGHT  = 0x98, //Closed Loop With PhotoSensors Reverse Right Turn (90)     
+    PSNS_REV_RIGHT  = 0x98, //Closed Loop With PhotoSensors Reverse Right Turn (90)
+    PSNS_FORWARD_JUNCTION_DETECT = 0x99,        // Closed Loop, Photosensors, Junction Detect
 
     //Grabber commands
     OPEN_GRABBER = 0x01,
@@ -98,9 +99,10 @@ typedef enum {
 
 typedef enum 
 {
-    NONE,
+    NONE_CONDITION_T,
     TIME, 
     DISTANCE,
+    SPEED,
     JUNCTION 
 } condition_t;
 

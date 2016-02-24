@@ -11,6 +11,18 @@
 
 /////////////////////////////////////DEFINES////////////////////////////////////
 
+#define speed_slow 150
+#define speed_med 300
+#define speed_fast 450
+
+// PID controller params
+#define kp_linetracking 1
+#define ki_linetracking 1
+#define kp_turning
+#define ki_turning
+#define ctrl_max     200 
+#define ctrl_min    -200
+
 //////////////////////////////TYPEDEFS,ENUMS,STRUCTS////////////////////////////
 
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
@@ -105,115 +117,12 @@ void switch_statecontrol(control_variables * local_state_vars_ptr,
         //Closed Loop with Analog Sensors states////////////////////////////////
         case PSNS_FORWARD:              //Closed Loop With PhotoSensors Forward drive   
             state_psns_forward(local_state_vars_ptr);   
+            break;
+        //Closed Loop with Analog Sensors states////////////////////////////////
+        case PSNS_FORWARD_JUNCTION_DETECT:              //Closed Loop With PhotoSensors and detecting junction   
+            state_psns_forward(local_state_vars_ptr);   
             break;  
-//        case PSNS_LEFT:                 //Closed Loop With PhotoSensors Forwards Left turn (90) 
-//            state_psns_left(control_variables * local_state_vars_ptr);      
-//            break;
-//        case PSNS_RIGHT:                //Closed Loop With PhotoSensors Forwards Right turn (90)
-//            state_psns_right(control_variables * local_state_vars_ptr);     
-//            break;
-//        case PSNS_REVERSE:              //Closed Loop With PhotoSensors Reverse    
-//            state_psns_reverse(control_variables * local_state_vars_ptr);   
-//            break;
-//        case PSNS_REV_LEFT:             //Closed Loop With PhotoSensors Reverse Left Turn (90)
-//            state_psns_rev_left(control_variables * local_state_vars_ptr);  
-//            break;
-//        case PSNS_REV_RIGHT:            //Closed Loop With PhotoSensors Reverse Right Turn (90) 
-//            state_psns_rev_right(control_variables * local_state_vars_ptr);  
-//            break;
-
-//        case OPEN_GRABBER:      
-//            // state_open_grabber();
-//            break;
-//        case CLOSE_GRABBER:     
-//            // state_close_grabber();
-//            break;
-//        case READ_GRABBER:      
-//            // state_read_grabber();
-//            break;
-//
-//        //Motor Commands////////////////////////////////////////////////////////
-//        case WRITE_MOTOR_LEFT_FWD:  
-//            state_write_motor_left_fwd(local_state_vars_ptr,
-//                                       local_state_data_ptr);
-//            break;
-//        case WRITE_MOTOR_LEFT_REV:  
-//            state_write_motor_left_rev(local_state_vars_ptr,
-//                                       local_state_data_ptr);
-//            break;
-//        case WRITE_MOTOR_RIGHT_FWD: 
-//            state_write_motor_right_fwd(local_state_vars_ptr,
-//                                        local_state_data_ptr);
-//            break;
-//        case WRITE_MOTOR_RIGHT_REV: 
-//            state_write_motor_right_rev(local_state_vars_ptr,
-//                                        local_state_data_ptr);
-//            break;
-//
-//
-//        //Encoder Commands//////////////////////////////////////////////////////
-////        case READ_ECDR1:        
-////            state_read_ecdr1(control_variables * local_state_vars_ptr);
-////            break;
-//        case READ_ECDR1_SUM:    
-//            state_read_ecdr1_sum(local_state_vars_ptr, 
-//                                 local_spi_data_out_ptr);
-//            break;
-////        case READ_ECDR2:        
-////            state_read_ecdr2(control_variables * local_state_vars_ptr);
-////            break;
-//        case READ_ECDR2_SUM:    
-//            state_read_ecdr2_sum(local_state_vars_ptr, 
-//                                 local_spi_data_out_ptr);
-//            break;
-//
-//        //Compass commands//////////////////////////////////////////////////////
-//        case READ_COMP:         
-//            state_read_comp(local_state_vars_ptr, 
-//                            local_spi_data_out_ptr);
-//            break;
-//
-//        //Photosensor commands//////////////////////////////////////////////////
-////        case READ_PSNS1:        
-////            state_read_psns1(control_variables * local_state_vars_ptr);
-////            break;
-////        case READ_PSNS2:        
-////            state_read_psns2(control_variables * local_state_vars_ptr);
-////            break;
-////        case READ_PSNS3:        
-////            state_read_psns3(control_variables * local_state_vars_ptr);
-////            break;
-////        case READ_PSNS4:        
-////            state_read_psns4(control_variables * local_state_vars_ptr);
-////            break;
-//        case READ_PSNS5:        
-//            state_read_psns_L(local_state_vars_ptr, 
-//                              local_spi_data_out_ptr);
-//            break;
-//        case READ_PSNS6:        
-//            state_read_psns_R(local_state_vars_ptr, 
-//                              local_spi_data_out_ptr);
-//            break;
-//        case READ_PSNSFNT:      
-//            state_read_psnsfnt(local_state_vars_ptr, 
-//                               local_spi_data_out_ptr);
-//            break;
-//        case READ_PSNSCBE:      
-//            state_read_psnscbe(local_state_vars_ptr, 
-//                               local_spi_data_out_ptr);
-//            break;
-//
-//        //Operate LED///////////////////////////////////////////////////////////
-//        case WRITE_LED:         
-//            state_write_led(local_state_vars_ptr,
-//                            local_state_data_ptr);
-//            break;
-//
-//        //Read DIP Switches/////////////////////////////////////////////////////
-//        case READ_DIP:          
-//            state_read_dip(local_state_vars_ptr,
-//                           local_spi_data_out_ptr);
-//            break;
+//        
     } // switch(Curr_State)
 }
 
@@ -563,11 +472,14 @@ void state_psns_forward(control_variables * local_state_vars_ptr)
     
     // estimate angle from differences
     signed int psns_estimate_angle = 0;
-    // psns_estimate_angle = linefollow_estimateangle_ldr(diffs_ptr);
+    psns_estimate_angle = linefollow_estimateangle_ldr(diffs_ptr);
 
     // input new angular error estimate into PID controller
     pid_update(psns_estimate_angle,
                local_state_vars_ptr->pid_ctrl_ptr);
+    
+    // update motors based on new cv
+    pid_updatemotors_fwd(local_state_vars_ptr);
     
     // generate break condition when encoder count is reached.
     if (local_state_vars_ptr->wheelencL_count > local_state_vars_ptr->wheelencL_limit ||
@@ -576,4 +488,230 @@ void state_psns_forward(control_variables * local_state_vars_ptr)
         local_state_vars_ptr->general_break_condition = STATE_BREAK; 
         return;
     };
+}
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%//
+/* -----------------------------------------------------------------------------
+ * Function: state_switch(control_variables local_state_vars)
+ * 
+ * This function is called when the poll_TMR triggers a new update, and switches
+ * the appropriate control algorithm into the loop.
+ * 
+ * INPUTS: spi_newstate, state_vars and state_break_condition structs.
+ * 
+ * OUTPUTS: initialise state_vars and state_break_condition structs.
+ */
+void switch_statesetup(control_variables * local_state_vars_ptr,
+                       spi_state_data * local_currentstate_data_ptr)                     
+{  
+//execute a different function based on state
+    switch (local_currentstate_data_ptr->state)
+    { 
+        default:  // Default state is stopped/              
+            state_stopped();        //Stationary
+            break;
+
+        case STOPPED:           
+            state_stopped();        //Stationary
+            break;
+
+        //Open Loop States//////////////////////////////////////////////////////        
+        case OL_FORWARD:                //Open Loop Forward drive       
+            setup_state_ol_forward(local_currentstate_data_ptr,
+                                   local_state_vars_ptr);    
+            break;
+        case OL_REVERSE:                //Open Loop Reverse   
+            setup_state_ol_reverse(local_currentstate_data_ptr,
+                                   local_state_vars_ptr);     
+            break;
+
+        //Closed Loop with Compass states///////////////////////////////////////
+        case COMP_FORWARD:              //Closed Loop With Compass Forward drive 
+            setup_state_comp_forward(local_currentstate_data_ptr,
+                                     local_state_vars_ptr);  
+            break;
+        case COMP_LEFT:                 //Closed Loop With Compass Turn angle  
+            setup_state_comp_turn(local_currentstate_data_ptr,
+                                  local_state_vars_ptr);      
+            break;
+        case COMP_RIGHT:                 //Closed Loop With Compass Turn angle  
+            setup_state_comp_turn(local_currentstate_data_ptr,
+                                  local_state_vars_ptr);      
+            break;    
+        case COMP_REVERSE:              //Closed Loop With Compass Reverse   
+            setup_state_comp_reverse(local_currentstate_data_ptr,
+                                     local_state_vars_ptr); 
+            break;
+        case COMP_REV_LEFT:             //Closed Loop With Compass Reverse Left Turn (90) 
+            setup_state_comp_rev_left(local_currentstate_data_ptr,
+                                      local_state_vars_ptr);  
+            break;
+        case COMP_REV_RIGHT:            //Closed Loop With Compass Reverse Right Turn (90)
+            setup_state_comp_rev_right(local_currentstate_data_ptr,
+                                       local_state_vars_ptr);
+            break;
+
+        //Closed Loop with Encoders states//////////////////////////////////////
+        case ECDR_FORWARD:              //Closed Loop With Encoders Forward drive
+            setup_state_ecdr_forward(local_currentstate_data_ptr,
+                                     local_state_vars_ptr);   
+            break;
+        case ECDR_LEFT:                 //Closed Loop With Encoders Forwards Left turn (90) 
+            setup_state_ecdr_left(local_currentstate_data_ptr,
+                                  local_state_vars_ptr);    
+            break;
+        case ECDR_RIGHT:                //Closed Loop With Encoders Forwards Right turn (90)
+            setup_state_ecdr_right(local_currentstate_data_ptr,
+                                   local_state_vars_ptr);    
+            break;
+        case ECDR_REVERSE:              //Closed Loop With Encoders Reverse   
+            setup_state_ecdr_reverse(local_currentstate_data_ptr,
+                                     local_state_vars_ptr);   
+            break;
+        case ECDR_REV_LEFT:             //Closed Loop With Encoders Reverse Left Turn (90)
+            setup_state_ecdr_rev_left(local_currentstate_data_ptr,
+                                      local_state_vars_ptr);  
+            break;
+        case ECDR_REV_RIGHT:            //Closed Loop With Encoders Reverse Right Turn (90)
+            setup_state_ecdr_rev_right(local_currentstate_data_ptr,
+                                       local_state_vars_ptr); 
+            break;
+
+        //Closed Loop with Analog Sensors states////////////////////////////////
+        case PSNS_FORWARD:              //Closed Loop With PhotoSensors Forward drive   
+            setup_state_psns_forward(local_currentstate_data_ptr,
+                                     local_state_vars_ptr);   
+            break;
+        //Closed Loop with Analog Sensors states////////////////////////////////
+        case PSNS_FORWARD_JUNCTION_DETECT:              //Closed Loop With PhotoSensors and detecting junction   
+            setup_state_psns_forward_junctiondetect(local_currentstate_data_ptr,
+                                                    local_state_vars_ptr);   
+            break;  
+    }   
+} // switch(Curr_State)
+
+/* -----------------------------------------------------------------------------
+ * Function: setup_state_ol_forward(spi_state_data * local_currentstate_data_ptr,
+ *                                  control_variables * local_state_vars_ptr);
+ * 
+ * Setups the local tracking structs for the state ol_forward.
+ * 
+ * INPUTS: spi_state_data * local_currentstate_data_ptr,
+ *         control_variables * local_state_vars_ptr
+ * 
+ * OUTPUTS: none
+ */
+void setup_state_ol_forward(spi_state_data * local_currentstate_data_ptr,
+                            control_variables * local_state_vars_ptr)
+{
+    // setup local data structures
+    local_state_vars_ptr->motor_dualspeed = local_currentstate_data_ptr->state_data.value;
+    local_state_vars_ptr->motor_dualdirection = FWD;
+    
+    // setup interrupts, enables, etc.
+    enableMotorPSU();
+    enc1_setupInterrupt();
+    enc2_setupInterrupt();
+}
+
+void setup_state_ecdr_left(spi_state_data * local_currentstate_data_ptr,
+                           control_variables * local_state_vars_ptr)
+{
+    
+}
+
+void setup_state_ecdr_right(spi_state_data * local_currentstate_data_ptr,
+                            control_variables * local_state_vars_ptr)
+{
+    
+}
+
+void setup_state_ol_reverse(spi_state_data * local_currentstate_data_ptr,
+                            control_variables * local_state_vars_ptr)
+{
+    
+}
+
+void setup_state_ecdr_rev_left(spi_state_data * local_currentstate_data_ptr,
+                               control_variables * local_state_vars_ptr)
+{
+    
+}
+
+void setup_state_ecdr_rev_right(spi_state_data * local_currentstate_data_ptr,
+                                control_variables * local_state_vars_ptr)
+{
+    
+}
+
+void setup_state_comp_forward(spi_state_data * local_currentstate_data_ptr,
+                              control_variables * local_state_vars_ptr)
+{
+    
+}
+
+void setup_state_comp_turn(spi_state_data * local_currentstate_data_ptr,
+                           control_variables * local_state_vars_ptr)
+{
+    
+}
+
+void setup_state_comp_reverse(spi_state_data * local_currentstate_data_ptr,
+                              control_variables * local_state_vars_ptr)
+{
+    
+}
+
+
+void setup_state_comp_rev_left(spi_state_data * local_currentstate_data_ptr,
+                               control_variables * local_state_vars_ptr)
+{
+    
+}
+
+void setup_state_comp_rev_right(spi_state_data * local_currentstate_data_ptr,
+                                control_variables * local_state_vars_ptr)
+{
+    
+}
+
+void setup_state_ecdr_forward(spi_state_data * local_currentstate_data_ptr,
+                              control_variables * local_state_vars_ptr)
+{
+    
+}
+
+void setup_state_ecdr_reverse(spi_state_data * local_currentstate_data_ptr,
+                              control_variables * local_state_vars_ptr)
+{
+    
+}
+
+void setup_state_psns_forward(spi_state_data * local_currentstate_data_ptr,
+                              control_variables * local_state_vars_ptr)
+{
+    // setup local data structures
+    local_state_vars_ptr->motor_dualspeed = local_currentstate_data_ptr->state_data.value;
+    local_state_vars_ptr->motor_dualdirection = FWD;
+    
+    local_state_vars_ptr->wheelencL_limit=0xFFFF;
+    local_state_vars_ptr->wheelencR_limit=0xFFFF;
+    
+    local_state_vars_ptr->usepsns = 1;
+    local_state_vars_ptr->psns_desiredheading = 0;
+    
+    local_state_vars_ptr->Controller1.kp = kp_linetracking;
+    local_state_vars_ptr->Controller1.ki = ki_linetracking;
+    local_state_vars_ptr->Controller1.max = ctrl_max;
+    local_state_vars_ptr->Controller1.min = ctrl_min;
+    
+    // setup interrupts, enables, etc.
+    enableMotorPSU();
+    enc1_setupInterrupt();
+    enc2_setupInterrupt();
+}
+
+void setup_state_psns_forward_junctiondetect(spi_state_data * local_currentstate_data_ptr,
+                                             control_variables * local_state_vars_ptr)
+{
+    
 }

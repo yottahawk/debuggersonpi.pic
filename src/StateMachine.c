@@ -11,6 +11,8 @@
 
 /////////////////////////////////////DEFINES////////////////////////////////////
 
+#define pollTMR_period 65536; //0xFFFF - 245Hz
+
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 
 state_conditions_t state_conditions;
@@ -112,9 +114,9 @@ void state_handler(spi_state_data * newstate_ptr) {
         .motor_R_desiredspeed           = 0,
         .motor_dualspeed                = 0,
         
-        .motor_L_direction              = FWD,
-        .motor_R_direction              = FWD,
-        .motor_dualdirection            = FWD,
+        .motor_L_direction              = NONE_MOTOR_DIRECTION_TYPE,
+        .motor_R_direction              = NONE_MOTOR_DIRECTION_TYPE,
+        .motor_dualdirection            = NONE_MOTOR_DIRECTION_TYPE,
         
         .usecompass                     = 0,        // disable by default
         .compass_currentheading         = 0,
@@ -130,14 +132,20 @@ void state_handler(spi_state_data * newstate_ptr) {
     break_conditions local_state_break_conditions;
     break_conditions * local_state_break_conditions_ptr = &local_state_break_conditions;
     
-    // Call state_setup function to initialise any modules necessary.
-    
+    // Call state_setup function to initialise state_vars and state_break_condition structs.
+    switch_statesetup(local_state_vars_ptr,
+                      local_currentstate_data_ptr);
+
+    // Start poll_TMR
+    unsigned int temp_pr = 0xFFFF;
+    POllTMRinit(temp_pr);
+    StartPollTMR();
     
     while(1) // remain in this function until a new state is triggered
     {
         // wait for poll_TMR ISR to set flag
-        while(!POLL_TIMER_INT_FL);
-        POLL_TIMER_INT_FL = 0; // reset flag
+        while(!IFS0bits.T1IF){};
+        IFS0bits.T1IF = 0; // reset flag
         
         // atomically copy all sensor values to local data struct
         atomic_sensorcopy(local_state_vars_ptr);
@@ -177,6 +185,8 @@ void state_handler(spi_state_data * newstate_ptr) {
 void atomic_sensorcopy(control_variables * local_state_vars_ptr)
 {
     // disable interrupts
+    SRbits.IPL = 0b111;
+    
     copyencdr_tolocal(local_state_vars_ptr);
 
     if (local_state_vars_ptr->usepsns){  // only read in data if the state requires it
@@ -185,7 +195,9 @@ void atomic_sensorcopy(control_variables * local_state_vars_ptr)
     if (local_state_vars_ptr->usecompass){
     copycompass_tolocal(local_state_vars_ptr);
     }
+    
     // enable interrupts
+    SRbits.IPL = 0b000;
 }
 
 /* -----------------------------------------------------------------------------
@@ -280,19 +292,6 @@ void switch_statebreak(control_variables * local_state_vars_ptr,
  */
 void pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
 {
-    if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
-    {
-        signed int temp_speed_L = local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv;
-        L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
-                                  FWD, 
-                                  temp_speed_L);
-        
-        R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
-                                  FWD, 
-                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
-    }
-    else
-    {
         L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   FWD, 
                                   (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
@@ -300,8 +299,7 @@ void pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
         R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   FWD, 
                                   (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
-    }
-}
+} 
 
 /* -----------------------------------------------------------------------------
  * Function: pid_updatemotors_rev(control_variables * local_state_vars_ptr)
