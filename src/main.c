@@ -101,7 +101,7 @@ int main(void)
     
         if (spi_newstate.state != STOPPED)
         {
-            state_handler(&spi_newstate);
+            state_handler(spi_newstate_ptr);
         }
         if (spi_info.command != 0) {
             SPI_Function(&spi_newstate);

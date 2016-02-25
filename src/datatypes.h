@@ -182,7 +182,7 @@ typedef struct
     pid_ctrl Controller1;
     pid_ctrl * pid_ctrl_ptr;
      
-    unsigned int psns_prev_digital_samples[4000][3];
+    unsigned int psns_prev_digital_samples[400][3];
     unsigned int psns_adc_samples[4];
     
     unsigned int wheelencL_count;
