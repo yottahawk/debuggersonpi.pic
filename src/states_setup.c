@@ -12,7 +12,7 @@
 /////////////////////////////////////DEFINES////////////////////////////////////
 
 // Speed is within the range 1-500, with 500 being that fastest possible speed.
-#define speed_level1 100
+#define speed_LEVEL_1 100
 #define speed_med 300
 #define speed_fast 450
 
@@ -48,7 +48,7 @@
  */
 void switch_statesetup(control_variables * local_state_vars_ptr,
                        spi_state_data * local_currentstate_data_ptr,
-                       break_conditions * local_state_break_conditions_ptr)                     
+                       break_conditions_store * local_state_break_conditions_ptr)                     
 {  
 //execute a different function based on state
     switch (local_currentstate_data_ptr->state)
@@ -176,10 +176,10 @@ void setup_state_stopped()
  */
 void setup_state_ol_forward(spi_state_data * local_currentstate_data_ptr,
                             control_variables * local_state_vars_ptr,
-                            break_conditions * local_state_break_conditions_ptr)
+                            break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup local data structures
-    local_state_vars_ptr->motor_dualspeed           = speed_level1;
+    local_state_vars_ptr->motor_dualspeed           = speed_LEVEL_1;
     local_state_vars_ptr->motor_dualdirection       = FWD;
     
     // setup break conditions
@@ -193,10 +193,10 @@ void setup_state_ol_forward(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_ecdr_left(spi_state_data * local_currentstate_data_ptr,
                            control_variables * local_state_vars_ptr,
-                           break_conditions * local_state_break_conditions_ptr)
+                           break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup local data structures
-    local_state_vars_ptr->motor_R_desiredspeed           = speed_level1;
+    local_state_vars_ptr->motor_R_desiredspeed           = speed_LEVEL_1;
     local_state_vars_ptr->motor_R_direction              = FWD;
     
     // setup break conditions
@@ -210,10 +210,10 @@ void setup_state_ecdr_left(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_ecdr_right(spi_state_data * local_currentstate_data_ptr,
                             control_variables * local_state_vars_ptr,
-                            break_conditions * local_state_break_conditions_ptr)
+                            break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup local data structures
-    local_state_vars_ptr->motor_L_desiredspeed           = speed_level1;
+    local_state_vars_ptr->motor_L_desiredspeed           = speed_LEVEL_1;
     local_state_vars_ptr->motor_L_direction              = FWD;
     
     // setup break conditions
@@ -227,10 +227,10 @@ void setup_state_ecdr_right(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_ol_reverse(spi_state_data * local_currentstate_data_ptr,
                             control_variables * local_state_vars_ptr,
-                            break_conditions * local_state_break_conditions_ptr)
+                            break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup local data structures
-    local_state_vars_ptr->motor_dualspeed           = speed_level1;
+    local_state_vars_ptr->motor_dualspeed           = speed_LEVEL_1;
     local_state_vars_ptr->motor_dualdirection       = REV;
     
     // setup break conditions
@@ -244,14 +244,14 @@ void setup_state_ol_reverse(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_ecdr_rev_left(spi_state_data * local_currentstate_data_ptr,
                                control_variables * local_state_vars_ptr,
-                               break_conditions * local_state_break_conditions_ptr)
+                               break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup local data structures
-    local_state_vars_ptr->motor_R_desiredspeed           = speed_level1;
+    local_state_vars_ptr->motor_R_desiredspeed           = speed_LEVEL_1;
     local_state_vars_ptr->motor_R_direction              = REV;
     
     // setup break conditions
-    // correct number of counts on rightt wheel
+    // correct number of counts on right wheel
     
     // setup interrupts, enables, etc.
     enableMotorPSU();
@@ -261,10 +261,10 @@ void setup_state_ecdr_rev_left(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_ecdr_rev_right(spi_state_data * local_currentstate_data_ptr,
                                 control_variables * local_state_vars_ptr,
-                                break_conditions * local_state_break_conditions_ptr)
+                                break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup local data structures
-    local_state_vars_ptr->motor_L_desiredspeed           = speed_level1;
+    local_state_vars_ptr->motor_L_desiredspeed           = speed_LEVEL_1;
     local_state_vars_ptr->motor_L_direction              = REV;
     
     // setup break conditions
@@ -278,10 +278,10 @@ void setup_state_ecdr_rev_right(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_comp_forward(spi_state_data * local_currentstate_data_ptr,
                               control_variables * local_state_vars_ptr,
-                              break_conditions * local_state_break_conditions_ptr)
+                              break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup "local_state_vars"
-    local_state_vars_ptr->motor_dualspeed           = speed_level1;
+    local_state_vars_ptr->motor_dualspeed           = speed_LEVEL_1;
     local_state_vars_ptr->motor_dualdirection       = FWD;
     
     int th = getHeading();
@@ -305,7 +305,7 @@ void setup_state_comp_forward(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_comp_turn(spi_state_data * local_currentstate_data_ptr,
                            control_variables * local_state_vars_ptr,
-                           break_conditions * local_state_break_conditions_ptr)
+                           break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup "local_state_vars"
     
@@ -314,12 +314,12 @@ void setup_state_comp_turn(spi_state_data * local_currentstate_data_ptr,
     int temph = 0;
     if (local_currentstate_data_ptr->state == COMP_LEFT)
     {
-        local_state_vars_ptr->motor_dualspeed           = speed_level1;
+        local_state_vars_ptr->motor_dualspeed           = speed_LEVEL_1;
         temph = addHeadings(th, -90); // left is -90
     }
     if (local_currentstate_data_ptr->state == COMP_RIGHT)
     {
-        local_state_vars_ptr->motor_dualspeed           = speed_level1;
+        local_state_vars_ptr->motor_dualspeed           = speed_LEVEL_1;
         temph = addHeadings(th, 90);  // right is +90
     }
     local_state_vars_ptr->compass_desiredheading    = temph; 
@@ -342,10 +342,10 @@ void setup_state_comp_turn(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_comp_reverse(spi_state_data * local_currentstate_data_ptr,
                               control_variables * local_state_vars_ptr,
-                              break_conditions * local_state_break_conditions_ptr)
+                              break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup "local_state_vars"
-    local_state_vars_ptr->motor_dualspeed           = speed_level1;
+    local_state_vars_ptr->motor_dualspeed           = speed_LEVEL_1;
     local_state_vars_ptr->motor_dualdirection       = REV;
     
     int th = getHeading();
@@ -370,10 +370,10 @@ void setup_state_comp_reverse(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_comp_rev_left(spi_state_data * local_currentstate_data_ptr,
                                control_variables * local_state_vars_ptr,
-                               break_conditions * local_state_break_conditions_ptr)     
+                               break_conditions_store * local_state_break_conditions_ptr)     
 {
      // setup "local_state_vars"
-    local_state_vars_ptr->motor_R_desiredspeed      = speed_level1;
+    local_state_vars_ptr->motor_R_desiredspeed      = speed_LEVEL_1;
     
     int th = getHeading();
     local_state_vars_ptr->compass_desiredheading    = addHeadings(th, -90); // minus 90 = rotate right
@@ -396,10 +396,10 @@ void setup_state_comp_rev_left(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_comp_rev_right(spi_state_data * local_currentstate_data_ptr,
                                 control_variables * local_state_vars_ptr,
-                                break_conditions * local_state_break_conditions_ptr)
+                                break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup "local_state_vars"
-    local_state_vars_ptr->motor_L_desiredspeed      = speed_level1;
+    local_state_vars_ptr->motor_L_desiredspeed      = speed_LEVEL_1;
     
     int th = getHeading();
     local_state_vars_ptr->compass_desiredheading    = addHeadings(th, 90); // add 90 = rotate right
@@ -422,10 +422,10 @@ void setup_state_comp_rev_right(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_ecdr_forward(spi_state_data * local_currentstate_data_ptr,
                               control_variables * local_state_vars_ptr,
-                              break_conditions * local_state_break_conditions_ptr)
+                              break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup "local_state_vars"
-    local_state_vars_ptr->motor_dualspeed           = speed_level1;
+    local_state_vars_ptr->motor_dualspeed           = speed_LEVEL_1;
     local_state_vars_ptr->motor_dualdirection       = FWD;
     
     local_state_vars_ptr->wheelencL_limit           = local_currentstate_data_ptr->state_data.value;
@@ -442,10 +442,10 @@ void setup_state_ecdr_forward(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_ecdr_reverse(spi_state_data * local_currentstate_data_ptr,
                               control_variables * local_state_vars_ptr,
-                              break_conditions * local_state_break_conditions_ptr)
+                              break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup "local_state_vars"
-    local_state_vars_ptr->motor_dualspeed           = speed_level1;
+    local_state_vars_ptr->motor_dualspeed           = speed_LEVEL_1;
     local_state_vars_ptr->motor_dualdirection       = REV;
     
     local_state_vars_ptr->wheelencL_limit           = local_currentstate_data_ptr->state_data.value;
@@ -462,10 +462,10 @@ void setup_state_ecdr_reverse(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_psns_forward(spi_state_data * local_currentstate_data_ptr,
                               control_variables * local_state_vars_ptr,
-                              break_conditions * local_state_break_conditions_ptr)
+                              break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup "local_state_vars"
-    local_state_vars_ptr->motor_dualspeed           = speed_level1;
+    local_state_vars_ptr->motor_dualspeed           = speed_LEVEL_1;
     local_state_vars_ptr->motor_dualdirection       = FWD;
     
     local_state_vars_ptr->wheelencL_limit           = local_currentstate_data_ptr->state_data.value;
@@ -492,10 +492,10 @@ void setup_state_psns_forward(spi_state_data * local_currentstate_data_ptr,
 
 void setup_state_psns_forward_junctiondetect(spi_state_data * local_currentstate_data_ptr,
                                              control_variables * local_state_vars_ptr,
-                                             break_conditions * local_state_break_conditions_ptr)
+                                             break_conditions_store * local_state_break_conditions_ptr)
 {
     // setup "local_state_vars"
-    local_state_vars_ptr->motor_dualspeed           = speed_level1;
+    local_state_vars_ptr->motor_dualspeed           = speed_LEVEL_1;
     local_state_vars_ptr->motor_dualdirection       = FWD;
     
     local_state_vars_ptr->wheelencL_limit           = local_currentstate_data_ptr->state_data.value;

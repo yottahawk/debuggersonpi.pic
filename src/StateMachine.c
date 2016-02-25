@@ -96,7 +96,10 @@ void state_handler(spi_state_data * newstate_ptr) {
         .update_counter                 = 0,
         .general_break_condition        = STATE_CONTINUE,
         
-        .Controller1 = {0, 0, 0, 0, 0, {0}, 0, 0, 0},   // set pid controller paramaters here
+        // set pid controller paramaters here
+        .Controller1 = {0, 0, 0, 0, 0, 
+                       {0},0,
+                        0, 0, 0},   
         .pid_ctrl_ptr = &(local_state_vars.Controller1),
         
         // .psns_prev_digital_samples,   
@@ -124,16 +127,19 @@ void state_handler(spi_state_data * newstate_ptr) {
         .psns_currentheading            = 0,
         .psns_desiredheading            = 0,
     };
+    local_state_vars.Controller1.p_e_ptr = local_state_vars.Controller1.p_e; // initialise pointer to recent errors array
     control_variables * local_state_vars_ptr = &local_state_vars;
     
     // Create local struct for storage of any break conditions.
-    break_conditions local_state_break_conditions;
-    break_conditions * local_state_break_conditions_ptr = &local_state_break_conditions;
+    break_conditions_store local_state_break_conditions;
+    break_conditions_store * local_state_break_conditions_ptr = &local_state_break_conditions;
     
     // Call state_setup function to initialise any modules necessary.
+    switch_statesetup(local_state_vars_ptr,
+                      local_currentstate_data_ptr,
+                      local_state_break_conditions_ptr); 
     
-    
-    while(1) // remain in this function until a new state is triggered
+    while(1) // remain in this function until break condition is triggered
     {
         // wait for poll_TMR ISR to set flag
         while(!POLL_TIMER_INT_FL);
@@ -151,9 +157,8 @@ void state_handler(spi_state_data * newstate_ptr) {
         if (local_state_vars.general_break_condition == STATE_BREAK) {return;};
         // Check for break conditions (intersection, collision, cube, distance, angle etc.)
         switch_statebreak(local_state_vars_ptr,
-                          local_currentstate_data_ptr);
-    
-        // Check for new_state available
+                          local_currentstate_data_ptr,
+                          local_state_break_conditions_ptr);
     
         // update loop counter
         local_state_vars_ptr->update_counter++;
@@ -234,9 +239,9 @@ void copypsns_tolocal(control_variables * local_state_vars_ptr)
     
     // read L,R,front sensor data into array under current update_counter
     unsigned int uc = local_state_vars_ptr->update_counter;
-    // local_state_vars_ptr->psns_prev_digital_samples[uc][1] = ;/* left sensor read */
-    // local_state_vars_ptr->psns_prev_digital_samples[uc][2] = ;/* right sensor read */
-    // local_state_vars_ptr->psns_prev_digital_samples[uc][3] = ;/* front sensor read */
+    local_state_vars_ptr->psns_prev_digital_samples[uc][1] = ReadSENSL();/* left sensor read */
+    local_state_vars_ptr->psns_prev_digital_samples[uc][2] = ReadSENSR();/* right sensor read */
+    local_state_vars_ptr->psns_prev_digital_samples[uc][3] = ReadSENSF();/* front sensor read */
 }
 
 
@@ -267,11 +272,78 @@ void copycompass_tolocal(control_variables * local_state_vars_ptr)
  * If a break condition is reached then the general break condition is set.
  */
 void switch_statebreak(control_variables * local_state_vars_ptr,
-                          spi_state_data * local_currentstate_data_ptr)
+                       spi_state_data * local_currentstate_data_ptr,
+                       break_conditions_store * local_state_break_conditions_ptr)
 {
-    
-}
+    //execute a different function based on state
+    switch (local_currentstate_data_ptr->state)
+    { 
+        default:  // Default state is stopped/              
+            //STOPPED
+            break;
 
+        case STOPPED:           
+            //SPI transfer
+            break;
+
+        //Open Loop States//////////////////////////////////////////////////////        
+        case OL_FORWARD:                //Open Loop Forward drive  
+            // none
+            break;
+        case OL_REVERSE:                //Open Loop Reverse  
+            // none
+            break;
+
+        //Closed Loop with Compass states///////////////////////////////////////
+        case COMP_FORWARD:              //Closed Loop With Compass Forward drive 
+            bc_counts_LandR(local_state_vars_ptr); 
+            break;
+        case COMP_LEFT:                 //Closed Loop With Compass Turn angle  
+            angle_smallerror(local_state_vars_ptr);      
+            break;
+        case COMP_RIGHT:                 //Closed Loop With Compass Turn angle  
+            angle_smallerror(local_state_vars_ptr);      
+            break;    
+        case COMP_REVERSE:              //Closed Loop With Compass Reverse   
+            bc_counts_LandR(local_state_vars_ptr);
+            break;
+        case COMP_REV_LEFT:             //Closed Loop With Compass Reverse Left Turn (90) 
+            angle_smallerror(local_state_vars_ptr);
+            break;
+        case COMP_REV_RIGHT:            //Closed Loop With Compass Reverse Right Turn (90)
+            angle_smallerror(local_state_vars_ptr);
+            break;
+
+        //Closed Loop with Encoders states//////////////////////////////////////
+        case ECDR_FORWARD:              //Closed Loop With Encoders Forward drive
+            bc_counts_LandR(local_state_vars_ptr);
+            break;
+        case ECDR_LEFT:                 //Closed Loop With Encoders Forwards Left turn (90) 
+            bc_counts_LandR(local_state_vars_ptr);  
+            break;
+        case ECDR_RIGHT:                //Closed Loop With Encoders Forwards Right turn (90)
+            bc_counts_LandR(local_state_vars_ptr);  
+            break;
+        case ECDR_REVERSE:              //Closed Loop With Encoders Reverse   
+            bc_counts_LandR(local_state_vars_ptr);  
+            break;
+        case ECDR_REV_LEFT:             //Closed Loop With Encoders Reverse Left Turn (90)
+            bc_counts_R(local_state_vars_ptr);
+            break;
+        case ECDR_REV_RIGHT:            //Closed Loop With Encoders Reverse Right Turn (90)
+            bc_counts_L(local_state_vars_ptr);
+            break;
+
+        //Closed Loop with Analog Sensors states////////////////////////////////
+        case PSNS_FORWARD:                              //Closed Loop With PhotoSensors Forward drive   
+            bc_counts_LandR(local_state_vars_ptr);   
+            break;
+        //Closed Loop with Analog Sensors states////////////////////////////////
+        case PSNS_FORWARD_JUNCTION_DETECT:              //Closed Loop With PhotoSensors and detecting junction   
+               
+            break;  
+    }
+}
 /* -----------------------------------------------------------------------------
  * Function: pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
  * 
@@ -281,26 +353,28 @@ void switch_statebreak(control_variables * local_state_vars_ptr,
  */
 void pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
 {
+    int decreasedSpeed_temp = local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv;
+    int increasedSpeed_temp = local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv;
+    
     if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
     {
-        signed int temp_speed_L = local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv;
         L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   FWD, 
-                                  temp_speed_L);
+                                  increasedSpeed_temp);
         
         R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   FWD, 
-                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+                                  decreasedSpeed_temp);
     }
     else
     {
         L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   FWD, 
-                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+                                  decreasedSpeed_temp);
         
         R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   FWD, 
-                                  (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+                                  increasedSpeed_temp);
     }
 }
 
@@ -314,25 +388,28 @@ void pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
  */
 void pid_updatemotors_rev(control_variables * local_state_vars_ptr)
 {
+    int decreasedSpeed_temp = local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv;
+    int increasedSpeed_temp = local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv;
+    
     if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
     {
         L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   REV, 
-                                  (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+                                  increasedSpeed_temp);
         
         R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   REV, 
-                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+                                  decreasedSpeed_temp);
     }
     else
     {
         L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   REV, 
-                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+                                  decreasedSpeed_temp);
         
         R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   REV, 
-                                  (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+                                  increasedSpeed_temp);
     }
 }
 
@@ -346,25 +423,28 @@ void pid_updatemotors_rev(control_variables * local_state_vars_ptr)
  */
 void pid_updatemotors_turn(control_variables * local_state_vars_ptr)
 {
-    if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
+    int decreasedSpeed_temp = local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv;
+    int increasedSpeed_temp = local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv;
+    
+    if (local_state_vars_ptr->Controller1.cv <= 0)          // less than 0 - turn right
     {
         L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   FWD, 
-                                  (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+                                  increasedSpeed_temp);
         
         R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   REV, 
-                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+                                  decreasedSpeed_temp);
     }
-    else        // =0 or >0, turn left
+    else                                                    // =0 or >0, turn left
     {
         L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   REV, 
-                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+                                  decreasedSpeed_temp);
         
         R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
                                   FWD, 
-                                  (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+                                  increasedSpeed_temp);
     }
 }
 
@@ -377,46 +457,61 @@ void pid_updatemotors_turn(control_variables * local_state_vars_ptr)
  */
 void pid_updatemotors_linefollow(control_variables * local_state_vars_ptr)
 {
-    unsigned int tempwheel_L;
-    unsigned int tempwheel_R;
+    int decreasedSpeed_temp = local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv;
+    int increasedSpeed_temp = local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv;
     
-    tempwheel_L = local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv;
-    tempwheel_R = local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv;
+    int decreasedSpeed_modulus = abs(decreasedSpeed_temp);
     
-    if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
+    // both speeds positive -> both wheels turn in same direction.
+    if(decreasedSpeed_temp > 0 && increasedSpeed_temp > 0)
     {
-        
-        L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
-                                  FWD, 
-                                  tempwheel_L);
+        // now check which direction to turn
+        if (local_state_vars_ptr->Controller1.cv <= 0)          // less than 0 - turn right
+        {
+            L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                      FWD, 
+                                      increasedSpeed_temp);
 
-        if (tempwheel_L < 0){
             R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
-                              REV, 
-                              (-1*tempwheel_R));        
+                                      FWD, 
+                                      decreasedSpeed_temp);
         }
-        else {
-        R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
-                              FWD, 
-                              tempwheel_R);   
+        else                                                    // =0 or >0, turn left
+        {
+            L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                      FWD, 
+                                      decreasedSpeed_temp);
+
+            R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                      FWD, 
+                                      increasedSpeed_temp);
         }
     }
     
-    if (local_state_vars_ptr->Controller1.cv > 0){ // turn left
-        
-        R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
-                              FWD, 
-                              tempwheel_R);
-        
-        if (tempwheel_R < 0){
+    // decreased speed is negative -> turn that wheel in reverse
+    if(decreasedSpeed_temp < 0 && increasedSpeed_temp > 0)
+    {
+        // now check which direction to turn
+        if (local_state_vars_ptr->Controller1.cv <= 0)          // less than 0 - turn right
+        {
             L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
-                              REV, 
-                              (-1*tempwheel_R));        
+                                      FWD, 
+                                      increasedSpeed_temp);
+
+            R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                      REV, 
+                                      decreasedSpeed_modulus);
         }
-        else {
-        L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
-                              FWD, 
-                              tempwheel_R);
+        else                                                    // =0 or >0, turn left
+        {
+            L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                      REV, 
+                                      decreasedSpeed_modulus);
+
+            R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                      FWD, 
+                                      increasedSpeed_temp);
         }
     }
 } 
+

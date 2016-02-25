@@ -46,9 +46,9 @@ void linefollow_calcpairdiffs(unsigned int * adc_sample_data_ptr , signed int * 
  * the robot angular deviation from the straight line.
  * The robot geometry is used here.
  */
-signed int linefollow_estimateangle_ldr()
+signed int linefollow_estimateangle_ldr(signed int * diffs_ptr)
 {
-    return 0;
+    return * diffs_ptr;      // return front sensors pair difference
 }
 
 /* -----------------------------------------------------------------------------

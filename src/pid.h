@@ -34,7 +34,8 @@ typedef struct
     int min;            // Set min bound on output
     
     int e;              // Error on current time step.
-    int p_e[2];         // Saved error of previous 2 time steps
+    int p_e[3];         // Saved error of previous 3 time steps
+    int * p_e_ptr;
     int i_sum;          // Sum of all previous errors
     
     int kp;             // Proportional Gain

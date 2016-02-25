@@ -22,7 +22,7 @@ void OpenGRABBER();
 void CloseGRABBER();
 unsigned int ReadGRABBER();
 
-#endif //debuggersonpi_pic_linefollow_h
+#endif //debuggersonpi_pic_grabber_h
 
 
 

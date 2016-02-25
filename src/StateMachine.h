@@ -13,12 +13,18 @@
 #include "xc.h"
 #include "datatypes.h"
 
+#include "states_setup.h"
 #include "spi.h"
 #include "states.h"
 #include "pid.h"
 #include "wheelEncoders.h"
 #include "compass.h"
+#include "breakconditions.h"
 
+
+#include "SensLPeripheral.h"
+#include "SensRPeripheral.h"
+#include "SensFRONT.h"
 /////////////////////////////////////DEFINES////////////////////////////////////
 
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
@@ -44,13 +50,13 @@ void copypsns_tolocal(control_variables * local_state_vars_ptr);
 void copycompass_tolocal(control_variables * local_state_vars_ptr);
 
 void switch_statebreak(control_variables * local_state_vars_ptr,
-                          spi_state_data * local_currentstate_data_ptr);
+                       spi_state_data * local_currentstate_data_ptr,
+                       break_conditions_store * local_state_break_conditions_ptr);
 
 void pid_updatemotors_fwd(control_variables * local_state_vars_ptr);
-
 void pid_updatemotors_rev(control_variables * local_state_vars_ptr);
-
 void pid_updatemotors_turn(control_variables * local_state_vars_ptr);
+void pid_updatemotors_linefollow(control_variables * local_state_vars_ptr);
 
 #endif //debuggersonpi_pic_statemachine_h
 

@@ -101,10 +101,8 @@ typedef enum {
 
 typedef enum 
 {
-    NONE_CONDITION_T,
-    TIME, 
-    DISTANCE,
-    SPEED,
+    NONE_CONDITION_T, 
+    COUNTS,
     JUNCTION 
 } condition_t;
 
@@ -184,7 +182,7 @@ typedef struct
     pid_ctrl Controller1;
     pid_ctrl * pid_ctrl_ptr;
      
-    unsigned int psns_prev_digital_samples[400][3];
+    unsigned int psns_prev_digital_samples[4000][3];
     unsigned int psns_adc_samples[4];
     
     unsigned int wheelencL_count;
@@ -208,6 +206,8 @@ typedef struct
     use_sensors usepsns;
     int psns_currentheading;
     int psns_desiredheading;
+    
+    
 } control_variables;
 
 /* -----------------------------------------------------------------------------
@@ -217,7 +217,7 @@ typedef struct
 {
     
     
-} break_conditions;
+} break_conditions_store;
 
 
 
