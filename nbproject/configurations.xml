@@ -5,9 +5,6 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>src/PeripheralTemplate.h</itemPath>
-      <itemPath>src/Sens1Peripheral.h</itemPath>
-      <itemPath>src/Sens2Peripheral.h</itemPath>
-      <itemPath>src/SensCubePeripheral.h</itemPath>
       <itemPath>src/config.h</itemPath>
       <itemPath>src/spi.h</itemPath>
       <itemPath>src/StateMachine.h</itemPath>
@@ -22,10 +19,6 @@
       <itemPath>src/led.h</itemPath>
       <itemPath>src/grabber.h</itemPath>
       <itemPath>src/compass.h</itemPath>
-      <itemPath>src/Sens3.h</itemPath>
-      <itemPath>src/Sens4.h</itemPath>
-      <itemPath>src/Sens5.h</itemPath>
-      <itemPath>src/Sens6.h</itemPath>
       <itemPath>src/SensFRONT.h</itemPath>
       <itemPath>src/I2C1.h</itemPath>
       <itemPath>src/I2C2.h</itemPath>
@@ -45,9 +38,6 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>src/PeripheralTemplate.c</itemPath>
-      <itemPath>src/Sens1Peripheral.c</itemPath>
-      <itemPath>src/Sens2Peripheral.c</itemPath>
-      <itemPath>src/SensCubePeripheral.c</itemPath>
       <itemPath>src/main.c</itemPath>
       <itemPath>src/config.c</itemPath>
       <itemPath>src/StateMachine.c</itemPath>
@@ -62,10 +52,6 @@
       <itemPath>src/led.c</itemPath>
       <itemPath>src/grabber.c</itemPath>
       <itemPath>src/compass.c</itemPath>
-      <itemPath>src/Sens3.c</itemPath>
-      <itemPath>src/Sens4.c</itemPath>
-      <itemPath>src/Sens5.c</itemPath>
-      <itemPath>src/Sens6.c</itemPath>
       <itemPath>src/SensFRONT.c</itemPath>
       <itemPath>src/I2C1.c</itemPath>
       <itemPath>src/I2C2.c</itemPath>
@@ -426,174 +412,6 @@
         </C30Global>
       </item>
       <item path="src/PeripheralTemplate.h" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Sens1Peripheral.c" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Sens1Peripheral.h" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Sens2Peripheral.c" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Sens2Peripheral.h" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Sens3.c" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Sens3.h" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Sens4.c" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Sens4.h" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Sens5.c" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Sens5.h" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Sens6.c" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/Sens6.h" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/SensCubePeripheral.c" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/SensCubePeripheral.h" ex="true" overriding="false">
         <C30>
         </C30>
         <C30-AR>
