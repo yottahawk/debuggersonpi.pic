@@ -39,7 +39,7 @@ void testFunctionEncoders()
     
     enableMotorPSU();
     
-    // L_motor_constSpeed(FWD, 500);
+    R_motor_constSpeed(FWD, 50);
     
     while(1){};
 }
@@ -64,7 +64,7 @@ void testfunctionCompass()
 void testLoadState(spi_state_data * spi_newstate_ptr)
 {
     spi_newstate_ptr->state = PSNS_FORWARD;
-    spi_newstate_ptr->state_data.data_type = 0;
+    spi_newstate_ptr->state_data.data_type = COUNTS;
     spi_newstate_ptr->state_data.value = 150;
 }
 
@@ -79,34 +79,35 @@ int main(void)
 #ifdef testmode
     // TESTFUNCTIONS GO HERE
     led_const_blue_on();
-    testfunctionCompass();
+    testFunctionEncoders();
 #endif //testmode
     
 #ifdef operatingmode
     // setup interrupt priorities
     
-//    // Create default state tracking struct 
-//    spi_state_data spi_newstate = {
-//        .state = STOPPED,
-//        .state_data.data_type = NONE,
-//        .state_data.value = 0
-//    };
-//    spi_state_data * spi_newstate_ptr = &spi_newstate;
-//    
-//    while(1){
-//    // interrupt or poll SPI here to collect next state information
-//    
-//        if (spi_newstate.state != STOPPED)
-//        {
-//            if(spi.readglobal)
-//            state_handler(spi_newstate_ptr);
-//        }
-/*        if (spi_info.command != 0) {
+    // Create default state tracking struct 
+    spi_state_data spi_newstate = {
+        .state = STOPPED,
+        .state_data.data_type = NONE_CONDITION_T,
+        .state_data.value = 0
+    };
+    spi_state_data * spi_newstate_ptr = &spi_newstate;
+    
+    // load in test state
+    testLoadState(&spi_newstate);
+    
+    while(1){
+    // interrupt or poll SPI here to collect next state information
+    
+        if (spi_newstate.state != STOPPED)
+        {
+            state_handler(&spi_newstate);
+        }
+        if (spi_info.command != 0) {
             SPI_Function(&spi_newstate);
-        }*/
-//    // return here when state completes.
-//    
-//    }      
+        }
+    // return here when state completes.
+    }      
     
 #endif //operating mode
     return 0;

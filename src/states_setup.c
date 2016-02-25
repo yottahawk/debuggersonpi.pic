@@ -28,7 +28,8 @@
 #define turning_ctrl_max     800 
 #define turning_ctrl_min    -800
 
-// PID controller params - turning
+// break condition for encoder counts
+#define degrees90counts   18
 
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 

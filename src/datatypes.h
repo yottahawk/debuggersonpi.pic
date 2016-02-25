@@ -101,9 +101,9 @@ typedef enum {
 
 typedef enum 
 {
-    NONE_CONDITION_T, 
-    COUNTS,
-    JUNCTION 
+    NONE_CONDITION_T = 0x00, 
+    COUNTS = 0x01,
+    JUNCTION = 0x02 
 } condition_t;
 
 typedef struct {
@@ -115,8 +115,8 @@ typedef struct {
  * ENUM to clearly illustrate when a break condition is set.
  */
 typedef enum {
-    STATE_CONTINUE,
-    STATE_BREAK
+    STATE_CONTINUE = 0x00,
+    STATE_BREAK = 0x01
 } boolean_breakstate;
 
 /* -----------------------------------------------------------------------------
@@ -125,29 +125,29 @@ typedef enum {
  */
 typedef enum 
 {
-	ERoom_Empty,
-	ERoom_Cross,
-	ERoom_NorthSouth,
-	ERoom_EastWest,
-	ERoom_EastSouthWest,
-	ERoom_NorthSouthWest,
-	ERoom_NorthEastWest,
-	ERoom_NorthEastSouth,
-	ERoom_NorthWest,
-	ERoom_NorthEast,
-	ERoom_EastSouth,
-	ERoom_SouthWest,
-	ERoom_North,
-	ERoom_East,
-	ERoom_South,
-	ERoom_West,
-	ERoom_Unknown
+	ERoom_Empty = 0x00,
+	ERoom_Cross = 0x01,
+	ERoom_NorthSouth = 0x02,
+	ERoom_EastWest = 0x03,
+	ERoom_EastSouthWest = 0x04,
+	ERoom_NorthSouthWest = 0x05,
+	ERoom_NorthEastWest = 0x06,
+	ERoom_NorthEastSouth = 0x07,
+	ERoom_NorthWest = 0x08,
+	ERoom_NorthEast = 0x09,
+	ERoom_EastSouth = 0x0A,
+	ERoom_SouthWest = 0x0B,
+	ERoom_North = 0x0C,
+	ERoom_East = 0x0D,
+	ERoom_South = 0x0E,
+	ERoom_West = 0x0F,
+	ERoom_Unknown = 0x10
 } ERoom;
 
 
 typedef enum{
-    USESENSORS_FALSE,
-    USESENSORS_TRUE
+    USESENSORS_FALSE = 0x00,
+    USESENSORS_TRUE = 0x01
 } use_sensors;
 
 /* -----------------------------------------------------------------------------
