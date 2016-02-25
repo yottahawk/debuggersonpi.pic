@@ -335,7 +335,8 @@ void SPI_Function(spi_state_data* state_data) {
             case PSNS_RIGHT: break;
             case PSNS_REVERSE: break;
             case PSNS_REV_LEFT: break;
-            case PSNS_REV_RIGHT: break;            
+            case PSNS_REV_RIGHT: break;   
+            case PSNS_FORWARD_JUNCTION_DETECT: break;
             //default:    //do nothing in default case
         }        
     }

@@ -29,6 +29,9 @@
       <itemPath>src/hs_math.h</itemPath>
       <itemPath>src/datatypes.h</itemPath>
       <itemPath>src/states_setup.h</itemPath>
+      <itemPath>src/SensCPeripheral.h</itemPath>
+      <itemPath>src/SensLPeripheral.h</itemPath>
+      <itemPath>src/SensRPeripheral.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -61,6 +64,9 @@
       <itemPath>src/states.c</itemPath>
       <itemPath>src/hs_math.c</itemPath>
       <itemPath>src/states_setup.c</itemPath>
+      <itemPath>src/SensCPeripheral.c</itemPath>
+      <itemPath>src/SensLPeripheral.c</itemPath>
+      <itemPath>src/SensRPeripheral.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -423,7 +429,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/SensFRONT.c" ex="true" overriding="false">
+      <item path="src/SensFRONT.c" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
@@ -435,7 +441,7 @@
         <C30Global>
         </C30Global>
       </item>
-      <item path="src/SensFRONT.h" ex="true" overriding="false">
+      <item path="src/SensFRONT.h" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>

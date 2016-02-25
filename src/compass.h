@@ -14,8 +14,8 @@
 
 #include "xc.h"
 
-//#include "I2C1.h"
-//#include "I2C2.h"
+#include "I2C1.h"
+#include "I2C2.h"
 
 
 //////////////////////////////////////DEFINES///////////////////////////////////
@@ -76,21 +76,23 @@ extern int prevheadings[100];       // Buffer containing previous headings
 
 ///////////////////////////////FUNCTION DECLARATIONS////////////////////////////
 
+unsigned char periph_readCompass(unsigned char reg_address);
+void periph_writeCompass(unsigned char reg_address, unsigned char value);
+int createIntFromChars(unsigned char MSB, unsigned char LSB); // Create int from two chars
+
 void initCompass(); // Init I2c comms, 
 void selfTestCompass(); // Run self test and verify pass
 
 void scaleAxis(); // Scale the output of each axis.
 void setGain(set_gauss_scale value);     // Use an enum to set the gauss scale
 
-int createIntFromChars(unsigned char MSB, unsigned char LSB); // Create int from two chars
-unsigned char readCompass(unsigned char reg); // Read the value of a certain register
-void writeCompass(unsigned char reg_address, unsigned char value); // Writes to a register
+int addHeadings(int heading1, int heading2);
 
 void readCompassData();     // Reads the relevant data to a buffer
 int calculateHeading();    // Takes the buffer data and calculates a heading
+int getHeading();          // Returns an int which is the current heading
 
-unsigned char periph_readCompass(unsigned char reg_address);
-void periph_writeCompass(unsigned char reg_address, unsigned char value);
+signed int heading_atan_int();
 
 ////////////////////////////////////////////////////////////////////////////////
 #endif //debuggersonpi_pic_compass_h

@@ -64,7 +64,7 @@ void testfunctionCompass()
 void testLoadState(spi_state_data * spi_newstate_ptr)
 {
     spi_newstate_ptr->state = PSNS_FORWARD;
-    spi_newstate_ptr->state_data.data_type = SPEED;
+    spi_newstate_ptr->state_data.data_type = 0;
     spi_newstate_ptr->state_data.value = 150;
 }
 

@@ -55,7 +55,8 @@ typedef enum {
     PSNS_RIGHT      = 0x95, //Closed Loop With PhotoSensors Forwards Right turn (90)
     PSNS_REVERSE    = 0x96, //Closed Loop With PhotoSensors Reverse
     PSNS_REV_LEFT   = 0x97, //Closed Loop With PhotoSensors Reverse Left Turn (90)
-    PSNS_REV_RIGHT  = 0x98, //Closed Loop With PhotoSensors Reverse Right Turn (90)     
+    PSNS_REV_RIGHT  = 0x98, //Closed Loop With PhotoSensors Reverse Right Turn (90)
+    PSNS_FORWARD_JUNCTION_DETECT = 0x99,        // Closed Loop, Photosensors, Junction Detect
 
     //Grabber commands
     OPEN_GRABBER = 0x01,
@@ -81,14 +82,13 @@ typedef enum {
     READ_PSNSFNT = 0x13,
     READ_PSNSCBE = 0x14,
             
+    READ_ROOM = 0x30,
+            
     //Operate LED
     WRITE_LED = 0x15,
             
     //Read DIP Switches
     READ_DIP = 0x16,
-            
-    //Read room type
-    READ_ROOM = 0x17,
             
     //Motor Commands
     WRITE_MOTOR_LEFT_FWD = 0x20,
@@ -101,9 +101,10 @@ typedef enum {
 
 typedef enum 
 {
-    NONE,
+    NONE_CONDITION_T,
     TIME, 
     DISTANCE,
+    SPEED,
     JUNCTION 
 } condition_t;
 
@@ -121,12 +122,44 @@ typedef enum {
 } boolean_breakstate;
 
 /* -----------------------------------------------------------------------------
+ * Enum to hold the intersection types, and used to indicate which intersection 
+ * has been detected.
+ */
+typedef enum 
+{
+	ERoom_Empty,
+	ERoom_Cross,
+	ERoom_NorthSouth,
+	ERoom_EastWest,
+	ERoom_EastSouthWest,
+	ERoom_NorthSouthWest,
+	ERoom_NorthEastWest,
+	ERoom_NorthEastSouth,
+	ERoom_NorthWest,
+	ERoom_NorthEast,
+	ERoom_EastSouth,
+	ERoom_SouthWest,
+	ERoom_North,
+	ERoom_East,
+	ERoom_South,
+	ERoom_West,
+	ERoom_Unknown
+} ERoom;
+
+
+typedef enum{
+    USESENSORS_FALSE,
+    USESENSORS_TRUE
+} use_sensors;
+
+/* -----------------------------------------------------------------------------
  * Value to hold any data used in the current state, passed from the SPI command.
  */
 typedef struct
 {
     state_t state;                       // current state (0 is default)
     state_conditions_t state_data;       // current state 
+
 } spi_state_data;
 
 /* -----------------------------------------------------------------------------
@@ -168,11 +201,11 @@ typedef struct
     motor_direction_type motor_R_direction;
     motor_direction_type motor_dualdirection;
     
-    int usecompass;
-    float compass_currentheading;   // update on measurement
-    float compass_desiredheading;   // determined at start of state
+    use_sensors usecompass;
+    int compass_currentheading;   // update on measurement
+    int compass_desiredheading;   // determined at start of state
     
-    int usepsns;
+    use_sensors usepsns;
     int psns_currentheading;
     int psns_desiredheading;
 } control_variables;
@@ -186,30 +219,7 @@ typedef struct
     
 } break_conditions;
 
-/* -----------------------------------------------------------------------------
- * Enum to hold the intersection types, and used to indicate which intersection 
- * has been detected.
- */
-typedef enum 
-{
-	ERoom_Empty,
-	ERoom_Cross,
-	ERoom_NorthSouth,
-	ERoom_EastWest,
-	ERoom_EastSouthWest,
-	ERoom_NorthSouthWest,
-	ERoom_NorthEastWest,
-	ERoom_NorthEastSouth,
-	ERoom_NorthWest,
-	ERoom_NorthEast,
-	ERoom_EastSouth,
-	ERoom_SouthWest,
-	ERoom_North,
-	ERoom_East,
-	ERoom_South,
-	ERoom_West,
-	ERoom_Unknown
-} ERoom;
+
 
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 
