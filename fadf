@@ -1,0 +1,52 @@
+[33m0733b20[m lukes code from renishaw_thursday
+[33m79a959a[m created setup_state methods for each driving state, still need to implement break conditions and intersection detection
+[33md1e5f9b[m Added open-loop forward and line_tracking state. PID line tracking controller working. Needs some tuning. Working state
+[33mb14e529[m merged origin into master
+[33m48dc471[m Finished statemachine. Compiles correctly
+[33mff31fc0[m merge
+[33me8d35e2[m merge
+[33m6d55dbc[m Merge remote-tracking branch 'origin/master'
+[33m8195bfb[m Completed state machine, will not compile
+[33mab72077[m added integer based atan function
+[33mb3e4cca[m merge
+[33mb2804d5[m worked on SPI comms link
+[33mb3dcdb0[m Fleshed out state machine. Still incomplete, will not compile in current state!
+[33madc3e0d[m added spi switch function
+[33m075f5ba[m merged files
+[33m9851dd9[m updated spi and state machine files - now successful compile and link
+[33mc129465[m Updated compass methods / i2c communication protocol
+[33meb78ceb[m fixed more build issues - this commit builds correctly
+[33m99ce36c[m Modified i2c read/write to use periph library. Compass is returning data but unsure if correct
+[33m4380363[m Fixed compilation
+[33m48df49b[m Merge commit
+[33me7df1b9[m Created compass read methods (not currently working), PI controller routines
+[33m7d95f76[m Added sensors files with stubs where appropriate
+[33mfbf1866[m Merge branch 'master' of https://github.com/yottahawk/debuggersonpi.pic
+[33m02a656d[m motors modified
+[33mfba271a[m added common structure to file preamble. Added templates for generating .c and .h files that use this template
+[33med3b6ee[m Combined all encoder methods into one file wheelencoders.c
+[33m9fe7d7e[m spi.c updated, grabber.c/h added
+[33m06b6c40[m added led methods, read DIP switch, created interrupts to read wheel encoders. Wheel encoder interrupts not working correctly.
+[33mad2447c[m Merge branch 'master' of https://github.com/yottahawk/debuggersonpi.pic
+[33m0b0e767[m SPI.c file updated
+[33m8b14555[m Added i2c basic interface, can control digipot successfully. Fixed bug in oc.h where some modules weren't starting up. Digipot test state
+[33m6bd3c9b[m merge 08022016
+[33m67f3035[m merge time
+[33m9324561[m created motors.c file
+[33m5fc32a9[m moved some comments around
+[33m1dbe443[m incremental changes to oc.c, confirmed working PWM
+[33mbdf6e02[m started spi_init, spi_interrupt, and spi_function
+[33mfd06b00[m merge fail
+[33m2c48bf2[m started statemachine.c
+[33m3ec63a6[m Add peripheral init/access files for led/switches and interrupts
+[33mc78d5a8[m Added statemachine.h file
+[33m703b6d3[m created adc, timers, and oc files with init methods
+[33ma5b8cea[m re-tracked files after gitignore fix
+[33me6d18be[m fixed .gitignore
+[33m289b792[m Merge remote-tracking branch 'origin/master'
+[33mc7d85cf[m removed some useless code configurator files, created config file
+[33ma5b23f3[m added encoder peripheral c files. updated sens1,2,cube files
+[33mc152a1c[m Used the MPLAB Code Configuration (mcc) to generate example setup files for peripherals
+[33mb780ecb[m more mplab-x setup
+[33m8b18c47[m Added mplab-x project and basic file structure
+[33m5efa21a[m Initial commit

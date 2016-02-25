@@ -56,6 +56,7 @@ void pid_update(signed int pv,               // process variable - estimate of p
     
     ptr->p_e[2] = ptr->p_e[1];    // Move previous error down array
     ptr->e = ptr->sp - pv;             // Calculate current error.
+    ptr->e = ptr->e >> 3;            // Calculate current error.
     ptr->p_e[1] = ptr->e;                 // Copy current error to top of array.
     
     temp_i_sum = ptr->i_sum + ptr->e ;    // update accumulated error
@@ -73,7 +74,7 @@ void pid_update(signed int pv,               // process variable - estimate of p
     { cv = ptr->min; }    // If less than min then set equal to min
     
     // Set new cv inside controller struct.
-    ptr->cv = cv >> 3;  // Right shift 3 (/8)) to give more dynamic range in the controller.
+    ptr->cv = cv >> 2;  // Right shift 3 (/8)) to give more dynamic range in the controller.
 }
 
 

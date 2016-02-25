@@ -294,13 +294,16 @@ void switch_statebreak(control_variables * local_state_vars_ptr,
  */
 void pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
 {
-        L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
-                                  FWD, 
-                                  (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
-        
-        R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
-                                  FWD, 
-                                  (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+    unsigned int temp_speedL = local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv;
+    unsigned int temp_speedR = local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv;
+    
+    L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                              FWD, 
+                              (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+
+    R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                              FWD, 
+                              (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
 } 
 
 /* -----------------------------------------------------------------------------
@@ -366,3 +369,56 @@ void pid_updatemotors_turn(control_variables * local_state_vars_ptr)
                                   (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
     }
 }
+
+/* -----------------------------------------------------------------------------
+ * Function pid_updatemotors_linefollow
+ * 
+ * This function will allow the motors to spin both backwards and forwards to
+ * direct the robot.
+ * 
+ */
+void pid_updatemotors_linefollow(control_variables * local_state_vars_ptr)
+{
+    unsigned int tempwheel_L;
+    unsigned int tempwheel_R;
+    
+    tempwheel_L = local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv;
+    tempwheel_R = local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv;
+    
+    if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
+    {
+        
+        L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                                  FWD, 
+                                  tempwheel_L);
+
+        if (tempwheel_L < 0){
+            R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                              REV, 
+                              (-1*tempwheel_R));        
+        }
+        else {
+        R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                              FWD, 
+                              tempwheel_R);   
+        }
+    }
+    
+    if (local_state_vars_ptr->Controller1.cv > 0){ // turn left
+        
+        R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                              FWD, 
+                              tempwheel_R);
+        
+        if (tempwheel_R < 0){
+            L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                              REV, 
+                              (-1*tempwheel_R));        
+        }
+        else {
+        L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                              FWD, 
+                              tempwheel_R);
+        }
+    }
+} 
