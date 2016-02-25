@@ -13,7 +13,6 @@
 #include "StateMachine.h"
 #include "datatypes.h"
 
-
 #include "SensLPeripheral.h"
 #include "SensRPeripheral.h"
 #include "SensCPeripheral.h"

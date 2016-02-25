@@ -1,5 +1,4 @@
 #include "spi.h"
-#include "datatypes.h"
 
 #define TIMEOUT 10000
 
@@ -58,7 +57,6 @@ void SPI_PSNS(unsigned char Sensor, unsigned int Length, unsigned int Clear) {
     //Buffer to send data from
     unsigned int* Buffer; 
  
-    // UNCOMMENT WHEN FUNCTIONS ARE CREATED!!!!! ///////////////////////////////////
 //    //Get data
     if(Sensor==0)      ReadSENSLBuffer(Buffer, Length);
     else if(Sensor==1) ReadSENSRBuffer(Buffer, Length);

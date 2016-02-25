@@ -19,7 +19,6 @@
       <itemPath>src/led.h</itemPath>
       <itemPath>src/grabber.h</itemPath>
       <itemPath>src/compass.h</itemPath>
-      <itemPath>src/SensFRONT.h</itemPath>
       <itemPath>src/I2C1.h</itemPath>
       <itemPath>src/I2C2.h</itemPath>
       <itemPath>src/linefollow.h</itemPath>
@@ -32,6 +31,7 @@
       <itemPath>src/SensCPeripheral.h</itemPath>
       <itemPath>src/SensLPeripheral.h</itemPath>
       <itemPath>src/SensRPeripheral.h</itemPath>
+      <itemPath>src/SensFRONT.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -55,7 +55,6 @@
       <itemPath>src/led.c</itemPath>
       <itemPath>src/grabber.c</itemPath>
       <itemPath>src/compass.c</itemPath>
-      <itemPath>src/SensFRONT.c</itemPath>
       <itemPath>src/I2C1.c</itemPath>
       <itemPath>src/I2C2.c</itemPath>
       <itemPath>src/linefollow.c</itemPath>
@@ -65,6 +64,7 @@
       <itemPath>src/hs_math.c</itemPath>
       <itemPath>src/states_setup.c</itemPath>
       <itemPath>src/SensCPeripheral.c</itemPath>
+      <itemPath>src/SensFRONT.c</itemPath>
       <itemPath>src/SensLPeripheral.c</itemPath>
       <itemPath>src/SensRPeripheral.c</itemPath>
     </logicalFolder>
@@ -418,30 +418,6 @@
         </C30Global>
       </item>
       <item path="src/PeripheralTemplate.h" ex="true" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/SensFRONT.c" ex="false" overriding="false">
-        <C30>
-        </C30>
-        <C30-AR>
-        </C30-AR>
-        <C30-AS>
-        </C30-AS>
-        <C30-LD>
-        </C30-LD>
-        <C30Global>
-        </C30Global>
-      </item>
-      <item path="src/SensFRONT.h" ex="false" overriding="false">
         <C30>
         </C30>
         <C30-AR>
