@@ -13,15 +13,11 @@
 #include "xc.h"
 #include "datatypes.h"
 
-#include "states.h"
-#include "states_setup.h"
-
 #include "spi.h"
+#include "states.h"
 #include "pid.h"
 #include "wheelEncoders.h"
 #include "compass.h"
-#include "timers.h"
-#include "interrupts.h"
 
 /////////////////////////////////////DEFINES////////////////////////////////////
 
@@ -29,7 +25,7 @@
 
 ////////////////////////////////FUNCTION DECLARATIONS///////////////////////////
 
-state_t get_curr_state();
+/*state_t get_curr_state();
 state_t get_next_state();
 state_t get_prev_state();
 state_conditions_t get_conditions();
@@ -37,7 +33,7 @@ state_conditions_t get_conditions();
 void set_curr_state(state_t state);
 void set_next_state(state_t state);
 void set_prev_state(state_t state);
-void set_conditions(state_conditions_t conditions);
+void set_conditions(state_conditions_t conditions);*/
 
 void state_handler(spi_state_data * newstate_ptr);
 

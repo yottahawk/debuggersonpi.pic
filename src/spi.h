@@ -14,13 +14,9 @@
 #include "datatypes.h"
 
 
-#include "Sens1Peripheral.h"
-#include "Sens2Peripheral.h"
-#include "Sens3.h"
-#include "Sens4.h"
-#include "Sens5.h"
-#include "Sens6.h"
-#include "SensCubePeripheral.h"
+#include "SensLPeripheral.h"
+#include "SensRPeripheral.h"
+#include "SensCPeripheral.h"
 #include "SensFRONT.h"
 
 #include "compass.h"
@@ -40,11 +36,17 @@ extern "C" {
     } spi_info_t;
     extern spi_info_t spi_info;
     
+    extern const unsigned int DONE;
+    extern const unsigned int Data;
+    
+    //Write data to SPI
+    void Write_SPI(const unsigned int* buffer, unsigned int length);
+    
     //Initialise SPI code - includes interrupt setup
     void Initialise_SPI();
        
     //Discrete SPI function handler
-    void SPI_Function();
+    void SPI_Function(spi_state_data* state_data);
 
 #ifdef	__cplusplus
 }

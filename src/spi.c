@@ -1,4 +1,5 @@
 #include "spi.h"
+#include "datatypes.h"
 
 #define TIMEOUT 10000
 
@@ -8,7 +9,7 @@ const unsigned int DONE = 0xFFFE;
 const unsigned int Data = 0xFFFD;
 
 //Function to write to spi link
-void Write_SPI(unsigned int* buffer, unsigned int length) {
+void Write_SPI(const unsigned int* buffer, unsigned int length) {
     //For each byte in the buffer...
     for(int i=0;i<length;i++) {
         while(SPI2STATbits.SPITBF) {} //wait until there is space in the buffer
@@ -43,31 +44,41 @@ void Write_SPI(unsigned int* buffer, unsigned int length) {
     }  
 }
 
+void SPI_ROOM() {
+    //Read DIP switches
+    unsigned int roomdata = (unsigned int) Current_Room;
+    
+    //Send via SPI
+    Write_SPI(&Data, 1);
+    Write_SPI(&roomdata, 1);
+    Write_SPI(&DONE, 1);    
+}
+
 void SPI_PSNS(unsigned char Sensor, unsigned int Length, unsigned int Clear) {
     //Buffer to send data from
     unsigned int* Buffer; 
  
     // UNCOMMENT WHEN FUNCTIONS ARE CREATED!!!!! ///////////////////////////////////
 //    //Get data
-//    if(Sensor==0)      ReadSENS1Buffer(Buffer, Length);
-//    else if(Sensor==1) ReadSENS2Buffer(Buffer, Length);
+    if(Sensor==0)      ReadSENSLBuffer(Buffer, Length);
+    else if(Sensor==1) ReadSENSRBuffer(Buffer, Length);
 //    else if(Sensor==2) ReadSENS3Buffer(Buffer, Length);
 //    else if(Sensor==3) ReadSENS4Buffer(Buffer, Length);
 //    else if(Sensor==4) ReadSENS5Buffer(Buffer, Length);
 //    else if(Sensor==5) ReadSENS6Buffer(Buffer, Length);
-//    else if(Sensor==6) ReadSENSFRONTBuffer(Buffer, Length);
-//    else               ReadSENSCUBEBuffer(Buffer, Length);
+    else if(Sensor==6) ReadSENSFBuffer(Buffer, Length);
+    else if(Sensor==7) ReadSENSCBuffer(Buffer, Length);
 //
-//    if(Clear) {
-//        if(Sensor==0)      ClearSENS1Buffer();
-//        else if(Sensor==1) ClearSENS2Buffer();
+    if(Clear) {
+        if(Sensor==0)      ClearSENSLBuffer();
+        else if(Sensor==1) ClearSENSRBuffer();
 //        else if(Sensor==2) ClearSENS3Buffer();
 //        else if(Sensor==3) ClearSENS4Buffer();
 //        else if(Sensor==4) ClearSENS5Buffer();
 //        else if(Sensor==5) ClearSENS6Buffer();
-//        else if(Sensor==6) ClearSENSFRONTBuffer();
-//        else               ClearSENSCUBEBuffer();        
-//    }
+        else if(Sensor==6) ClearSENSFBuffer();
+        else if(Sensor==7) ClearSENSCBuffer();        
+    }
     
     //Return data to PI
     Write_SPI(&Data, 1);
@@ -77,7 +88,7 @@ void SPI_PSNS(unsigned char Sensor, unsigned int Length, unsigned int Clear) {
 
 void SPI_DIP() {
     //Read DIP switches
-    int DIP;
+    unsigned int DIP;
     readDIP(&DIP);
     
     //Send via SPI
@@ -89,11 +100,11 @@ void SPI_DIP() {
 
 void SPI_COMP() {
     //Get data
-    // unsigned int direction = ReadCOMPASS(); // UNCOMMMENT WHEN FUNCTION CREATED!!
+    int direction = calculateHeading(); // UNCOMMMENT WHEN FUNCTION CREATED!!
 
     //Return data to PI
     Write_SPI(&Data, 1);
-//    Write_SPI(&direction, 1);
+    Write_SPI((unsigned int *) &direction, 1);
     Write_SPI(&DONE, 1);
 }
 
@@ -111,7 +122,7 @@ void SPI_ECDR(unsigned char Mode, unsigned int Reset) {
 
     //Return data to PI & write DONE to end transaction
     Write_SPI(&Data, 1);
-    Write_SPI(&integral, 1);
+    Write_SPI((const unsigned int*) &integral, 1);
     Write_SPI(&DONE, 1);
 }
 
@@ -130,7 +141,7 @@ void SPI_MOTOR(unsigned char Mode, unsigned int Speed, unsigned int direction) {
         if(Mode==2) motor_speed = L_motor_SpeedGet();
         else        motor_speed = R_motor_SpeedGet();
         Write_SPI(&Data, 1);
-        Write_SPI(&motor_speed, 1);
+        Write_SPI((const unsigned int*) &motor_speed, 1);
     }
     
     //Write done to spi to finish transaction
@@ -217,22 +228,15 @@ void Initialise_SPI() {
 }
 
 //Discrete SPI function handler
-void SPI_Function() {
+void SPI_Function(spi_state_data* state_data) {
     //Check if command is a state change or a function call
     if (spi_info.command >= 0x0080) {
-        set_next_state((state_t) spi_info.command);    //if a state, change next state to it   
+        state_data->state = (state_t) (spi_info.command);    //if a state, change next state to it   
         
         //Set stop conditions
-        state_conditions_t conditions;
-        if(spi_info.info[0]==0)     conditions.data_type = TIME;
-        else if(spi_info.info[0]==1)conditions.data_type = DISTANCE;
-        else                        conditions.data_type = NONE_CONDITION_T;
-        
+        state_data->state_data.data_type = (condition_t) spi_info.info[0];
         //set stop condition value
-        conditions.value = spi_info.info[1];
-        set_conditions(conditions);
-        
-        Write_SPI(&DONE, 1);                        //Send "DONE" to PI   
+        state_data->state_data.value = spi_info.info[1];
     } else {
         //This function is called if the PI wants to call certain functions
         //behaviour depends on the function the PI is calling
@@ -303,35 +307,35 @@ void SPI_Function() {
             case READ_DIP: {
                 SPI_DIP();
                 break;}
-            
-            case OL_FORWARD:{break;}
-            case OL_LEFT:{break;}
-            case OL_RIGHT:{break;}
-            case OL_REVERSE:{break;}
-            case OL_REV_LEFT:{break;}
-            case OL_REV_RIGHT:{break;}
-            case COMP_FORWARD:{break;}
-            case COMP_LEFT:{break;}
-            case COMP_RIGHT:{break;}
-            case COMP_REVERSE:{break;}
-            case COMP_REV_LEFT:{break;}
-            case COMP_REV_RIGHT:{break;}
-            case ECDR_FORWARD:{break;}
-            case ECDR_LEFT:{break;}
-            case ECDR_RIGHT:{break;}
-            case ECDR_REVERSE:{break;}
-            case ECDR_REV_LEFT:{break;}
-            case ECDR_REV_RIGHT:{break;}
-            case PSNS_FORWARD:{break;}
-            case PSNS_LEFT:{break;}
-            case PSNS_RIGHT:{break;}
-            case PSNS_REVERSE:{break;}
-            case PSNS_REV_LEFT:{break;}
-            case PSNS_REV_RIGHT:{break;}
-            case PSNS_FORWARD_JUNCTION_DETECT:{break;}
-    
-            
-            case STOPPED:{break;}
+            case READ_ROOM: {
+                SPI_ROOM();
+                break;
+            }
+            case STOPPED: break;
+            case OL_FORWARD: break;
+            case OL_LEFT: break;
+            case OL_RIGHT: break;
+            case OL_REVERSE: break;
+            case OL_REV_LEFT: break;
+            case OL_REV_RIGHT: break;
+            case COMP_FORWARD: break;
+            case COMP_LEFT: break;
+            case COMP_RIGHT: break;
+            case COMP_REVERSE: break;
+            case COMP_REV_RIGHT: break;
+            case COMP_REV_LEFT: break;
+            case ECDR_FORWARD: break;
+            case ECDR_LEFT: break;
+            case ECDR_RIGHT: break;
+            case ECDR_REVERSE: break;
+            case ECDR_REV_LEFT: break;
+            case ECDR_REV_RIGHT: break;
+            case PSNS_FORWARD: break;
+            case PSNS_LEFT: break;
+            case PSNS_RIGHT: break;
+            case PSNS_REVERSE: break;
+            case PSNS_REV_LEFT: break;
+            case PSNS_REV_RIGHT: break;            
             //default:    //do nothing in default case
         }        
     }

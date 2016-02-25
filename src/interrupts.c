@@ -133,7 +133,6 @@ void __attribute__((__interrupt__, auto_psv)) _ADC1Interrupt(void)
 
 void __attribute__((__interrupt__, auto_psv)) _T1Interrupt(void)
 {
-    IFS0bits.T1IF = 0; // reset flag
     /*
     ** Timer 1 expired interrupt
     ** This ISR is used to poll all sensors that need to be polled. It will execute,

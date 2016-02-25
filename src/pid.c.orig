@@ -36,11 +36,44 @@
 
 /////////////////////////////////////DEFINES////////////////////////////////////
 
+// VALUES NEED TUNING!!!!!
+#define ProportionalGain 10;          // Proportional Gain
+#define IntegralGain 10;          // Integral Gain
+
+#define error_i_max 100;    // Max value for integral error (prevent integral wind up)
+
+#define bound_max 50;      // Bound on max value of output 
+#define bound_min 50;      // Bound on min value of output
+
 //////////////////////////////TYPEDEFS,ENUMS,STRUCTS////////////////////////////
 
 //////////////////////////////////GLOBAL VARIABLES//////////////////////////////
 
 ///////////////////////////////FUNCTION DEFINITIONS/////////////////////////////
+
+void pid_init(pid_ctrl * ptr,       // Ptr to the pid controller struct
+              int max,            
+              int min)
+{
+    /*
+     * Initialises the memebers of the pid controller struct. This must also be 
+     * called to reset the values back to their default values. Whenever a new 
+     * tracking state is to begin, the controller must be reset.
+     */
+    
+    // Now initialise the struct "controller1"
+    ptr->sp = 0;
+    
+    ptr->max = bound_max;
+    ptr->min = bound_min;
+    
+    ptr->e = 0;
+    ptr->p_e[2] = 0;
+    ptr->i_sum = 0;
+    
+    ptr->kp = ProportionalGain;
+    ptr->ki = IntegralGain;
+}
 
 void pid_update(signed int pv,               // process variable - estimate of plant output as measured by sensors
                 pid_ctrl * ptr)       // ptr to controller struct in use
@@ -73,8 +106,12 @@ void pid_update(signed int pv,               // process variable - estimate of p
     else if (cv < ptr->min)
     { cv = ptr->min; }    // If less than min then set equal to min
     
+<<<<<<< HEAD
+    // Set new cv inside controller struct.
+    ptr->cv = cv >> 2;  // Right shift 3 (/8)) to give more dynamic range in the controller.
+=======
     ptr->cv = cv;   // Set new cv inside controller struct.
-    ptr->cv = cv >> 3;  // Right shift 3 (/8)) to give more dynamic range in the controller.
+>>>>>>> tempmergeluke
 }
 
 

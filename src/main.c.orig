@@ -20,12 +20,14 @@
 #include "spi.h"
 #include "compass.h"
 
-#include "hs_math.h"
-
 /////////////////////////////////////DEFINES//////////////////////////////////// 
 
+<<<<<<< HEAD
 // #define testmode
 #define operatingmode
+
+=======
+>>>>>>> tempmergeluke
 ////////////////////////////////////FUNCTIONS///////////////////////////////////
 
 //functions for testing here - above main so no need for forward declaration
@@ -44,6 +46,7 @@ void testFunctionEncoders()
     while(1){};
 }
 
+<<<<<<< HEAD
 void testfunctionCompass()
 {
     initCompass(); // write to configA, configB, mode
@@ -65,10 +68,12 @@ void testLoadState(spi_state_data * spi_newstate_ptr)
 {
     spi_newstate_ptr->state = PSNS_FORWARD;
     spi_newstate_ptr->state_data.data_type = SPEED;
-    spi_newstate_ptr->state_data.value = 150;
+    spi_newstate_ptr->state_data.value = 0xFFFF;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+=======
+>>>>>>> tempmergeluke
 
 // main loop of execution - anything not interrupt driven goes here
 int main(void) 
@@ -76,13 +81,10 @@ int main(void)
     /* Setup all pins as inputs/outputs and drive outputs to default values */
     initialise_pinmap(); 
     
-#ifdef testmode
-    // TESTFUNCTIONS GO HERE
     led_const_blue_on();
-    testfunctionCompass();
-#endif //testmode
+    // TESTFUNCTIONS GO HERE
+    testFunctionEncoders();
     
-#ifdef operatingmode
     // setup interrupt priorities
     
 //    // Create default state tracking struct 
@@ -108,7 +110,6 @@ int main(void)
 //    
 //    }      
     
-#endif //operating mode
     return 0;
 }
 

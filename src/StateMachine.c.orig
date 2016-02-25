@@ -281,6 +281,19 @@ void switch_statebreak(control_variables * local_state_vars_ptr,
  */
 void pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
 {
+<<<<<<< HEAD
+    unsigned int temp_speedL = local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv;
+    unsigned int temp_speedR = local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv;
+    
+    L_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                              FWD, 
+                              (local_state_vars_ptr->motor_dualspeed - local_state_vars_ptr->Controller1.cv));
+
+    R_motor_acceltoconstSpeed(local_state_vars_ptr->update_counter,
+                              FWD, 
+                              (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
+} 
+=======
     if (local_state_vars_ptr->Controller1.cv <= 0) // less than 0 - turn right
     {
         signed int temp_speed_L = local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv;
@@ -303,6 +316,7 @@ void pid_updatemotors_fwd(control_variables * local_state_vars_ptr)
                                   (local_state_vars_ptr->motor_dualspeed + local_state_vars_ptr->Controller1.cv));
     }
 }
+>>>>>>> tempmergeluke
 
 /* -----------------------------------------------------------------------------
  * Function: pid_updatemotors_rev(control_variables * local_state_vars_ptr)
