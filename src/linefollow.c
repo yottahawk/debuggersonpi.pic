@@ -32,10 +32,14 @@ void linefollow_calcpairdiffs(unsigned int * adc_sample_data_ptr , signed int * 
     signed int temp_diffs1 = 0;
     signed int temp_diffs2 = 0;
     
-    temp_diffs1 = (* adc_sample_data_ptr) - (* (adc_sample_data_ptr + 1));
-    temp_diffs1 = (* (adc_sample_data_ptr + 2)) - (* (adc_sample_data_ptr + 3));
+    unsigned int snsl = ReadSENSL() << 7;
+    unsigned int snsr  = ReadSENSR() << 7 ;
     
-    * temp_diffs_ptr = temp_diffs1;
+    
+    temp_diffs1 = * (adc_sample_data_ptr + 3) - * (adc_sample_data_ptr);
+    temp_diffs2 = * (adc_sample_data_ptr + 2) - * (adc_sample_data_ptr + 1);
+    
+    * temp_diffs_ptr = temp_diffs1 - snsl + snsr;
     * (temp_diffs_ptr + 1) = temp_diffs2;
 }
 

@@ -97,29 +97,29 @@ void __attribute__((__interrupt__, auto_psv)) _CNInterrupt(void)
     
 }
  
-////SPI Interrupt code
-//void __attribute__((__interrupt__, auto_psv)) _SPI2Interrupt(void) {   
-//    //When interrupt triggers, data has been received in Buffer.
-//    unsigned int command = (unsigned int) SPI2BUF;
-//    
-//    if(command) {
-//        //First data in buffer is always command word!   
-//        spi_info.command = command; 
-//        //Remaining data goes in "info" buffer
-//        for(int i=0;i<7;i++) spi_info.info[i] = (unsigned int) SPI2BUF;
-//    }
-//
-//    //Ensure the receive buffer is empty;
-//    for(int i=0;i<8;i++) {unsigned int empty = SPI2BUF;}
-//    
-//    //clear interrupt flag?
-//    IFS2bits.SPI2IF = 0;        //Clear bit 1
-//    SPI2STATbits.SPIROV = 0;    //Clear SPIROV bit
-//    
-//    //Reset SPI module (tends to get out of sync)
-//    SPI2STATbits.SPIEN = 0;
-//    SPI2STATbits.SPIEN = 1;
-//}
+//SPI Interrupt code
+void __attribute__((__interrupt__, auto_psv)) _SPI2Interrupt(void) {   
+    //When interrupt triggers, data has been received in Buffer.
+    unsigned int command = (unsigned int) SPI2BUF;
+    
+    if(command) {
+        //First data in buffer is always command word!   
+        spi_info.command = command; 
+        //Remaining data goes in "info" buffer
+        for(int i=0;i<7;i++) spi_info.info[i] = (unsigned int) SPI2BUF;
+    }
+
+    //Ensure the receive buffer is empty;
+    for(int i=0;i<8;i++) {unsigned int empty = SPI2BUF;}
+    
+    //clear interrupt flag?
+    IFS2bits.SPI2IF = 0;        //Clear bit 1
+    SPI2STATbits.SPIROV = 0;    //Clear SPIROV bit
+    
+    //Reset SPI module (tends to get out of sync)
+    SPI2STATbits.SPIEN = 0;
+    SPI2STATbits.SPIEN = 1;
+}
 
 void __attribute__((__interrupt__, auto_psv)) _ADC1Interrupt(void)
 {

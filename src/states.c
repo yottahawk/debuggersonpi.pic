@@ -391,3 +391,10 @@ void state_psns_forward(control_variables * local_state_vars_ptr)
     // now update motors
     pid_updatemotors_linefollow(local_state_vars_ptr);
 }
+
+/* -----------------------------------------------------------------------------
+ * Function: state_psns_forward_junction(local_state_vars_ptr)
+ * 
+ * 
+ * 
+ */

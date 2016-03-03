@@ -12,15 +12,15 @@
 /////////////////////////////////////DEFINES////////////////////////////////////
 
 // Speed is within the range 1-500, with 500 being that fastest possible speed.
-#define speed_LEVEL_1 100
+#define speed_LEVEL_1 200
 #define speed_med 300
 #define speed_fast 450
 
 // PID controller params - linetracking
-#define linetracking_kp           50
-#define linetracking_ki           5
-#define linetracking_ctrl_max     500 
-#define linetracking_ctrl_min    -500
+#define linetracking_kp           25
+#define linetracking_ki           2
+#define linetracking_ctrl_max     2500 
+#define linetracking_ctrl_min    -2500
 
 // PID controller params - turning
 #define turning_kp           1

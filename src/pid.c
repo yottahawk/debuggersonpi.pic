@@ -74,7 +74,7 @@ void pid_update(signed int pv,        // process variable - estimate of plant ou
     
     
     // Only increase i_sum if cv within bounds
-    if ((cv < ptr->max) && (cv > ptr->min))
+    if ((cv < ptr->max) && (cv > ptr->min) && (ptr->ki !=0))
     { ptr->i_sum = temp_i_sum; }  // only update if true      
     
     

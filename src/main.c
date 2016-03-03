@@ -24,8 +24,8 @@
 
 /////////////////////////////////////DEFINES//////////////////////////////////// 
 
-// #define testmode
-#define operatingmode
+ //#define testmode
+ #define operatingmode
 ////////////////////////////////////FUNCTIONS///////////////////////////////////
 
 //functions for testing here - above main so no need for forward declaration
@@ -39,7 +39,8 @@ void testFunctionEncoders()
     
     enableMotorPSU();
     
-    R_motor_constSpeed(FWD, 50);
+    R_motor_constSpeed(FWD, 350);
+    L_motor_constSpeed(FWD, 350);
     
     while(1){};
 }
@@ -65,7 +66,7 @@ void testLoadState(spi_state_data * spi_newstate_ptr)
 {
     spi_newstate_ptr->state = PSNS_FORWARD;
     spi_newstate_ptr->state_data.data_type = COUNTS;
-    spi_newstate_ptr->state_data.value = 150;
+    spi_newstate_ptr->state_data.value = 0xFFFF;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
